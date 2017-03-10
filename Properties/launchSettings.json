@@ -1,8 +1,7 @@
 {
   "profiles": {
     "LibYear": {
-      "commandName": "Project",
-      "commandLineArgs": "D:\\Code\\www"
+      "commandName": "Project"
     }
   }
 }

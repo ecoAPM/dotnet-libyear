@@ -8,7 +8,7 @@ using NuGet.Versioning;
 
 namespace LibYear
 {
-    public class PackageVersionChecker
+    public class PackageVersionChecker : IPackageVersionChecker
     {
         private readonly PackageMetadataResource _metadataResource;
         private readonly IDictionary<string, IList<VersionInfo>> _versionCache;

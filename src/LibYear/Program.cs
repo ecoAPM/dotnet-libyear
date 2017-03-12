@@ -11,6 +11,8 @@ namespace LibYear
 {
     public static class Program
     {
+        private static bool _quietMode;
+
         public static void Main(string[] args)
         {
             if (args.Any(a => a == "-h" || a == "--help" || a == "-?" || a == "/?"))
@@ -18,6 +20,8 @@ namespace LibYear
                 ShowHelp();
                 return;
             }
+            if (args.Any(a => a == "-q" || a == "--quiet"))
+                _quietMode = true;
 
             var projects = GetAllProjects(args);
             if (!projects.Any())
@@ -46,11 +50,15 @@ namespace LibYear
 
         private static void ShowHelp()
         {
-            Console.WriteLine("Usage: dotnet libyear [{csproj}|{dir}] [{csproj}|{dir}]");
+            Console.WriteLine("Usage: dotnet libyear [args] [{csproj}|{dir}]");
             Console.WriteLine();
-            Console.WriteLine("Zero or more directories or csproj files may be passed");
-            Console.WriteLine("If no arguments are passed, the current directory is searched");
-            Console.WriteLine("If no csproj is found in a directory, subdirectories are searched");
+            Console.WriteLine("  Zero or more directories or csproj files may be passed");
+            Console.WriteLine("  If no arguments are passed, the current directory is searched");
+            Console.WriteLine("  If no csproj is found in a directory, subdirectories are searched");
+            Console.WriteLine();
+            Console.WriteLine("Arguments:");
+            Console.WriteLine("  -h, --help \t display this help message");
+            Console.WriteLine("  -q, --quiet \t only show outdated packages");
             Console.WriteLine();
         }
 
@@ -75,9 +83,9 @@ namespace LibYear
         private static IList<IProjectFile> GetProjects(string dirPath)
         {
             var dir = new DirectoryInfo(dirPath);
-            var csproj = dir.GetFiles("*.csproj", SearchOption.TopDirectoryOnly).FirstOrDefault();
-            return csproj != null
-                ? new List<IProjectFile> { new CsProjFile(csproj.FullName) }
+            var csprojs = dir.GetFiles("*.csproj", SearchOption.TopDirectoryOnly).FirstOrDefault();
+            return csprojs != null
+                ? new List<IProjectFile> { new CsProjFile(csprojs.FullName) }
                 : dir.GetFiles("*.csproj", SearchOption.AllDirectories).Select(f => new CsProjFile(f.FullName) as IProjectFile).ToList();
         }
 
@@ -103,7 +111,7 @@ namespace LibYear
             var latestPad = results.Value.Max(r => r.Latest.Version.ToString().Length);
             Console.WriteLine($"{"Package".PadRight(namePad)} \t {"Installed".PadRight(installedPad)} \t Released \t {"Latest".PadRight(latestPad)} \t Released \t Age (y)");
 
-            foreach (var result in results.Value)
+            foreach (var result in results.Value.Where(p => !(_quietMode && p.Installed.Version == p.Latest.Version)))
                 Console.WriteLine($"{result.Name.PadRight(namePad)} \t {result.Installed.Version.ToString().PadRight(installedPad)} \t {result.Installed.Released:yyyy-MM-dd} \t {result.Latest.Version.ToString().PadRight(latestPad)} \t {result.Latest.Released:yyyy-MM-dd} \t {result.YearsBehind:F1}");
 
             var projectTotal = results.Value.Sum(r => r.YearsBehind);

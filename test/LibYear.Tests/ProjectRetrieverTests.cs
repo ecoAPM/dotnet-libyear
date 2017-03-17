@@ -10,7 +10,7 @@ namespace LibYear.Tests
         public void CanFindProjectFiles()
         {
             //arrange
-            var retriever = new ProjectRetriever();
+            var retriever = new ProjectFileManager();
             var dir = new DirectoryInfo("FileTypes");
 
             //act
@@ -26,7 +26,7 @@ namespace LibYear.Tests
         public void CanFindProjectFilesRecursively()
         {
             //arrange
-            var retriever = new ProjectRetriever();
+            var retriever = new ProjectFileManager();
             var dir = new DirectoryInfo(".");
 
             //act
@@ -42,7 +42,7 @@ namespace LibYear.Tests
         public void CanGetProjectsForDir()
         {
             //arrange
-            var retriever = new ProjectRetriever();
+            var retriever = new ProjectFileManager();
 
             //act
             var projects = retriever.GetProjects("FileTypes");
@@ -57,7 +57,7 @@ namespace LibYear.Tests
         public void GetsProjectsRecursivelyIfNoneFound()
         {
             //arrange
-            var retriever = new ProjectRetriever();
+            var retriever = new ProjectFileManager();
 
             //act
             var projects = retriever.GetProjects(".");
@@ -78,7 +78,7 @@ namespace LibYear.Tests
                 "FileTypes\\project.json",
                 "FileTypes\\packages.config",
             };
-            var retriever = new ProjectRetriever();
+            var retriever = new ProjectFileManager();
 
             //act
             var projects = retriever.GetAllProjects(projectFileNames);

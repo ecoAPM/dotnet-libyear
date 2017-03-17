@@ -5,7 +5,7 @@ using LibYear.FileTypes;
 
 namespace LibYear
 {
-    public class ProjectRetriever : IProjectRetriever
+    public class ProjectFileManager : IProjectFileManager
     {
         public IList<IProjectFile> GetAllProjects(IReadOnlyList<string> args)
         {
@@ -42,6 +42,19 @@ namespace LibYear
                 .Union(dir.EnumerateFiles("project.json", searchMode).Select<FileInfo, IProjectFile>(f => new ProjectJsonFile(f.FullName)))
                 .Union(dir.EnumerateFiles("packages.config", searchMode).Select<FileInfo, IProjectFile>(f => new PackagesConfigFile(f.FullName)))
                 .ToList();
+        }
+
+        public void UpdateAll(IDictionary<IProjectFile, IEnumerable<Result>> allResults)
+        {
+            foreach (var result in allResults)
+                Update(result);
+        }
+
+        public void Update(KeyValuePair<IProjectFile, IEnumerable<Result>> result)
+        {
+            var projectFile = result.Key;
+            var results = result.Value;
+            projectFile.Update(results);
         }
     }
 }

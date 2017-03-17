@@ -7,5 +7,6 @@ namespace LibYear.FileTypes
     {
         string FileName { get; }
         IDictionary<string, NuGetVersion> Packages { get; }
+        void Update(IEnumerable<Result> results);
     }
 }

@@ -77,11 +77,13 @@ namespace LibYear.Tests
             Assert.Equal("4", versions[3].Name);
         }
 
+        #pragma warning disable 1998
         private static async Task<Result> Sleep(int x)
         {
             Thread.Sleep(x);
             return new Result(x.ToString(), null, null);
         }
+        #pragma warning restore 1998
 
         [Fact]
         public void GetPackagesGetsPackages()
@@ -99,7 +101,7 @@ namespace LibYear.Tests
             var project = new TestProject("test", new Dictionary<string, NuGetVersion> { { "test", new NuGetVersion(1, 2, 3) } });
 
             //act
-            var packages = checker.GetPackages(new [] { project });
+            var packages = checker.GetPackages(new[] { project });
 
             //assert
             var latest = packages.First().Value.First().Latest.Version.ToString();
@@ -117,6 +119,11 @@ namespace LibYear.Tests
         {
             FileName = fileName;
             Packages = packages;
+        }
+
+        public void Update(IEnumerable<Result> results)
+        {
+            throw new NotImplementedException();
         }
     }
 }

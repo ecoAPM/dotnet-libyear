@@ -8,16 +8,29 @@ namespace LibYear.FileTypes
 {
     public class ProjectJsonFile : IProjectFile
     {
+        private string _fileContents;
         public string FileName { get; }
         public IDictionary<string, NuGetVersion> Packages { get; }
-
         public ProjectJsonFile(string filename)
         {
             FileName = filename;
-            var deps = JObject.Parse(File.ReadAllText(filename)).Descendants()
+            _fileContents = File.ReadAllText(FileName);
+
+            var deps = JObject.Parse(_fileContents).Descendants()
                 .Where(d => d.Type == JTokenType.Property && d.Path.Contains("dependencies") && !d.Path.EndsWith("dependencies"));
-            Packages = deps
-                .ToDictionary(p => ((JProperty)p).Name.ToString(), p => new NuGetVersion(((JProperty)p).Value.ToString()));
+
+            Packages = deps.ToDictionary(p => ((JProperty)p).Name.ToString(), p => new NuGetVersion(((JProperty)p).Value.ToString()));
+        }
+
+        public void Update(IEnumerable<Result> results)
+        {
+            lock (_fileContents)
+            {
+                foreach (var result in results)
+                    _fileContents = _fileContents.Replace($"\"{result.Name}\": \"{result.Installed.Version}\"", $"\"{result.Name}\": \"{result.Latest.Version}\"");
+
+                File.WriteAllText(FileName, _fileContents);
+            }
         }
     }
 }

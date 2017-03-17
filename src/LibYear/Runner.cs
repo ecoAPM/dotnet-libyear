@@ -8,13 +8,14 @@ namespace LibYear
     public class Runner
     {
         private readonly IPackageVersionChecker _checker;
-        private readonly IProjectRetriever _projectRetriever;
+        private readonly IProjectFileManager _projectFileManager;
         private bool _quietMode;
+        private bool _update;
 
-        public Runner(IPackageVersionChecker checker, IProjectRetriever projectRetriever)
+        public Runner(IPackageVersionChecker checker, IProjectFileManager projectFileManager)
         {
             _checker = checker;
-            _projectRetriever = projectRetriever;
+            _projectFileManager = projectFileManager;
         }
 
         public string Run(IReadOnlyList<string> args)
@@ -26,15 +27,21 @@ namespace LibYear
             {
                 if (args.Any(a => a == "-q" || a == "--quiet"))
                     _quietMode = true;
+                
+                if (args.Any(a => a == "-u" || a == "--update"))
+                    _update = true;
 
-                var projects = _projectRetriever.GetAllProjects(args);
+                var projects = _projectFileManager.GetAllProjects(args);
                 if (!projects.Any())
                     msg.AppendLine("No project files found");
                 else
                 {
                     msg.AppendLine(GetStartupMessage());
-                    var results = _checker.GetPackages(projects);
-                    msg.AppendLine(GetAllResultsTables(results));
+                    var allResults = _checker.GetPackages(projects);
+                    msg.AppendLine(GetAllResultsTables(allResults));
+
+                    if (_update)
+                        _projectFileManager.UpdateAll(allResults);
                 }
             }
             return msg.ToString();
@@ -52,6 +59,7 @@ namespace LibYear
             msg.AppendLine("Arguments:");
             msg.AppendLine("  -h, --help \t display this help message");
             msg.AppendLine("  -q, --quiet \t only show outdated packages");
+            msg.AppendLine("  -u, --update \t update project files after displaying packages");
             return msg.ToString();
         }
 

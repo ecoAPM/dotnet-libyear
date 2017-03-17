@@ -3,8 +3,9 @@ using LibYear.FileTypes;
 
 namespace LibYear
 {
-    public interface IProjectRetriever
+    public interface IProjectFileManager
     {
         IList<IProjectFile> GetAllProjects(IReadOnlyList<string> args);
+        void UpdateAll(IDictionary<IProjectFile, IEnumerable<Result>> allResults);
     }
 }

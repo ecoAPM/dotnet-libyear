@@ -6,6 +6,6 @@ namespace LibYear
     public interface IProjectFileManager
     {
         IList<IProjectFile> GetAllProjects(IReadOnlyList<string> args);
-        void UpdateAll(IDictionary<IProjectFile, IEnumerable<Result>> allResults);
+        void Update(IProjectFile projectFile, IEnumerable<Result> results);
     }
 }

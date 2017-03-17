@@ -27,7 +27,7 @@ namespace LibYear
             {
                 if (args.Any(a => a == "-q" || a == "--quiet"))
                     _quietMode = true;
-                
+
                 if (args.Any(a => a == "-u" || a == "--update"))
                     _update = true;
 
@@ -41,7 +41,15 @@ namespace LibYear
                     msg.AppendLine(GetAllResultsTables(allResults));
 
                     if (_update)
-                        _projectFileManager.UpdateAll(allResults);
+                    {
+                        foreach (var result in allResults)
+                        {
+                            var projectFile = result.Key;
+                            var results = result.Value;
+                            _projectFileManager.Update(projectFile, results);
+                            msg.AppendLine($"{projectFile.FileName} updated");
+                        }
+                    }
                 }
             }
             return msg.ToString();

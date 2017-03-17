@@ -44,16 +44,8 @@ namespace LibYear
                 .ToList();
         }
 
-        public void UpdateAll(IDictionary<IProjectFile, IEnumerable<Result>> allResults)
+        public void Update(IProjectFile projectFile, IEnumerable<Result> results)
         {
-            foreach (var result in allResults)
-                Update(result);
-        }
-
-        public void Update(KeyValuePair<IProjectFile, IEnumerable<Result>> result)
-        {
-            var projectFile = result.Key;
-            var results = result.Value;
             projectFile.Update(results);
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LibYear.FileTypes;
 using NSubstitute;
 using NuGet.Common;
 using NuGet.Packaging.Core;

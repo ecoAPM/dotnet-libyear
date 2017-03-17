@@ -1,18 +1,20 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
+using LibYear.FileTypes;
 
 namespace LibYear
 {
     public class Runner
     {
         private readonly IPackageVersionChecker _checker;
+        private readonly IProjectRetriever _projectRetriever;
         private bool _quietMode;
 
-        public Runner(IPackageVersionChecker checker)
+        public Runner(IPackageVersionChecker checker, IProjectRetriever projectRetriever)
         {
             _checker = checker;
+            _projectRetriever = projectRetriever;
         }
 
         public string Run(IReadOnlyList<string> args)
@@ -25,15 +27,13 @@ namespace LibYear
                 if (args.Any(a => a == "-q" || a == "--quiet"))
                     _quietMode = true;
 
-                var projects = GetAllProjects(args);
+                var projects = _projectRetriever.GetAllProjects(args);
                 if (!projects.Any())
-                    msg.AppendLine("No C# projects found");
+                    msg.AppendLine("No project files found");
                 else
                 {
                     msg.AppendLine(GetStartupMessage());
-
                     var results = _checker.GetPackages(projects);
-
                     msg.AppendLine(GetAllResultsTables(results));
                 }
             }
@@ -62,33 +62,6 @@ namespace LibYear
             return msg.ToString();
         }
 
-        private static IList<IProjectFile> GetAllProjects(IReadOnlyList<string> args)
-        {
-            if (!args.Any())
-                return GetProjects(Directory.GetCurrentDirectory());
-
-            var projects = new List<IProjectFile>();
-            foreach (var arg in args)
-            {
-                if (IsProjectFile(arg))
-                    projects.Add(new CsProjFile(arg));
-                else if (Directory.Exists(arg))
-                    projects.AddRange(GetProjects(arg));
-            }
-            return projects;
-        }
-
-        public static bool IsProjectFile(string path) => File.Exists(path) && new FileInfo(path).Extension == "csproj";
-
-        private static IList<IProjectFile> GetProjects(string dirPath)
-        {
-            var dir = new DirectoryInfo(dirPath);
-            var csprojs = dir.GetFiles("*.csproj", SearchOption.TopDirectoryOnly).FirstOrDefault();
-            return csprojs != null
-                ? new List<IProjectFile> { new CsProjFile(csprojs.FullName) }
-                : dir.GetFiles("*.csproj", SearchOption.AllDirectories).Select(f => new CsProjFile(f.FullName) as IProjectFile).ToList();
-        }
-
         private string GetAllResultsTables(IDictionary<IProjectFile, IEnumerable<Result>> allResults)
         {
             var msg = new StringBuilder();
@@ -105,6 +78,9 @@ namespace LibYear
 
         private string GetResultsTable(KeyValuePair<IProjectFile, IEnumerable<Result>> results)
         {
+            if (!results.Value.Any())
+                return string.Empty;
+
             var msg = new StringBuilder();
             msg.AppendLine(results.Key.FileName);
 

@@ -8,7 +8,11 @@
     <Company>Steve Desmond Software Development</Company>
     <Description>Display projects' package dependencies and their outdatedness</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.3</Version>
+    <Version>0.1.0</Version>
+    <PackageId>libyear</PackageId>
+    <Product>libyear</Product>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

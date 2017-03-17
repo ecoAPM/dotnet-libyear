@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LibYear.FileTypes;
 using NuGet.Common;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
@@ -33,7 +34,7 @@ namespace LibYear
         {
             var versions = _versionCache.ContainsKey(packageName) ? _versionCache[packageName] : _versionCache[packageName] = await GetVersions(packageName);
             var current = versions.First(v => v.Version == installed);
-            var latest = versions.First(v => v.Version == versions.Max(m => m.Version));
+            var latest = versions.First(v => v.Version == versions.Where(m => !m.Version.IsPrerelease).Max(m => m.Version));
             return new Result(packageName, current, latest);
         }
 

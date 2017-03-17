@@ -42,13 +42,9 @@ namespace LibYear
 
                     if (_update)
                     {
-                        foreach (var result in allResults)
-                        {
-                            var projectFile = result.Key;
-                            var results = result.Value;
-                            projectFile.Update(results);
-                            msg.AppendLine($"{projectFile.FileName} updated");
-                        }
+                        var updated = _projectFileManager.Update(allResults);
+                        foreach (var projectFile in updated)
+                            msg.AppendLine($"{projectFile} updated");
                     }
                 }
             }
@@ -101,12 +97,12 @@ namespace LibYear
             msg.AppendLine(results.Key.FileName);
 
             var namePad = results.Value.Max(r => r.Name.Length);
-            var installedPad = results.Value.Max(r => r.Installed.Version.ToString().Length);
-            var latestPad = results.Value.Max(r => r.Latest.Version.ToString().Length);
+            var installedPad = results.Value.Max(r => r.Installed?.Version.ToString().Length ?? 0);
+            var latestPad = results.Value.Max(r => r.Latest?.Version.ToString().Length ?? 0);
             msg.AppendLine($"{"Package".PadRight(namePad)} \t {"Installed".PadRight(installedPad)} \t Released \t {"Latest".PadRight(latestPad)} \t Released \t Age (y)");
 
             foreach (var result in results.Value.Where(p => !(_quietMode && p.Installed.Version == p.Latest.Version)))
-                msg.AppendLine($"{result.Name.PadRight(namePad)} \t {result.Installed.Version.ToString().PadRight(installedPad)} \t {result.Installed.Released:yyyy-MM-dd} \t {result.Latest.Version.ToString().PadRight(latestPad)} \t {result.Latest.Released:yyyy-MM-dd} \t {result.YearsBehind:F1}");
+                msg.AppendLine($"{result.Name.PadRight(namePad)} \t {result.Installed?.Version.ToString().PadRight(installedPad)} \t {result.Installed?.Released:yyyy-MM-dd} \t {result.Latest?.Version.ToString().PadRight(latestPad)} \t {result.Latest?.Released:yyyy-MM-dd} \t {result.YearsBehind:F1}");
 
             var projectTotal = results.Value.Sum(r => r.YearsBehind);
             msg.AppendLine($"Project is {projectTotal:F1} libyears behind");

@@ -1,3 +1,5 @@
+using System;
+
 namespace LibYear
 {
     public class Result
@@ -13,6 +15,6 @@ namespace LibYear
             Latest = latest;
         }
 
-        public double YearsBehind => (Latest.Released - Installed.Released).TotalDays / 365;
+        public double YearsBehind => (Latest?.Released - Installed?.Released ?? TimeSpan.Zero).TotalDays / 365;
     }
 }

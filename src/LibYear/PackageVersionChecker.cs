@@ -33,8 +33,8 @@ namespace LibYear
         public async Task<Result> GetResultTask(string packageName, SemanticVersion installed)
         {
             var versions = _versionCache.ContainsKey(packageName) ? _versionCache[packageName] : _versionCache[packageName] = await GetVersions(packageName);
-            var current = versions.First(v => v.Version == installed);
-            var latest = versions.First(v => v.Version == versions.Where(m => !m.Version.IsPrerelease).Max(m => m.Version));
+            var current = versions.FirstOrDefault(v => v.Version == installed);
+            var latest = versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease).Max(m => m.Version));
             return new Result(packageName, current, latest);
         }
 

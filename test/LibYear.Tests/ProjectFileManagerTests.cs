@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using LibYear.FileTypes;
+using NuGet.Versioning;
 using Xunit;
 
 namespace LibYear.Tests
@@ -122,6 +125,29 @@ namespace LibYear.Tests
             Assert.True(projects.Any(p => p.FileName.EndsWith("project.csproj")));
             Assert.True(projects.Any(p => p.FileName.EndsWith("project.json")));
             Assert.True(projects.Any(p => p.FileName.EndsWith("packages.config")));
+        }
+
+        [Fact]
+        public void CanUpdateProjectFiles()
+        {
+            //arrange
+            var fileManager = new ProjectFileManager();
+
+            //act
+
+            var allResults = new Dictionary<IProjectFile, IEnumerable<Result>>
+            {
+                {
+                    new TestProjectFile("test1"), new List<Result>
+                    {
+                        new Result("test1", new VersionInfo(new SemanticVersion(0, 1, 0), DateTime.Today), new VersionInfo(new SemanticVersion(1, 2, 3), DateTime.Today)),
+                    }
+                }
+            };
+            var updated = fileManager.Update(allResults);
+
+            //assert
+            Assert.Contains("test1", updated);
         }
     }
 }

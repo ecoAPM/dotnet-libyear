@@ -98,7 +98,7 @@ namespace LibYear.Tests
             var v2 = new VersionInfo(new NuGetVersion("2.3.4"), new DateTime(2016, 1, 1));
             var versionCache = new Dictionary<string, IList<VersionInfo>> { { "test", new List<VersionInfo> { v1, v2 } } };
             var checker = new PackageVersionChecker(metadataResource, versionCache);
-            var project = new TestProject("test", new Dictionary<string, NuGetVersion> { { "test", new NuGetVersion(1, 2, 3) } });
+            var project = new TestProjectFile("test", new Dictionary<string, NuGetVersion> { { "test", new NuGetVersion(1, 2, 3) } });
 
             //act
             var packages = checker.GetPackages(new[] { project });
@@ -110,12 +110,12 @@ namespace LibYear.Tests
         }
     }
 
-    internal class TestProject : IProjectFile
+    internal class TestProjectFile : IProjectFile
     {
         public string FileName { get; }
         public IDictionary<string, NuGetVersion> Packages { get; }
 
-        public TestProject(string fileName, IDictionary<string, NuGetVersion> packages)
+        public TestProjectFile(string fileName, IDictionary<string, NuGetVersion> packages = null)
         {
             FileName = fileName;
             Packages = packages;
@@ -123,7 +123,6 @@ namespace LibYear.Tests
 
         public void Update(IEnumerable<Result> results)
         {
-            throw new NotImplementedException();
         }
     }
 }

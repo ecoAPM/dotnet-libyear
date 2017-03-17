@@ -32,17 +32,20 @@ namespace LibYear.FileTypes
 
         public void Update(IEnumerable<Result> results)
         {
-            foreach (var result in results)
-            {
-                var elements = _xmlContents.Descendants(_elementName)
-                    .Where(d => d.Attribute(_packageAttributeName).Value == result.Name && d.Attribute(_versionAttributeName).Value == result.Installed.Version.ToString());
-
-                foreach (var element in elements)
-                    element.Attribute(_versionAttributeName).Value = result.Latest.Version.ToString();
-            }
-
             lock (_xmlContents)
+            {
+                foreach (var result in results)
+                {
+                    var elements = _xmlContents.Descendants(_elementName)
+                        .Where(d => d.Attribute(_packageAttributeName).Value == result.Name &&
+                                    d.Attribute(_versionAttributeName).Value == result.Installed.Version.ToString());
+
+                    foreach (var element in elements)
+                        element.Attribute(_versionAttributeName).Value = result.Latest.Version.ToString();
+                }
+
                 File.WriteAllText(FileName, _xmlContents.ToString());
+            }
         }
     }
 }

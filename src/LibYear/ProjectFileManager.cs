@@ -43,10 +43,5 @@ namespace LibYear
                 .Union(dir.EnumerateFiles("packages.config", searchMode).Select<FileInfo, IProjectFile>(f => new PackagesConfigFile(f.FullName)))
                 .ToList();
         }
-
-        public void Update(IProjectFile projectFile, IEnumerable<Result> results)
-        {
-            projectFile.Update(results);
-        }
     }
 }

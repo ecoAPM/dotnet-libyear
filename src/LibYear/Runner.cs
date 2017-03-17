@@ -46,7 +46,7 @@ namespace LibYear
                         {
                             var projectFile = result.Key;
                             var results = result.Value;
-                            _projectFileManager.Update(projectFile, results);
+                            projectFile.Update(results);
                             msg.AppendLine($"{projectFile.FileName} updated");
                         }
                     }

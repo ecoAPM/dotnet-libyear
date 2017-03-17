@@ -19,7 +19,8 @@ namespace LibYear.FileTypes
         protected XmlProjectFile(string filename, string elementName, string packageAttributeName, string versionAttributeName)
         {
             FileName = filename;
-            _xmlContents = XDocument.Load(FileName);
+            using (var fileStream = File.OpenRead(FileName))
+                _xmlContents = XDocument.Load(fileStream);
 
             _elementName = elementName;
             _packageAttributeName = packageAttributeName;

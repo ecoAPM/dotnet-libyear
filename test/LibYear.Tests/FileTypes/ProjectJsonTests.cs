@@ -24,7 +24,7 @@ namespace LibYear.Tests.FileTypes
         }
 
         [Fact]
-        public void CanUpdatePackagesConfigFile()
+        public void CanUpdateProjectJsonFile()
         {
             //arrange
             const string filename = "FileTypes\\project.json";

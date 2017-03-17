@@ -17,7 +17,9 @@ namespace LibYear.FileTypes
             _fileContents = File.ReadAllText(FileName);
 
             var deps = JObject.Parse(_fileContents).Descendants()
-                .Where(d => d.Type == JTokenType.Property && d.Path.Contains("dependencies") && d.Path.EndsWith("]") && ((JProperty)d).Value.Type == JTokenType.String);
+                .Where(d => d.Type == JTokenType.Property && d.Path.Contains("dependencies")
+                && (!d.Path.Contains("[") || d.Path.EndsWith("]"))
+                && ((JProperty)d).Value.Type == JTokenType.String);
 
             Packages = deps.ToDictionary(p => ((JProperty)p).Name.ToString(), p => new NuGetVersion(((JProperty)p).Value.ToString()));
         }

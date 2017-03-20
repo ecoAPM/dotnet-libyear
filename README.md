@@ -10,9 +10,7 @@ A simple measure of dependency freshness
 
     1. `dotnet new libyear`
     
-    or
-    
-    1. add the following to your existing csproj:
+    or add the following to your existing csproj:
 ```
 <ItemGroup>
   <DotNetCliToolReference Include="libyear" Version="*" />

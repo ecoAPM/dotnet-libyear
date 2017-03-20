@@ -2,6 +2,25 @@
 
 A simple measure of dependency freshness
 
+## Installation
+
+1. get your project set up
+
+    1. `dotnet new -i libyear::*`
+
+    1. `dotnet new libyear`
+    
+    or
+    
+    1. add the following to your existing csproj:
+```
+<ItemGroup>
+  <DotNetCliToolReference Include="libyear" Version="*" />
+</ItemGroup>
+```
+
+2. `dotnet restore`
+
 ## Usage
 
 `dotnet libyear [args] [{csproj}|{dir}]`

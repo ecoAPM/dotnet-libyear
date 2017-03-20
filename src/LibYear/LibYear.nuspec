@@ -9,6 +9,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <packageTypes>
+      <packageType name="Template" />
       <packageType name="DotnetCliTool" />
     </packageTypes>
   </metadata>

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,9 +37,9 @@ namespace LibYear
                     msg.AppendLine("No project files found");
                 else
                 {
-                    msg.AppendLine(GetStartupMessage());
                     var allResults = _checker.GetPackages(projects);
-                    msg.AppendLine(GetAllResultsTables(allResults));
+                    var output = GetAllResultsTables(allResults);
+                    msg.AppendLine(output);
 
                     if (_update)
                     {
@@ -67,18 +68,18 @@ namespace LibYear
             return msg.ToString();
         }
 
-        private static string GetStartupMessage()
-        {
-            var msg = new StringBuilder();
-            msg.AppendLine("Running...");
-            return msg.ToString();
-        }
-
         private string GetAllResultsTables(IDictionary<IProjectFile, IEnumerable<Result>> allResults)
         {
+            if (!allResults.Any())
+                return string.Empty;
+
+            var namePad = Math.Max("Package".Length, allResults.Max(results => results.Value.Any() ? results.Value.Max(r => r.Name.Length) : 0));
+            var installedPad = Math.Max("Installed".Length, allResults.Max(results => results.Value.Any() ? results.Value.Max(r => r.Installed?.Version.ToString().Length ?? 0) : 0));
+            var latestPad = Math.Max("Latest".Length, allResults.Max(results => results.Value.Any() ? results.Value.Max(r => r.Latest?.Version.ToString().Length ?? 0) : 0));
+
             var msg = new StringBuilder();
             foreach (var results in allResults)
-                msg.AppendLine(GetResultsTable(results));
+                msg.AppendLine(GetResultsTable(results, namePad, installedPad, latestPad));
 
             if (allResults.Count > 1)
             {
@@ -88,7 +89,7 @@ namespace LibYear
             return msg.ToString();
         }
 
-        private string GetResultsTable(KeyValuePair<IProjectFile, IEnumerable<Result>> results)
+        private string GetResultsTable(KeyValuePair<IProjectFile, IEnumerable<Result>> results, int namePad, int installedPad, int latestPad)
         {
             if (!results.Value.Any())
                 return string.Empty;
@@ -96,13 +97,10 @@ namespace LibYear
             var msg = new StringBuilder();
             msg.AppendLine(results.Key.FileName);
 
-            var namePad = results.Value.Max(r => r.Name.Length);
-            var installedPad = results.Value.Max(r => r.Installed?.Version.ToString().Length ?? 0);
-            var latestPad = results.Value.Max(r => r.Latest?.Version.ToString().Length ?? 0);
-            msg.AppendLine($"{"Package".PadRight(namePad)} \t {"Installed".PadRight(installedPad)} \t Released \t {"Latest".PadRight(latestPad)} \t Released \t Age (y)");
+            msg.AppendLine($"{"Package".PadRight(namePad)}   {"Installed".PadRight(installedPad)}   Released     {"Latest".PadRight(latestPad)}   Released     Age (y)");
 
             foreach (var result in results.Value.Where(p => !(_quietMode && p.Installed.Version == p.Latest.Version)))
-                msg.AppendLine($"{result.Name.PadRight(namePad)} \t {result.Installed?.Version.ToString().PadRight(installedPad)} \t {result.Installed?.Released:yyyy-MM-dd} \t {result.Latest?.Version.ToString().PadRight(latestPad)} \t {result.Latest?.Released:yyyy-MM-dd} \t {result.YearsBehind:F1}");
+                msg.AppendLine($"{result.Name.PadRight(namePad)}   {result.Installed?.Version.ToString().PadRight(installedPad)}   {result.Installed?.Released:yyyy-MM-dd}   {result.Latest?.Version.ToString().PadRight(latestPad)}   {result.Latest?.Released:yyyy-MM-dd}   {result.YearsBehind:F1}");
 
             var projectTotal = results.Value.Sum(r => r.YearsBehind);
             msg.AppendLine($"Project is {projectTotal:F1} libyears behind");

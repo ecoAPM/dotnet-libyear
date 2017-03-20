@@ -1,0 +1,10 @@
+﻿{
+  "author": "Steve Desmond",
+  "identity": "libyear",
+  "name": "LibYear",
+  "shortName": "libyear",
+  "sourceName": "template",
+  "tags": {
+    "language": "C#"
+  }
+}

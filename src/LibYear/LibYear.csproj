@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
     <AssemblyName>dotnet-libyear</AssemblyName>
     <Authors>Steve Desmond</Authors>
     <Company>Steve Desmond Software Development</Company>
-    <Description>Display projects' package dependencies and their outdatedness</Description>
+    <Description>Display projects' dependencies and their outdatedness</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.1.0</Version>
+    <Version>1.0.1</Version>
     <PackageId>libyear</PackageId>
     <Product>libyear</Product>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
@@ -17,6 +17,11 @@
 
   <ItemGroup>
     <PackageReference Include="NuGet.Protocol.Core.v3" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="template\.template.config\template.json" />
+    <Content Include="template\libyear.csproj" />
   </ItemGroup>
 
 </Project>

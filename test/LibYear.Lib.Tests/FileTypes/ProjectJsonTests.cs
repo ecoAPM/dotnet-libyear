@@ -21,6 +21,7 @@ namespace LibYear.Lib.Tests.FileTypes
             //assert
             Assert.Equal("test1", file.Packages.First().Key);
             Assert.Equal("test2", file.Packages.Skip(1).First().Key);
+            //TODO Assert.Equal("test3", file.Packages.Skip(2).First().Key);
         }
 
         [Fact]
@@ -32,7 +33,8 @@ namespace LibYear.Lib.Tests.FileTypes
             var results = new List<Result>
             {
                 new Result("test1", new VersionInfo(new SemanticVersion(0, 1, 0), DateTime.Today), new VersionInfo(new SemanticVersion(1, 2, 3), DateTime.Today)),
-                new Result("test2", new VersionInfo(new SemanticVersion(0, 2, 0), DateTime.Today), new VersionInfo(new SemanticVersion(2, 3, 4), DateTime.Today))
+                new Result("test2", new VersionInfo(new SemanticVersion(0, 2, 0), DateTime.Today), new VersionInfo(new SemanticVersion(2, 3, 4), DateTime.Today)),
+                new Result("test3", new VersionInfo(new SemanticVersion(0, 3, 0), DateTime.Today), new VersionInfo(new SemanticVersion(3, 4, 5), DateTime.Today))
             };
 
             //act
@@ -42,6 +44,7 @@ namespace LibYear.Lib.Tests.FileTypes
             var newFile = new ProjectJsonFile(filename);
             Assert.Equal("1.2.3", newFile.Packages.First().Value.ToString());
             Assert.Equal("2.3.4", newFile.Packages.Skip(1).First().Value.ToString());
+            //TODO Assert.Equal("3.4.5", newFile.Packages.Skip(2).First().Value.ToString());
         }
     }
 }

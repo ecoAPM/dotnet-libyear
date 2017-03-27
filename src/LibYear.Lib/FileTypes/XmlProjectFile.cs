@@ -27,7 +27,8 @@ namespace LibYear.Lib.FileTypes
             _versionAttributeName = versionAttributeName;
 
             Packages = _xmlContents.Descendants(_elementName)
-                .ToDictionary(d => d.Attribute(_packageAttributeName).Value, d => new NuGetVersion(d.Attribute(_versionAttributeName).Value));
+                .ToDictionary(d => d.Attribute(_packageAttributeName)?.Value ?? d.Element(_packageAttributeName)?.Value,
+                    d => new NuGetVersion(d.Attribute(_versionAttributeName)?.Value ?? d.Element(_versionAttributeName)?.Value));
         }
 
         public void Update(IEnumerable<Result> results)
@@ -37,11 +38,20 @@ namespace LibYear.Lib.FileTypes
                 foreach (var result in results)
                 {
                     var elements = _xmlContents.Descendants(_elementName)
-                        .Where(d => d.Attribute(_packageAttributeName).Value == result.Name &&
-                                    d.Attribute(_versionAttributeName).Value == result.Installed.Version.ToString());
+                        .Where(d => (d.Attribute(_packageAttributeName)?.Value ?? d.Element(_packageAttributeName)?.Value) == result.Name &&
+                                    (d.Attribute(_versionAttributeName)?.Value ?? d.Element(_versionAttributeName)?.Value) == result.Installed.Version.ToString());
 
                     foreach (var element in elements)
-                        element.Attribute(_versionAttributeName).Value = result.Latest.Version.ToString();
+                    {
+                        if(element.Attribute(_versionAttributeName) != null)
+                            element.Attribute(_versionAttributeName).Value = result.Latest.Version.ToString();
+                        else
+                        {
+                            var e = element.Element(_versionAttributeName);
+                            if (e != null)
+                                e.Value = result.Latest.Version.ToString();
+                        }
+                    }
                 }
 
                 File.WriteAllText(FileName, _xmlContents.ToString());

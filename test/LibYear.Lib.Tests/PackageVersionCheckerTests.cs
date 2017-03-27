@@ -55,6 +55,50 @@ namespace LibYear.Lib.Tests
         }
 
         [Fact]
+        public async Task LatestDoesNotIncludePrerelease()
+        {
+            //arrange
+            var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new NuGetVersion(1, 2, 3))).Build();
+            var metadataResource = Substitute.For<PackageMetadataResource>();
+            metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
+                .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
+
+            var v1 = new VersionInfo(new NuGetVersion("1.2.3"), new DateTime(2015, 1, 1));
+            var v2 = new VersionInfo(new NuGetVersion("2.3.4-beta-1"), new DateTime(2016, 1, 1));
+            var versionCache = new Dictionary<string, IList<VersionInfo>> { { "test", new List<VersionInfo> { v1, v2 } } };
+            var checker = new PackageVersionChecker(metadataResource, versionCache);
+
+            //act
+            var result = await checker.GetResultTask("test", new NuGetVersion(1, 2, 3));
+
+            //assert
+            var latest = result.Latest.Version.ToString();
+            Assert.Equal("1.2.3", latest);
+        }
+
+        [Fact]
+        public async Task LatestDoesNotIncludeUnpublished()
+        {
+            //arrange
+            var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new NuGetVersion(1, 2, 3))).Build();
+            var metadataResource = Substitute.For<PackageMetadataResource>();
+            metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
+                .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
+
+            var v1 = new VersionInfo(new NuGetVersion("1.2.3"), new DateTime(2015, 1, 1));
+            var v2 = new VersionInfo(new NuGetVersion("2.3.4"), new DateTime(1900, 1, 1));
+            var versionCache = new Dictionary<string, IList<VersionInfo>> { { "test", new List<VersionInfo> { v1, v2 } } };
+            var checker = new PackageVersionChecker(metadataResource, versionCache);
+
+            //act
+            var result = await checker.GetResultTask("test", new NuGetVersion(1, 2, 3));
+
+            //assert
+            var latest = result.Latest.Version.ToString();
+            Assert.Equal("1.2.3", latest);
+        }
+
+        [Fact]
         public void AwaitResultsWaitsForAll()
         {
             //arrange

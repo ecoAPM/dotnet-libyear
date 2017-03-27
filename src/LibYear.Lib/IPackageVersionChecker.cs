@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using LibYear.FileTypes;
+using LibYear.Lib.FileTypes;
 
-namespace LibYear
+namespace LibYear.Lib
 {
     public interface IPackageVersionChecker
     {

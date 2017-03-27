@@ -1,4 +1,4 @@
-namespace LibYear.FileTypes
+namespace LibYear.Lib.FileTypes
 {
     public class CsProjFile : XmlProjectFile
     {

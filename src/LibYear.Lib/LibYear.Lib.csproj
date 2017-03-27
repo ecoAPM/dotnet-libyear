@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <Version>1.0.1</Version>
+    <Product>LibYear</Product>
+    <Authors>Steve Desmond</Authors>
+    <Company>Steve Desmond Software Development</Company>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>libyear-lib</PackageId>
+    <Description>Library portion of libyear, for consumption by other applications</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGet.Protocol.Core.v3" Version="4.0.0" />
+  </ItemGroup>
+
+</Project>

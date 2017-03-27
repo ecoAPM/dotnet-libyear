@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using LibYear.FileTypes;
+using LibYear.Lib.FileTypes;
 
-namespace LibYear
+namespace LibYear.Lib
 {
     public class ProjectFileManager : IProjectFileManager
     {

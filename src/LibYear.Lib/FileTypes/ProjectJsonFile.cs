@@ -4,7 +4,7 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using NuGet.Versioning;
 
-namespace LibYear.FileTypes
+namespace LibYear.Lib.FileTypes
 {
     public class ProjectJsonFile : IProjectFile
     {

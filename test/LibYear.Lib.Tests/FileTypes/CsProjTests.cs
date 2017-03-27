@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LibYear.FileTypes;
+using LibYear.Lib.FileTypes;
 using NuGet.Versioning;
 using Xunit;
 
-namespace LibYear.Tests.FileTypes
+namespace LibYear.Lib.Tests.FileTypes
 {
-    public class ProjectJsonTests
+    public class CsProjTests
     {
         [Fact]
-        public void CanLoadProjectJsonFile()
+        public void CanLoadCsProjFile()
         {
             //arrange
-            const string filename = "FileTypes\\project.json";
+            const string filename = "FileTypes\\project.csproj";
 
             //act
-            var file = new ProjectJsonFile(filename);
+            var file = new CsProjFile(filename);
 
             //assert
             Assert.Equal("test1", file.Packages.First().Key);
@@ -24,11 +24,11 @@ namespace LibYear.Tests.FileTypes
         }
 
         [Fact]
-        public void CanUpdateProjectJsonFile()
+        public void CanUpdateCsProjFile()
         {
             //arrange
-            const string filename = "FileTypes\\project.json";
-            var file = new ProjectJsonFile(filename);
+            const string filename = "FileTypes\\project.csproj";
+            var file = new CsProjFile(filename);
             var results = new List<Result>
             {
                 new Result("test1", new VersionInfo(new SemanticVersion(0, 1, 0), DateTime.Today), new VersionInfo(new SemanticVersion(1, 2, 3), DateTime.Today)),
@@ -39,7 +39,7 @@ namespace LibYear.Tests.FileTypes
             file.Update(results);
 
             //assert
-            var newFile = new ProjectJsonFile(filename);
+            var newFile = new CsProjFile(filename);
             Assert.Equal("1.2.3", newFile.Packages.First().Value.ToString());
             Assert.Equal("2.3.4", newFile.Packages.Skip(1).First().Value.ToString());
         }

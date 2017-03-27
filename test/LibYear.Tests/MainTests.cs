@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace LibYear.Tests
+namespace LibYear.App.Tests
 {
     public class MainTests
     {

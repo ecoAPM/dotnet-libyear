@@ -1,6 +1,6 @@
 using System;
 
-namespace LibYear
+namespace LibYear.Lib
 {
     public class Result
     {

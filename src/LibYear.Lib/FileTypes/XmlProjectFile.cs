@@ -4,7 +4,7 @@ using System.Linq;
 using System.Xml.Linq;
 using NuGet.Versioning;
 
-namespace LibYear.FileTypes
+namespace LibYear.Lib.FileTypes
 {
     public abstract class XmlProjectFile : IProjectFile
     {

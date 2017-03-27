@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LibYear.FileTypes;
 using NSubstitute;
 using NuGet.Common;
 using NuGet.Packaging.Core;
@@ -11,7 +10,7 @@ using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 using Xunit;
 
-namespace LibYear.Tests
+namespace LibYear.Lib.Tests
 {
     public class PackageVersionCheckerTests
     {
@@ -107,22 +106,6 @@ namespace LibYear.Tests
             var latest = packages.First().Value.First().Latest.Version.ToString();
             Assert.Equal("2.3.4", latest);
 
-        }
-    }
-
-    internal class TestProjectFile : IProjectFile
-    {
-        public string FileName { get; }
-        public IDictionary<string, NuGetVersion> Packages { get; }
-
-        public TestProjectFile(string fileName, IDictionary<string, NuGetVersion> packages = null)
-        {
-            FileName = fileName;
-            Packages = packages;
-        }
-
-        public void Update(IEnumerable<Result> results)
-        {
         }
     }
 }

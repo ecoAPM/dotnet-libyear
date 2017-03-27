@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using LibYear.FileTypes;
+using LibYear.Lib.FileTypes;
 using NuGet.Versioning;
 using Xunit;
 
-namespace LibYear.Tests
+namespace LibYear.Lib.Tests
 {
     public class ProjectFileManagerTests
     {

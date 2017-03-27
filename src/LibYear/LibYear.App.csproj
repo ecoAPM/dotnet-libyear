@@ -24,4 +24,8 @@
     <Content Include="template\libyear.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LibYear.Lib\LibYear.Lib.csproj" />
+  </ItemGroup>
+
 </Project>

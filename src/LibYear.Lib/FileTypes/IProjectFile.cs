@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using NuGet.Versioning;
 
-namespace LibYear.FileTypes
+namespace LibYear.Lib.FileTypes
 {
     public interface IProjectFile
     {

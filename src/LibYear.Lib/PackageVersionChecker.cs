@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LibYear.FileTypes;
+using LibYear.Lib.FileTypes;
 using NuGet.Common;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 
-namespace LibYear
+namespace LibYear.Lib
 {
     public class PackageVersionChecker : IPackageVersionChecker
     {

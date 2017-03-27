@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace LibYear
+namespace LibYear.Lib
 {
     public static class FileUtils
     {

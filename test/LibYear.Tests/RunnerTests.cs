@@ -1,11 +1,13 @@
 using System;
-using LibYear.FileTypes;
-using NSubstitute;
-using Xunit;
 using System.Collections.Generic;
+using LibYear.Lib;
+using LibYear.Lib.FileTypes;
+using LibYear.Lib.Tests;
+using NSubstitute;
 using NuGet.Versioning;
+using Xunit;
 
-namespace LibYear.Tests
+namespace LibYear.App.Tests
 {
     public class RunnerTests
     {
@@ -31,7 +33,7 @@ namespace LibYear.Tests
             var checker = Substitute.For<IPackageVersionChecker>();
 
             var manager = Substitute.For<IProjectFileManager>();
-            manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new[] { new TestProjectFile("test1") });
+            manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { new TestProjectFile("test1") });
             manager.Update(Arg.Any<IDictionary<IProjectFile, IEnumerable<Result>>>()).Returns(new[] { "updated" });
 
             var runner = new Runner(checker, manager);
@@ -56,7 +58,7 @@ namespace LibYear.Tests
             checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
 
             var manager = Substitute.For<IProjectFileManager>();
-            manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new[] { projectFile });
+            manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { projectFile });
 
             var runner = new Runner(checker, manager);
 
@@ -80,7 +82,7 @@ namespace LibYear.Tests
             checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
 
             var manager = Substitute.For<IProjectFileManager>();
-            manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new[] { projectFile });
+            manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { projectFile });
 
             var runner = new Runner(checker, manager);
 
@@ -106,7 +108,7 @@ namespace LibYear.Tests
             checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
 
             var manager = Substitute.For<IProjectFileManager>();
-            manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new[] { projectFile1, projectFile2 });
+            manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { projectFile1, projectFile2 });
 
             var runner = new Runner(checker, manager);
 
@@ -132,7 +134,7 @@ namespace LibYear.Tests
             checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
 
             var manager = Substitute.For<IProjectFileManager>();
-            manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new[] { projectFile1, projectFile2 });
+            manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { projectFile1, projectFile2 });
 
             var runner = new Runner(checker, manager);
 
@@ -149,7 +151,6 @@ namespace LibYear.Tests
         {
             //arrange
             var checker = Substitute.For<IPackageVersionChecker>();
-            var results = new Dictionary<IProjectFile, IEnumerable<Result>>();
 
             var manager = Substitute.For<IProjectFileManager>();
             manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new List<IProjectFile>());

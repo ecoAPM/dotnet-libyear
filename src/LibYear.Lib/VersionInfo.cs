@@ -2,7 +2,7 @@
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 
-namespace LibYear
+namespace LibYear.Lib
 {
     public class VersionInfo
     {

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using LibYear.Lib;
 using NuGet.Configuration;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
+using VersionInfo = LibYear.Lib.VersionInfo;
 
-namespace LibYear
+namespace LibYear.App
 {
     public static class Program
     {

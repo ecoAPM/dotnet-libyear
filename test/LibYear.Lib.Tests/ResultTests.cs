@@ -2,7 +2,7 @@ using System;
 using NuGet.Versioning;
 using Xunit;
 
-namespace LibYear.Tests
+namespace LibYear.Lib.Tests
 {
     public class ResultTests
     {

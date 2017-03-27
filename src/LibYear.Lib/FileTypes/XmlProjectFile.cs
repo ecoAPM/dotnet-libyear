@@ -1,37 +1,32 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
-using NuGet.Versioning;
 
 namespace LibYear.Lib.FileTypes
 {
-    public abstract class XmlProjectFile : IProjectFile
+    public abstract class XmlProjectFile : XmlProject
     {
         private readonly string _elementName;
         private readonly string _packageAttributeName;
         private readonly string _versionAttributeName;
-        private readonly XDocument _xmlContents;
 
-        public string FileName { get; }
-        public IDictionary<string, NuGetVersion> Packages { get; }
+        public override string FileName { get; }
 
         protected XmlProjectFile(string filename, string elementName, string packageAttributeName, string versionAttributeName)
+            :base (File.OpenRead(filename), elementName, packageAttributeName, versionAttributeName)
         {
             FileName = filename;
-            using (var fileStream = File.OpenRead(FileName))
-                _xmlContents = XDocument.Load(fileStream);
 
             _elementName = elementName;
             _packageAttributeName = packageAttributeName;
             _versionAttributeName = versionAttributeName;
 
-            Packages = _xmlContents.Descendants(_elementName)
-                .ToDictionary(d => d.Attribute(_packageAttributeName)?.Value ?? d.Element(_packageAttributeName)?.Value,
-                    d => new NuGetVersion(d.Attribute(_versionAttributeName)?.Value ?? d.Element(_versionAttributeName)?.Value));
+            //Don't like this, but don't want to do it in the base class
+            //as I would prefer consumers handle the lifeteam of the stream
+            _underlyingStreamData.Dispose();
         }
 
-        public void Update(IEnumerable<Result> results)
+        public override void Update(IEnumerable<Result> results)
         {
             lock (_xmlContents)
             {

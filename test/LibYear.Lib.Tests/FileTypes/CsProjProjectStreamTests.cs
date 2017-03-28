@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using LibYear.Lib.FileTypes;
 using Xunit;
@@ -8,17 +9,12 @@ namespace LibYear.Lib.Tests.FileTypes
 {
     public class CsProjProjectStreamTests
     {
-        private static System.IO.Stream LoadStreamFromFile(string fileName)
-        {
-            return System.IO.File.OpenRead(fileName);
-        }
-
         [Fact]
         public void CanLoadCsProjStream()
         {
             //arrange
             const string filename = "FileTypes\\project.csproj";
-            using (var stream = LoadStreamFromFile(filename))
+            using (var stream = File.OpenRead(filename))
             {
                 //act
                 var csprojStream = new CsProjStream(stream);
@@ -35,7 +31,7 @@ namespace LibYear.Lib.Tests.FileTypes
         {
             //arrange
             const string filename = "FileTypes\\project.csproj";
-            using (var stream = LoadStreamFromFile(filename))
+            using (var stream = File.OpenRead(filename))
             {
                 //act
                 var csprojStream = new CsProjStream(stream);
@@ -50,7 +46,7 @@ namespace LibYear.Lib.Tests.FileTypes
         {
             //arrange
             const string filename = "FileTypes\\project.csproj";
-            using (var stream = LoadStreamFromFile(filename))
+            using (var stream = File.OpenRead(filename))
             {
                 //act
                 var csprojStream = new CsProjStream(stream);

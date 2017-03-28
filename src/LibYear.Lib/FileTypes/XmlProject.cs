@@ -9,16 +9,15 @@ namespace LibYear.Lib.FileTypes
 {
     public abstract class XmlProject : IProjectFile
     {
-        public virtual string FileName => throw new NotSupportedException();
         protected readonly XDocument _xmlContents;
         protected readonly Stream _underlyingStreamData;
+        public virtual string FileName => throw new NotSupportedException();
         public IDictionary<string, NuGetVersion> Packages { get; protected set; }
 
         public XmlProject(Stream fileStream, string elementName, string packageAttributeName, string versionAttributeName)
         {
             _underlyingStreamData = fileStream;
             _xmlContents = XDocument.Load(fileStream);
-
 
             Packages = _xmlContents.Descendants(elementName)
                 .ToDictionary(d => d.Attribute(packageAttributeName)?.Value ?? d.Element(packageAttributeName)?.Value,

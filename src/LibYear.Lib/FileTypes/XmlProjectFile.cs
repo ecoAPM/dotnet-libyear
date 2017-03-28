@@ -9,7 +9,6 @@ namespace LibYear.Lib.FileTypes
         private readonly string _elementName;
         private readonly string _packageAttributeName;
         private readonly string _versionAttributeName;
-
         public override string FileName { get; }
 
         protected XmlProjectFile(string filename, string elementName, string packageAttributeName, string versionAttributeName)
@@ -21,8 +20,8 @@ namespace LibYear.Lib.FileTypes
             _packageAttributeName = packageAttributeName;
             _versionAttributeName = versionAttributeName;
 
-            //Don't like this, but don't want to do it in the base class
-            //as I would prefer consumers handle the lifeteam of the stream
+            // Don't like this, but don't want to do it in the base class
+            // as I would prefer consumers handle the lifetime of the stream
             _underlyingStreamData.Dispose();
         }
 

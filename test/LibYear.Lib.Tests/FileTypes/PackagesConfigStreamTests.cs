@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using LibYear.Lib.FileTypes;
 using Xunit;
@@ -8,17 +9,12 @@ namespace LibYear.Lib.Tests.FileTypes
 {
     public class PackagesConfigStreamTests
     {
-        private static System.IO.Stream LoadStreamFromFile(string fileName)
-        {
-            return System.IO.File.OpenRead(fileName);
-        }
-
         [Fact]
         public void CanLoadPackagesConfigStream()
         {
             //arrange
             const string filename = "FileTypes\\packages.config";
-            using (var stream = LoadStreamFromFile(filename))
+            using (var stream = File.OpenRead(filename))
             {
                 //act
                 var packagesConfigStream = new PackagesConfigStream(stream);
@@ -35,7 +31,7 @@ namespace LibYear.Lib.Tests.FileTypes
         {
             //arrange
             const string filename = "FileTypes\\packages.config";
-            using (var stream = LoadStreamFromFile(filename))
+            using (var stream = File.OpenRead(filename))
             {
                 //act
                 var packagesConfigStream = new PackagesConfigStream(stream);
@@ -50,7 +46,7 @@ namespace LibYear.Lib.Tests.FileTypes
         {
             //arrange
             const string filename = "FileTypes\\packages.config";
-            using (var stream = LoadStreamFromFile(filename))
+            using (var stream = File.OpenRead(filename))
             {
                 //act
                 var packagesConfigStream = new PackagesConfigStream(stream);

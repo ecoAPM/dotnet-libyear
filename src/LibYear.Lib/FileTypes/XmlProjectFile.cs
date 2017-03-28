@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace LibYear.Lib.FileTypes
 {
-    public abstract class XmlProjectFile : XmlProject
+    public abstract class XmlProjectFile : XmlProject, IProjectFile
     {
         private readonly string _elementName;
         private readonly string _packageAttributeName;
         private readonly string _versionAttributeName;
-        public override string FileName { get; }
+        public string FileName { get; }
 
         protected XmlProjectFile(string filename, string elementName, string packageAttributeName, string versionAttributeName)
             :base (File.OpenRead(filename), elementName, packageAttributeName, versionAttributeName)
@@ -20,12 +20,10 @@ namespace LibYear.Lib.FileTypes
             _packageAttributeName = packageAttributeName;
             _versionAttributeName = versionAttributeName;
 
-            // Don't like this, but don't want to do it in the base class
-            // as I would prefer consumers handle the lifetime of the stream
-            _underlyingStreamData.Dispose();
+            _xmlStream.Dispose();
         }
 
-        public override void Update(IEnumerable<Result> results)
+        public void Update(IEnumerable<Result> results)
         {
             lock (_xmlContents)
             {

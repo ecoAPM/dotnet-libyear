@@ -34,7 +34,7 @@ namespace LibYear.Lib
         {
             var versions = _versionCache.ContainsKey(packageName) ? _versionCache[packageName] : _versionCache[packageName] = await GetVersions(packageName);
             var current = versions.FirstOrDefault(v => v.Version == installed);
-            var latest = versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.Released >= current.Released).Max(m => m.Version));
+            var latest = versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.Released >= current?.Released).Max(m => m.Version));
             return new Result(packageName, current, latest);
         }
 

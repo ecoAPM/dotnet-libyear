@@ -10,7 +10,7 @@ namespace LibYear.Lib.FileTypes
     {
         private string _fileContents;
         public string FileName { get; }
-        public IDictionary<string, NuGetVersion> Packages { get; }
+        public IDictionary<string, SemanticVersion> Packages { get; }
         public ProjectJsonFile(string filename)
         {
             FileName = filename;
@@ -21,7 +21,7 @@ namespace LibYear.Lib.FileTypes
                 && (!d.Path.Contains("[") || d.Path.EndsWith("]"))
                 && ((JProperty)d).Value.Type == JTokenType.String);
 
-            Packages = deps.ToDictionary(p => ((JProperty)p).Name.ToString(), p => new NuGetVersion(((JProperty)p).Value.ToString()));
+            Packages = deps.ToDictionary(p => ((JProperty)p).Name.ToString(), p => SemanticVersion.Parse(((JProperty)p).Value.ToString()));
         }
 
         public void Update(IEnumerable<Result> results)

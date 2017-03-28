@@ -10,7 +10,7 @@ namespace LibYear.Lib.FileTypes
     {
         protected readonly XDocument _xmlContents;
         protected readonly Stream _xmlStream;
-        public IDictionary<string, NuGetVersion> Packages { get; }
+        public IDictionary<string, SemanticVersion> Packages { get; }
 
         protected XmlProject(Stream fileStream, string elementName, string packageAttributeName, string versionAttributeName)
         {
@@ -19,7 +19,7 @@ namespace LibYear.Lib.FileTypes
 
             Packages = _xmlContents.Descendants(elementName)
                 .ToDictionary(d => d.Attribute(packageAttributeName)?.Value ?? d.Element(packageAttributeName)?.Value,
-                    d => new NuGetVersion(d.Attribute(versionAttributeName)?.Value ?? d.Element(versionAttributeName)?.Value));
+                    d => SemanticVersion.Parse(d.Attribute(versionAttributeName)?.Value ?? d.Element(versionAttributeName)?.Value));
         }
     }
 }

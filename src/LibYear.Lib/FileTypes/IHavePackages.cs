@@ -5,6 +5,6 @@ namespace LibYear.Lib.FileTypes
 {
     public interface IHavePackages
     {
-        IDictionary<string, NuGetVersion> Packages { get; }
+        IDictionary<string, SemanticVersion> Packages { get; }
     }
 }

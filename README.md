@@ -17,6 +17,8 @@ A simple measure of dependency freshness
 </ItemGroup>
 ```
 
+You might get some weird errors about some nuget 4.0 packages having invalid specs -- those are lies that you should ignore.
+
 2. `dotnet restore`
 
 ## Usage

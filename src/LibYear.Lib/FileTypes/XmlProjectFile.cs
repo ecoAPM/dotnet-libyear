@@ -12,7 +12,7 @@ namespace LibYear.Lib.FileTypes
         public string FileName { get; }
 
         protected XmlProjectFile(string filename, string elementName, string packageAttributeName, string versionAttributeName)
-            :base (File.OpenRead(filename), elementName, packageAttributeName, versionAttributeName)
+            : base(File.OpenRead(filename), elementName, packageAttributeName, versionAttributeName)
         {
             FileName = filename;
 
@@ -31,12 +31,13 @@ namespace LibYear.Lib.FileTypes
                 {
                     var elements = _xmlContents.Descendants(_elementName)
                         .Where(d => (d.Attribute(_packageAttributeName)?.Value ?? d.Element(_packageAttributeName)?.Value) == result.Name
-                                 && (d.Attribute(_versionAttributeName)?.Value ?? d.Element(_versionAttributeName)?.Value) == result.Installed.Version.ToString());
+                                 && (d.Attribute(_versionAttributeName)?.Value ?? d.Element(_versionAttributeName)?.Value) == result.Installed?.Version.ToString());
 
                     foreach (var element in elements)
                     {
-                        if(element.Attribute(_versionAttributeName) != null)
-                            element.Attribute(_versionAttributeName).Value = result.Latest.Version.ToString();
+                        var attribute = element.Attribute(_versionAttributeName);
+                        if (attribute != null)
+                            attribute.Value = result.Latest.Version.ToString();
                         else
                         {
                             var e = element.Element(_versionAttributeName);

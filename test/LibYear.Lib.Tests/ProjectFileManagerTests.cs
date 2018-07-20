@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using LibYear.Lib.FileTypes;
 using NuGet.Versioning;
 using Xunit;
@@ -21,9 +20,9 @@ namespace LibYear.Lib.Tests
             var projects = fileManager.FindProjects(dir, SearchOption.TopDirectoryOnly);
 
             //assert
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.csproj")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.json")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("packages.config")));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
         }
 
         [Fact]
@@ -37,9 +36,9 @@ namespace LibYear.Lib.Tests
             var projects = fileManager.FindProjects(dir, SearchOption.AllDirectories);
 
             //assert
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.csproj")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.json")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("packages.config")));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
         }
 
         [Fact]
@@ -52,9 +51,9 @@ namespace LibYear.Lib.Tests
             var projects = fileManager.GetProjects("FileTypes");
 
             //assert
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.csproj")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.json")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("packages.config")));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
         }
 
         [Fact]
@@ -67,9 +66,9 @@ namespace LibYear.Lib.Tests
             var projects = fileManager.GetProjects(".");
 
             //assert
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.csproj")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.json")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("packages.config")));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
         }
 
         [Fact]
@@ -88,9 +87,9 @@ namespace LibYear.Lib.Tests
             var projects = fileManager.GetAllProjects(projectFileNames);
 
             //assert
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.csproj")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.json")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("packages.config")));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
         }
 
         [Fact]
@@ -107,9 +106,9 @@ namespace LibYear.Lib.Tests
             var projects = fileManager.GetAllProjects(projectFileNames);
 
             //assert
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.csproj")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.json")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("packages.config")));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
         }
 
         [Fact]
@@ -122,9 +121,9 @@ namespace LibYear.Lib.Tests
             var projects = fileManager.GetAllProjects(new List<string>());
 
             //assert
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.csproj")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("project.json")));
-            Assert.True(projects.Any(p => p.FileName.EndsWith("packages.config")));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
+            Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
         }
 
         [Fact]

@@ -4,22 +4,7 @@ A simple measure of dependency freshness
 
 ## Installation
 
-1. get your project set up
-
-    1. `dotnet new -i libyear::*`
-
-    1. `dotnet new libyear`
-    
-    or add the following to your existing csproj:
-```
-<ItemGroup>
-  <DotNetCliToolReference Include="libyear" Version="*" />
-</ItemGroup>
-```
-
-You might get some weird errors about some nuget 4.0 packages having invalid specs -- those are lies that you should ignore.
-
-2. `dotnet restore`
+`dotnet tool install -g libyear`
 
 ## Usage
 

@@ -25,5 +25,39 @@ namespace LibYear.Lib.Tests.FileTypes
                 Assert.Equal("test5", csprojStream.Packages.Skip(4).First().Key);
             }
         }
+
+        [Fact]
+        public void CanLoadPropsAsCsProjStream()
+        {
+            //arrange
+            const string filename = "FileTypes\\Directory.Build.props";
+            using (var stream = File.OpenRead(filename))
+            {
+                //act
+                var csprojStream = new CsProjStream(stream);
+
+                //assert
+                Assert.Equal("test1", csprojStream.Packages.First().Key);
+                Assert.Equal("test2", csprojStream.Packages.Skip(1).First().Key);
+                Assert.Equal("test3", csprojStream.Packages.Skip(2).First().Key);
+            }
+        }
+
+        [Fact]
+        public void CanLoadTargetsAsCsProjStream()
+        {
+            //arrange
+            const string filename = "FileTypes\\Directory.Build.targets";
+            using (var stream = File.OpenRead(filename))
+            {
+                //act
+                var csprojStream = new CsProjStream(stream);
+
+                //assert
+                Assert.Equal("test1", csprojStream.Packages.First().Key);
+                Assert.Equal("test2", csprojStream.Packages.Skip(1).First().Key);
+                Assert.Equal("test3", csprojStream.Packages.Skip(2).First().Key);
+            }
+        }
     }
 }

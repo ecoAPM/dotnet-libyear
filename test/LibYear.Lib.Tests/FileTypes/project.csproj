@@ -13,4 +13,7 @@
       <Version>0.3.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 </Project>

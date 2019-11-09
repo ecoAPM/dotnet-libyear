@@ -17,26 +17,10 @@ namespace LibYear.Lib.FileTypes
             _xmlStream = fileStream;
             _xmlContents = XDocument.Load(fileStream);
 
-            Packages = _xmlContents.Descendants(elementName)
-                .ToDictionary(d =>
-                {
-                    foreach (var packageAttributeName in packageAttributeNames)
-                    {
-                        var result = d.Attribute(packageAttributeName)?.Value ?? d.Element(packageAttributeName)?.Value;
-                        if (result != null)
-                            return result;
-                    }
-                    return null;
-                    }, d =>
-                    {
-                    foreach (var packageAttributeName in packageAttributeNames)
-                    {
-                        var result = SemanticVersion.Parse(d.Attribute(versionAttributeName)?.Value ?? d.Element(versionAttributeName)?.Value);
-                        if (result != null)
-                            return result;
-                    }
-                    return null;
-                });
+            Packages = _xmlContents.Descendants(elementName).ToDictionary(
+                d => packageAttributeNames.Select(p => d.Attribute(p)?.Value ?? d.Element(p)?.Value).FirstOrDefault(v => v != null),
+                d => SemanticVersion.Parse(d.Attribute(versionAttributeName)?.Value ?? d.Element(versionAttributeName)?.Value)
+            );
         }
     }
 }

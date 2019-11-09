@@ -30,8 +30,7 @@ namespace LibYear.Lib.FileTypes
                 foreach (var result in results)
                 {
                     var elements = _xmlContents.Descendants(_elementName)
-                        .Where(d => _packageAttributeNames.Any(attributeName =>
-                            (d.Attribute(attributeName)?.Value ?? d.Element(attributeName)?.Value) == result.Name
+                        .Where(d => _packageAttributeNames.Any(attributeName => (d.Attribute(attributeName)?.Value ?? d.Element(attributeName)?.Value) == result.Name
                                 && (d.Attribute(_versionAttributeName)?.Value ?? d.Element(_versionAttributeName)?.Value) == result.Installed?.Version.ToString()
                             )
                         );

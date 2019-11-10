@@ -12,7 +12,7 @@ namespace LibYear.Lib.FileTypes
         private readonly string _elementName;
         private readonly string[] _packageAttributeNames;
         private readonly string _versionAttributeName;
-        
+
         public string FileName { get; }
         public IDictionary<string, SemanticVersion> Packages { get; }
 
@@ -28,7 +28,9 @@ namespace LibYear.Lib.FileTypes
 
             Packages = _xmlContents.Descendants(elementName).ToDictionary(
                 d => packageAttributeNames.Select(p => d.Attribute(p)?.Value ?? d.Element(p)?.Value).FirstOrDefault(v => v != null),
-                d => SemanticVersion.Parse(d.Attribute(versionAttributeName)?.Value ?? d.Element(versionAttributeName)?.Value)
+                d => !string.IsNullOrEmpty(d.Attribute(versionAttributeName)?.Value ?? d.Element(versionAttributeName)?.Value)
+                    ? SemanticVersion.Parse(d.Attribute(versionAttributeName)?.Value ?? d.Element(versionAttributeName)?.Value)
+                    : null
             );
         }
 

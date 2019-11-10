@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibYear.Lib.FileTypes;
@@ -7,29 +7,29 @@ using Xunit;
 
 namespace LibYear.Lib.Tests.FileTypes
 {
-    public class PackagesConfigTests
+    public class ProjectJsonFileTests
     {
         [Fact]
-        public void CanLoadPackagesConfigFile()
+        public void CanLoadProjectJsonFile()
         {
             //arrange
-            const string filename = "FileTypes\\packages.config";
+            const string filename = "FileTypes\\project.json";
 
             //act
-            var file = new PackagesConfigFile(filename);
+            var file = new ProjectJsonFile(filename);
 
             //assert
             Assert.Equal("test1", file.Packages.First().Key);
             Assert.Equal("test2", file.Packages.Skip(1).First().Key);
-            Assert.Equal("test3", file.Packages.Skip(2).First().Key);
+            //TODO Assert.Equal("test3", file.Packages.Skip(2).First().Key);
         }
 
         [Fact]
-        public void CanUpdatePackagesConfigFile()
+        public void CanUpdateProjectJsonFile()
         {
             //arrange
-            const string filename = "FileTypes\\packages.config";
-            var file = new PackagesConfigFile(filename);
+            const string filename = "FileTypes\\project.json";
+            var file = new ProjectJsonFile(filename);
             var results = new List<Result>
             {
                 new Result("test1", new VersionInfo(new SemanticVersion(0, 1, 0), DateTime.Today), new VersionInfo(new SemanticVersion(1, 2, 3), DateTime.Today)),
@@ -41,10 +41,10 @@ namespace LibYear.Lib.Tests.FileTypes
             file.Update(results);
 
             //assert
-            var newFile = new PackagesConfigFile(filename);
+            var newFile = new ProjectJsonFile(filename);
             Assert.Equal("1.2.3", newFile.Packages.First().Value.ToString());
             Assert.Equal("2.3.4", newFile.Packages.Skip(1).First().Value.ToString());
-            Assert.Equal("3.4.5", newFile.Packages.Skip(2).First().Value.ToString());
+            //TODO Assert.Equal("3.4.5", newFile.Packages.Skip(2).First().Value.ToString());
         }
     }
 }

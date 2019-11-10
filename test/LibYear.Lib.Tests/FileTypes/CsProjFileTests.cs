@@ -7,7 +7,7 @@ using Xunit;
 
 namespace LibYear.Lib.Tests.FileTypes
 {
-    public class CsProjTests
+    public class CsProjFileTests
     {
         [Fact]
         public void CanLoadCsProjFile()
@@ -33,7 +33,7 @@ namespace LibYear.Lib.Tests.FileTypes
             const string filename = "FileTypes\\Directory.Build.props";
 
             //act
-            var file = new CsProjFile(filename);
+            var file = new DirectoryBuildPropsFile(filename);
 
             //assert
             Assert.Equal("test1", file.Packages.First().Key);
@@ -48,7 +48,7 @@ namespace LibYear.Lib.Tests.FileTypes
             const string filename = "FileTypes\\Directory.Build.targets";
 
             //act
-            var file = new CsProjFile(filename);
+            var file = new DirectoryBuildTargetsFile(filename);
 
             //assert
             Assert.Equal("test1", file.Packages.First().Key);
@@ -87,7 +87,7 @@ namespace LibYear.Lib.Tests.FileTypes
         {
             //arrange
             const string filename = "FileTypes\\Directory.Build.props";
-            var file = new CsProjFile(filename);
+            var file = new DirectoryBuildPropsFile(filename);
             var results = new List<Result>
                 {
                     new Result("test1", new VersionInfo(new SemanticVersion(0, 1, 0), DateTime.Today), new VersionInfo(new SemanticVersion(1, 2, 3), DateTime.Today)),
@@ -99,7 +99,7 @@ namespace LibYear.Lib.Tests.FileTypes
             file.Update(results);
 
             //assert
-            var newFile = new CsProjFile(filename);
+            var newFile = new DirectoryBuildPropsFile(filename);
             Assert.Equal("1.2.3", newFile.Packages.First().Value.ToString());
             Assert.Equal("2.3.4", newFile.Packages.Skip(1).First().Value.ToString());
             Assert.Equal("3.4.5", newFile.Packages.Skip(2).First().Value.ToString());
@@ -110,7 +110,7 @@ namespace LibYear.Lib.Tests.FileTypes
         {
             //arrange
             const string filename = "FileTypes\\Directory.Build.targets";
-            var file = new CsProjFile(filename);
+            var file = new DirectoryBuildTargetsFile(filename);
             var results = new List<Result>
                 {
                     new Result("test1", new VersionInfo(new SemanticVersion(0, 1, 0), DateTime.Today), new VersionInfo(new SemanticVersion(1, 2, 3), DateTime.Today)),
@@ -122,7 +122,7 @@ namespace LibYear.Lib.Tests.FileTypes
             file.Update(results);
                    
             //assert
-            var newFile = new CsProjFile(filename);
+            var newFile = new DirectoryBuildTargetsFile(filename);
             Assert.Equal("1.2.3", newFile.Packages.First().Value.ToString());
             Assert.Equal("2.3.4", newFile.Packages.Skip(1).First().Value.ToString());
             Assert.Equal("3.4.5", newFile.Packages.Skip(2).First().Value.ToString());

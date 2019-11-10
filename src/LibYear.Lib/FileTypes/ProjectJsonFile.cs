@@ -11,17 +11,21 @@ namespace LibYear.Lib.FileTypes
         private string _fileContents;
         public string FileName { get; }
         public IDictionary<string, SemanticVersion> Packages { get; }
+
         public ProjectJsonFile(string filename)
         {
             FileName = filename;
             _fileContents = File.ReadAllText(FileName);
+            Packages = GetDependencies().ToDictionary(p => ((JProperty)p).Name.ToString(), p => SemanticVersion.Parse(((JProperty)p).Value.ToString()));
+        }
 
-            var deps = JObject.Parse(_fileContents).Descendants()
-                .Where(d => d.Type == JTokenType.Property && d.Path.Contains("dependencies")
-                && (!d.Path.Contains("[") || d.Path.EndsWith("]"))
-                && ((JProperty)d).Value.Type == JTokenType.String);
-
-            Packages = deps.ToDictionary(p => ((JProperty)p).Name.ToString(), p => SemanticVersion.Parse(((JProperty)p).Value.ToString()));
+        private IEnumerable<JToken> GetDependencies()
+        {
+            return JObject.Parse(_fileContents).Descendants()
+                .Where(d => d.Type == JTokenType.Property
+                        && d.Path.Contains("dependencies")
+                        && (!d.Path.Contains("[") || d.Path.EndsWith("]"))
+                        && ((JProperty)d).Value.Type == JTokenType.String);
         }
 
         public void Update(IEnumerable<Result> results)

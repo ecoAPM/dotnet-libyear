@@ -22,33 +22,29 @@ namespace LibYear.App
 
         public string Run(IReadOnlyList<string> args)
         {
-            var msg = new StringBuilder();
             if (args.Any(a => a == "-h" || a == "--help" || a == "-?" || a == "/?"))
-                msg.AppendLine(GetHelpMessage());
-            else
+                return GetHelpMessage();
+            
+            if (args.Any(a => a == "-q" || a == "--quiet"))
+                _quietMode = true;
+
+            if (args.Any(a => a == "-u" || a == "--update"))
+                _update = true;
+
+            var projects = _projectFileManager.GetAllProjects(args);
+            if (!projects.Any())
+                return "No project files found";
+            
+            var msg = new StringBuilder();
+            var allResults = _checker.GetPackages(projects);
+            var output = GetAllResultsTables(allResults);
+            msg.AppendLine(output);
+
+            if (_update)
             {
-                if (args.Any(a => a == "-q" || a == "--quiet"))
-                    _quietMode = true;
-
-                if (args.Any(a => a == "-u" || a == "--update"))
-                    _update = true;
-
-                var projects = _projectFileManager.GetAllProjects(args);
-                if (!projects.Any())
-                    msg.AppendLine("No project files found");
-                else
-                {
-                    var allResults = _checker.GetPackages(projects);
-                    var output = GetAllResultsTables(allResults);
-                    msg.AppendLine(output);
-
-                    if (_update)
-                    {
-                        var updated = _projectFileManager.Update(allResults);
-                        foreach (var projectFile in updated)
-                            msg.AppendLine($"{projectFile} updated");
-                    }
-                }
+                var updated = _projectFileManager.Update(allResults);
+                foreach (var projectFile in updated)
+                    msg.AppendLine($"{projectFile} updated");
             }
             return msg.ToString();
         }

@@ -17,7 +17,7 @@ namespace LibYear.Lib.Tests
             var dir = new DirectoryInfo("FileTypes");
 
             //act
-            var projects = fileManager.FindProjects(dir, SearchOption.TopDirectoryOnly);
+            var projects = fileManager.FindProjectsInDir(dir, SearchOption.TopDirectoryOnly);
 
             //assert
             Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
@@ -33,7 +33,7 @@ namespace LibYear.Lib.Tests
             var dir = new DirectoryInfo(".");
 
             //act
-            var projects = fileManager.FindProjects(dir, SearchOption.AllDirectories);
+            var projects = fileManager.FindProjectsInDir(dir, SearchOption.AllDirectories);
 
             //assert
             Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
@@ -48,7 +48,7 @@ namespace LibYear.Lib.Tests
             var fileManager = new ProjectFileManager();
 
             //act
-            var projects = fileManager.GetProjects("FileTypes");
+            var projects = fileManager.GetProjectsInDir("FileTypes");
 
             //assert
             Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
@@ -63,7 +63,7 @@ namespace LibYear.Lib.Tests
             var fileManager = new ProjectFileManager();
 
             //act
-            var projects = fileManager.GetProjects(".");
+            var projects = fileManager.GetProjectsInDir(".");
 
             //assert
             Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));

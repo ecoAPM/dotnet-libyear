@@ -1,3 +1,4 @@
+using LibYear.Lib.FileTypes;
 using Xunit;
 
 namespace LibYear.Lib.Tests
@@ -7,19 +8,37 @@ namespace LibYear.Lib.Tests
         [Fact]
         public void RecognizesCsProjFiles()
         {
-            Assert.True("FileTypes\\project.csproj".IsCsProjFile());
+            Assert.IsType<CsProjFile>("FileTypes\\project.csproj".ToProjectFile());
+        }
+
+        [Fact]
+        public void RecognizesDirectoryBuildPropsFiles()
+        {
+            Assert.IsType<DirectoryBuildPropsFile>("FileTypes\\Directory.Build.props".ToProjectFile());
+        }
+
+        [Fact]
+        public void RecognizesDirectoryBuildTargetsFiles()
+        {
+            Assert.IsType<DirectoryBuildTargetsFile>("FileTypes\\Directory.Build.targets".ToProjectFile());
         }
 
         [Fact]
         public void RecognizesProjectJsonFiles()
         {
-            Assert.True("FileTypes\\project.json".IsProjectJsonFile());
+            Assert.IsType<ProjectJsonFile>("FileTypes\\project.json".ToProjectFile());
         }
 
         [Fact]
         public void RecognizesNuGetFiles()
         {
-            Assert.True("FileTypes\\packages.config".IsNuGetFile());
+            Assert.IsType<PackagesConfigFile>("FileTypes\\packages.config".ToProjectFile());
+        }
+
+        [Fact]
+        public void UnrecognizedFilesReturnNull()
+        {
+            Assert.Null("xunit.runner.json".ToProjectFile());
         }
     }
 }

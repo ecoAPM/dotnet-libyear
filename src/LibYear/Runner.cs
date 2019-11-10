@@ -70,9 +70,10 @@ namespace LibYear.App
             if (!allResults.Any())
                 return string.Empty;
 
-            var namePad = Math.Max("Package".Length, allResults.Max(results => results.Value.Any() ? results.Value.Max(r => r.Name.Length) : 0));
-            var installedPad = Math.Max("Installed".Length, allResults.Max(results => results.Value.Any() ? results.Value.Max(r => r.Installed?.Version.ToString().Length ?? 0) : 0));
-            var latestPad = Math.Max("Latest".Length, allResults.Max(results => results.Value.Any() ? results.Value.Max(r => r.Latest?.Version.ToString().Length ?? 0) : 0));
+            int MaxLength(Func<Result, int> field) => allResults.Max(results => results.Value.Any() ? results.Value.Max(field) : 0);
+            var namePad = Math.Max("Package".Length, MaxLength(r => r.Name.Length));
+            var installedPad = Math.Max("Installed".Length, MaxLength(r => r.Installed?.Version.ToString().Length ?? 0));
+            var latestPad = Math.Max("Latest".Length, MaxLength(r => r.Latest?.Version.ToString().Length ?? 0));
 
             var msg = new StringBuilder();
             foreach (var results in allResults)

@@ -9,10 +9,19 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>libyear-lib</PackageId>
     <Description>Library portion of libyear, for consumption by other applications</Description>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NuGet.Protocol.Core.v3" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

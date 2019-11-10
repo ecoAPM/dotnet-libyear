@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>dotnet-libyear</ToolCommandName>
-    <Version>3.0.0-rc2</Version>
+    <Version>3.0.0</Version>
     <PackageId>libyear</PackageId>
     <Product>libyear</Product>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>

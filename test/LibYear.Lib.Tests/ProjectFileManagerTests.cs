@@ -77,9 +77,9 @@ namespace LibYear.Lib.Tests
             //arrange
             var projectFileNames = new[]
             {
-                "FileTypes\\project.csproj",
-                "FileTypes\\project.json",
-                "FileTypes\\packages.config"
+                Path.Combine("FileTypes", "project.csproj"),
+                Path.Combine("FileTypes", "project.json"),
+                Path.Combine("FileTypes", "packages.config")
             };
             var fileManager = new ProjectFileManager();
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using LibYear.Lib.FileTypes;
 using NuGet.Versioning;
@@ -13,7 +14,7 @@ namespace LibYear.Lib.Tests.FileTypes
         public void CanLoadDirectoryBuildTargetsFile()
         {
             //arrange
-            const string filename = "FileTypes\\Directory.Build.targets";
+            var filename = Path.Combine("FileTypes", "Directory.Build.targets");
 
             //act
             var file = new DirectoryBuildTargetsFile(filename);
@@ -28,7 +29,7 @@ namespace LibYear.Lib.Tests.FileTypes
         public void CanUpdateDirectoryTargetsFile()
         {
             //arrange
-            const string filename = "FileTypes\\Directory.Build.targets";
+            var filename = Path.Combine("FileTypes", "Directory.Build.targets");
             var file = new DirectoryBuildTargetsFile(filename);
             var results = new List<Result>
             {

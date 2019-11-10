@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using LibYear.Lib.FileTypes;
 using NuGet.Versioning;
@@ -13,7 +14,7 @@ namespace LibYear.Lib.Tests.FileTypes
         public void CanLoadCsProjFile()
         {
             //arrange
-            const string filename = "FileTypes\\project.csproj";
+            var filename = Path.Combine("FileTypes", "project.csproj");
 
             //act
             var file = new CsProjFile(filename);
@@ -31,7 +32,7 @@ namespace LibYear.Lib.Tests.FileTypes
         public void CanUpdateCsProjFile()
         {
             //arrange
-            const string filename = "FileTypes\\project.csproj";
+            var filename = Path.Combine("FileTypes", "project.csproj");
             var file = new CsProjFile(filename);
             var results = new List<Result>
             {

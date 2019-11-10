@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using LibYear.Lib.FileTypes;
 using NuGet.Versioning;
@@ -13,7 +14,7 @@ namespace LibYear.Lib.Tests.FileTypes
         public void CanLoadProjectJsonFile()
         {
             //arrange
-            const string filename = "FileTypes\\project.json";
+            var filename = Path.Combine("FileTypes", "project.json");
 
             //act
             var file = new ProjectJsonFile(filename);
@@ -28,7 +29,7 @@ namespace LibYear.Lib.Tests.FileTypes
         public void CanUpdateProjectJsonFile()
         {
             //arrange
-            const string filename = "FileTypes\\project.json";
+            var filename = Path.Combine("FileTypes", "project.json");
             var file = new ProjectJsonFile(filename);
             var results = new List<Result>
             {

@@ -2,6 +2,8 @@
 
 A simple measure of dependency freshness
 
+[![Actions Status](https://github.com/stevedesmond-ca/dotnet-libyear/workflows/CI/badge.svg)](https://github.com/stevedesmond-ca/dotnet-libyear/actions)
+
 ## Installation
 
 `dotnet tool install -g libyear`

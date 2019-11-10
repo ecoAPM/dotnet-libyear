@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using LibYear.Lib.FileTypes;
 using NuGet.Versioning;
@@ -13,7 +14,7 @@ namespace LibYear.Lib.Tests.FileTypes
         public void CanLoadPackagesConfigFile()
         {
             //arrange
-            const string filename = "FileTypes\\packages.config";
+            var filename = Path.Combine("FileTypes", "packages.config");
 
             //act
             var file = new PackagesConfigFile(filename);
@@ -28,7 +29,7 @@ namespace LibYear.Lib.Tests.FileTypes
         public void CanUpdatePackagesConfigFile()
         {
             //arrange
-            const string filename = "FileTypes\\packages.config";
+            var filename = Path.Combine("FileTypes", "packages.config");
             var file = new PackagesConfigFile(filename);
             var results = new List<Result>
             {

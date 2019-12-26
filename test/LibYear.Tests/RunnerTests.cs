@@ -20,7 +20,7 @@ namespace LibYear.App.Tests
             var runner = new Runner(checker, manager);
 
             //act
-            var output = runner.Run(new[] { "-h" });
+            var output = runner.Run(new List<string>(new[] { "-h" }));
 
             //assert
             Assert.Contains("Usage: ", output);
@@ -39,7 +39,7 @@ namespace LibYear.App.Tests
             var runner = new Runner(checker, manager);
 
             //act
-            var output = runner.Run(new[] { "-u" });
+            var output = runner.Run(new List<string>(new[] { "-u" }));
 
             //assert
             Assert.Contains("updated", output);
@@ -63,7 +63,7 @@ namespace LibYear.App.Tests
             var runner = new Runner(checker, manager);
 
             //act
-            var output = runner.Run(new[] { "" });
+            var output = runner.Run(new List<string>(new[] { "" }));
 
             //assert
             Assert.Contains("test1", output);
@@ -87,7 +87,7 @@ namespace LibYear.App.Tests
             var runner = new Runner(checker, manager);
 
             //act
-            var output = runner.Run(new[] { "-q" });
+            var output = runner.Run(new List<string>(new[] { "-q" }));
 
             //assert
             Assert.DoesNotContain("test1", output);
@@ -113,7 +113,7 @@ namespace LibYear.App.Tests
             var runner = new Runner(checker, manager);
 
             //act
-            var output = runner.Run(new[] { "-q" });
+            var output = runner.Run(new List<string>(new[] { "-q" }));
 
             //assert
             Assert.Contains("Total", output);
@@ -139,7 +139,7 @@ namespace LibYear.App.Tests
             var runner = new Runner(checker, manager);
 
             //act
-            var output = runner.Run(new[] { "" });
+            var output = runner.Run(new List<string>(new[] { "" }));
 
             //assert
             Assert.Contains("test project 1", output);
@@ -158,7 +158,7 @@ namespace LibYear.App.Tests
             var runner = new Runner(checker, manager);
 
             //act
-            var output = runner.Run(new[] { "" });
+            var output = runner.Run(new List<string>(new[] { "" }));
 
             //assert
             Assert.Contains("No project files found", output);

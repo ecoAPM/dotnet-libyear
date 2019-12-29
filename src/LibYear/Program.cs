@@ -21,7 +21,7 @@ namespace LibYear.App
                 var projectRetriever = new ProjectFileManager();
 
                 var runner = new Runner(packageVersionChecker, projectRetriever);
-                var output = runner.Run(args);
+                var output = runner.Run(new List<string>(args));
                 Console.WriteLine(output);
             }
             catch (Exception e)

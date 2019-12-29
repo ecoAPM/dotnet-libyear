@@ -20,16 +20,23 @@ namespace LibYear.App
             _projectFileManager = projectFileManager;
         }
 
-        public string Run(IReadOnlyList<string> args)
+        public string Run(List<string> args)
         {
             if (args.Any(a => a == "-h" || a == "--help" || a == "-?" || a == "/?"))
                 return GetHelpMessage();
-            
+
             if (args.Any(a => a == "-q" || a == "--quiet"))
+            {
                 _quietMode = true;
+                args.RemoveAt(args.FindIndex(a=> a == "-q" || a == "--quiet"));
+            }
 
             if (args.Any(a => a == "-u" || a == "--update"))
+            {
                 _update = true;
+                args.RemoveAt(args.FindIndex(a=> a == "-u" || a == "--update"));
+            }
+            
 
             var projects = _projectFileManager.GetAllProjects(args);
             if (!projects.Any())
@@ -91,14 +98,22 @@ namespace LibYear.App
         {
             if (!results.Value.Any())
                 return string.Empty;
-
+            
             var msg = new StringBuilder();
             msg.AppendLine(results.Key.FileName);
+                
+            if (!_quietMode)
+            {
+                msg.AppendLine(
+                    $"{"Package".PadRight(namePad)}   {"Installed".PadRight(installedPad)}   Released     {"Latest".PadRight(latestPad)}   Released     Age (y)");
 
-            msg.AppendLine($"{"Package".PadRight(namePad)}   {"Installed".PadRight(installedPad)}   Released     {"Latest".PadRight(latestPad)}   Released     Age (y)");
+                foreach (var result in results.Value)
+                {
 
-            foreach (var result in results.Value.Where(p => !(_quietMode && p.Installed.Version == p.Latest.Version)))
-                msg.AppendLine($"{result.Name.PadRight(namePad)}   {result.Installed?.Version.ToString().PadRight(installedPad)}   {result.Installed?.Released:yyyy-MM-dd}   {result.Latest?.Version.ToString().PadRight(latestPad)}   {result.Latest?.Released:yyyy-MM-dd}   {result.YearsBehind:F1}");
+                    msg.AppendLine(
+                        $"{result.Name.PadRight(namePad)}   {result.Installed?.Version.ToString().PadRight(installedPad)}   {result.Installed?.Released:yyyy-MM-dd}   {result.Latest?.Version.ToString().PadRight(latestPad)}   {result.Latest?.Released:yyyy-MM-dd}   {result.YearsBehind:F1}");
+                }
+            }
 
             var projectTotal = results.Value.Sum(r => r.YearsBehind);
             msg.AppendLine($"Project is {projectTotal:F1} libyears behind");

@@ -40,7 +40,7 @@ namespace LibYear.Lib
 
         public async Task<IList<VersionInfo>> GetVersions(string packageName)
         {
-            var metadata = _metadataResource.GetMetadataAsync(packageName, true, true, new NullLogger(), CancellationToken.None);
+            var metadata = _metadataResource.GetMetadataAsync(packageName, true, true, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
             return (await metadata).Select(m => new VersionInfo(m)).ToList();
         }
     }

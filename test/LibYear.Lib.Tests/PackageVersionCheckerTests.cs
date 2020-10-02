@@ -20,7 +20,7 @@ namespace LibYear.Lib.Tests
             //arrange
             var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new NuGetVersion(1, 2, 3))).Build();
             var metadataResource = Substitute.For<PackageMetadataResource>();
-            metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
+            metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(new List<IPackageSearchMetadata> { metadata });
 
             var checker = new PackageVersionChecker(metadataResource, new Dictionary<string, IList<VersionInfo>>());
@@ -38,7 +38,7 @@ namespace LibYear.Lib.Tests
             //arrange
             var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new NuGetVersion(1, 2, 3))).Build();
             var metadataResource = Substitute.For<PackageMetadataResource>();
-            metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
+            metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
 
             var v1 = new VersionInfo(new SemanticVersion(1, 2, 3), new DateTime(2015, 1, 1));
@@ -60,7 +60,7 @@ namespace LibYear.Lib.Tests
             //arrange
             var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new NuGetVersion(1, 2, 3))).Build();
             var metadataResource = Substitute.For<PackageMetadataResource>();
-            metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
+            metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
 
             var v1 = new VersionInfo(new SemanticVersion(1, 2, 3), new DateTime(2015, 1, 1));
@@ -82,7 +82,7 @@ namespace LibYear.Lib.Tests
             //arrange
             var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new NuGetVersion(1, 2, 3))).Build();
             var metadataResource = Substitute.For<PackageMetadataResource>();
-            metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
+            metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
 
             var v1 = new VersionInfo(new SemanticVersion(1, 2, 3), new DateTime(2015, 1, 1));
@@ -134,7 +134,7 @@ namespace LibYear.Lib.Tests
             //arrange
             var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new NuGetVersion(1, 2, 3))).Build();
             var metadataResource = Substitute.For<PackageMetadataResource>();
-            metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
+            metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
 
             var v1 = new VersionInfo(new SemanticVersion(1, 2, 3), new DateTime(2015, 1, 1));

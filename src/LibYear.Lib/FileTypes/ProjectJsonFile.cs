@@ -10,13 +10,13 @@ namespace LibYear.Lib.FileTypes
     {
         private string _fileContents;
         public string FileName { get; }
-        public IDictionary<string, SemanticVersion> Packages { get; }
+        public IDictionary<string, NuGetVersion> Packages { get; }
 
         public ProjectJsonFile(string filename)
         {
             FileName = filename;
             _fileContents = File.ReadAllText(FileName);
-            Packages = GetDependencies().ToDictionary(p => ((JProperty)p).Name.ToString(), p => SemanticVersion.Parse(((JProperty)p).Value.ToString()));
+            Packages = GetDependencies().ToDictionary(p => ((JProperty)p).Name.ToString(), p => NuGetVersion.Parse(((JProperty)p).Value.ToString()));
         }
 
         private IEnumerable<JToken> GetDependencies()

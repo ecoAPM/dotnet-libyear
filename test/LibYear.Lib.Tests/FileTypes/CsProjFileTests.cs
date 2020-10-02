@@ -36,11 +36,11 @@ namespace LibYear.Lib.Tests.FileTypes
             var file = new CsProjFile(filename);
             var results = new List<Result>
             {
-                new Result("test1", new VersionInfo(new SemanticVersion(0, 1, 0), DateTime.Today), new VersionInfo(new SemanticVersion(1, 2, 3), DateTime.Today)),
-                new Result("test2", new VersionInfo(new SemanticVersion(0, 2, 0), DateTime.Today), new VersionInfo(new SemanticVersion(2, 3, 4), DateTime.Today)),
-                new Result("test3", new VersionInfo(new SemanticVersion(0, 3, 0), DateTime.Today), new VersionInfo(new SemanticVersion(3, 4, 5), DateTime.Today)),
-                new Result("test4", new VersionInfo(new SemanticVersion(0, 4, 0), DateTime.Today), new VersionInfo(new SemanticVersion(4, 5, 6), DateTime.Today)),
-                new Result("test5", new VersionInfo(new SemanticVersion(0, 5, 0), DateTime.Today), new VersionInfo(new SemanticVersion(5, 6, 7), DateTime.Today)),
+                new Result("test1", new VersionInfo(new NuGetVersion(0, 1, 0, 1), DateTime.Today), new VersionInfo(new NuGetVersion(1, 2, 3), DateTime.Today)),
+                new Result("test2", new VersionInfo(new NuGetVersion(0, 2, 0), DateTime.Today), new VersionInfo(new NuGetVersion(2, 3, 4), DateTime.Today)),
+                new Result("test3", new VersionInfo(new NuGetVersion(0, 3, 0), DateTime.Today), new VersionInfo(new NuGetVersion(3, 4, 5), DateTime.Today)),
+                new Result("test4", new VersionInfo(new NuGetVersion(0, 4, 0), DateTime.Today), new VersionInfo(new NuGetVersion(4, 5, 6), DateTime.Today)),
+                new Result("test5", new VersionInfo(new NuGetVersion(0, 5, 0), DateTime.Today), new VersionInfo(new NuGetVersion(5, 6, 7), DateTime.Today)),
             };
 
             //act

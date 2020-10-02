@@ -7,9 +7,9 @@ namespace LibYear.Lib.Tests
     public class TestProjectFile : IProjectFile
     {
         public string FileName { get; }
-        public IDictionary<string, SemanticVersion> Packages { get; }
+        public IDictionary<string, NuGetVersion> Packages { get; }
 
-        public TestProjectFile(string fileName, IDictionary<string, SemanticVersion> packages = null)
+        public TestProjectFile(string fileName, IDictionary<string, NuGetVersion> packages = null)
         {
             FileName = fileName;
             Packages = packages;

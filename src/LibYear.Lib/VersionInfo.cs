@@ -6,14 +6,14 @@ namespace LibYear.Lib
 {
     public class VersionInfo
     {
-        public SemanticVersion Version { get; }
+        public NuGetVersion Version { get; }
         public DateTime Released { get; }
 
         public VersionInfo(IPackageSearchMetadata metadata) : this(metadata.Identity.Version, metadata.Published.GetValueOrDefault().Date)
         {
         }
 
-        public VersionInfo(SemanticVersion version, DateTime released)
+        public VersionInfo(NuGetVersion version, DateTime released)
         {
             Version = version;
             Released = released;

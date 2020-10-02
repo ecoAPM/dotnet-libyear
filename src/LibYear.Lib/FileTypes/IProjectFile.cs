@@ -6,7 +6,7 @@ namespace LibYear.Lib.FileTypes
     public interface IProjectFile
     {
         string FileName { get; }
-        IDictionary<string, SemanticVersion> Packages { get; }
+        IDictionary<string, NuGetVersion> Packages { get; }
         void Update(IEnumerable<Result> results);
 
     }

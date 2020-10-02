@@ -30,7 +30,7 @@ namespace LibYear.Lib
             return tasks.Select(t => t.Result);
         }
 
-        public async Task<Result> GetResultTask(string packageName, SemanticVersion installed)
+        public async Task<Result> GetResultTask(string packageName, NuGetVersion installed)
         {
             var versions = _versionCache.ContainsKey(packageName) ? _versionCache[packageName] : _versionCache[packageName] = await GetVersions(packageName);
             var current = versions.FirstOrDefault(v => v.Version == installed);

@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="test1" Version="0.1.0" />
+    <PackageReference Include="test1" Version="0.1.0.1" />
     <PackageReference Include="test2" Version="0.2.0" />
     <PackageReference Update="test3" Version="0.3.0" />
     <PackageReference>

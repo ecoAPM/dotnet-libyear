@@ -41,13 +41,13 @@ namespace LibYear.Lib.Tests
             metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
 
-            var v1 = new VersionInfo(new SemanticVersion(1, 2, 3), new DateTime(2015, 1, 1));
-            var v2 = new VersionInfo(new SemanticVersion(2, 3, 4), new DateTime(2016, 1, 1));
+            var v1 = new VersionInfo(new NuGetVersion(1, 2, 3), new DateTime(2015, 1, 1));
+            var v2 = new VersionInfo(new NuGetVersion(2, 3, 4), new DateTime(2016, 1, 1));
             var versionCache = new Dictionary<string, IList<VersionInfo>> { { "test", new List<VersionInfo> { v1, v2 } } };
             var checker = new PackageVersionChecker(metadataResource, versionCache);
 
             //act
-            var result = await checker.GetResultTask("test", new SemanticVersion(1, 2, 3));
+            var result = await checker.GetResultTask("test", new NuGetVersion(1, 2, 3));
 
             //assert
             var latest = result.Latest.Version.ToString();
@@ -63,13 +63,13 @@ namespace LibYear.Lib.Tests
             metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
 
-            var v1 = new VersionInfo(new SemanticVersion(1, 2, 3), new DateTime(2015, 1, 1));
-            var v2 = new VersionInfo(SemanticVersion.Parse("2.3.4-beta-1"), new DateTime(2016, 1, 1));
+            var v1 = new VersionInfo(new NuGetVersion(1, 2, 3), new DateTime(2015, 1, 1));
+            var v2 = new VersionInfo(NuGetVersion.Parse("2.3.4-beta-1"), new DateTime(2016, 1, 1));
             var versionCache = new Dictionary<string, IList<VersionInfo>> { { "test", new List<VersionInfo> { v1, v2 } } };
             var checker = new PackageVersionChecker(metadataResource, versionCache);
 
             //act
-            var result = await checker.GetResultTask("test", new SemanticVersion(1, 2, 3));
+            var result = await checker.GetResultTask("test", new NuGetVersion(1, 2, 3));
 
             //assert
             var latest = result.Latest.Version.ToString();
@@ -85,13 +85,13 @@ namespace LibYear.Lib.Tests
             metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
 
-            var v1 = new VersionInfo(new SemanticVersion(1, 2, 3), new DateTime(2015, 1, 1));
-            var v2 = new VersionInfo(new SemanticVersion(2, 3, 4), new DateTime(1900, 1, 1));
+            var v1 = new VersionInfo(new NuGetVersion(1, 2, 3), new DateTime(2015, 1, 1));
+            var v2 = new VersionInfo(new NuGetVersion(2, 3, 4), new DateTime(1900, 1, 1));
             var versionCache = new Dictionary<string, IList<VersionInfo>> { { "test", new List<VersionInfo> { v1, v2 } } };
             var checker = new PackageVersionChecker(metadataResource, versionCache);
 
             //act
-            var result = await checker.GetResultTask("test", new SemanticVersion(1, 2, 3));
+            var result = await checker.GetResultTask("test", new NuGetVersion(1, 2, 3));
 
             //assert
             var latest = result.Latest.Version.ToString();
@@ -137,11 +137,11 @@ namespace LibYear.Lib.Tests
             metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
 
-            var v1 = new VersionInfo(new SemanticVersion(1, 2, 3), new DateTime(2015, 1, 1));
-            var v2 = new VersionInfo(new SemanticVersion(2, 3, 4), new DateTime(2016, 1, 1));
+            var v1 = new VersionInfo(new NuGetVersion(1, 2, 3), new DateTime(2015, 1, 1));
+            var v2 = new VersionInfo(new NuGetVersion(2, 3, 4), new DateTime(2016, 1, 1));
             var versionCache = new Dictionary<string, IList<VersionInfo>> { { "test", new List<VersionInfo> { v1, v2 } } };
             var checker = new PackageVersionChecker(metadataResource, versionCache);
-            var project = new TestProjectFile("test", new Dictionary<string, SemanticVersion> { { "test", new SemanticVersion(1, 2, 3) } });
+            var project = new TestProjectFile("test", new Dictionary<string, NuGetVersion> { { "test", new NuGetVersion(1, 2, 3) } });
 
             //act
             var packages = checker.GetPackages(new[] { project });

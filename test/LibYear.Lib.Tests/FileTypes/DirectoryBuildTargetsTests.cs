@@ -33,9 +33,9 @@ namespace LibYear.Lib.Tests.FileTypes
             var file = new DirectoryBuildTargetsFile(filename);
             var results = new List<Result>
             {
-                new Result("test1", new VersionInfo(new SemanticVersion(0, 1, 0), DateTime.Today), new VersionInfo(new SemanticVersion(1, 2, 3), DateTime.Today)),
-                new Result("test2", new VersionInfo(new SemanticVersion(0, 2, 0), DateTime.Today), new VersionInfo(new SemanticVersion(2, 3, 4), DateTime.Today)),
-                new Result("test3", new VersionInfo(new SemanticVersion(0, 3, 0), DateTime.Today), new VersionInfo(new SemanticVersion(3, 4, 5), DateTime.Today))
+                new Result("test1", new VersionInfo(new NuGetVersion(0, 1, 0), DateTime.Today), new VersionInfo(new NuGetVersion(1, 2, 3), DateTime.Today)),
+                new Result("test2", new VersionInfo(new NuGetVersion(0, 2, 0), DateTime.Today), new VersionInfo(new NuGetVersion(2, 3, 4), DateTime.Today)),
+                new Result("test3", new VersionInfo(new NuGetVersion(0, 3, 0), DateTime.Today), new VersionInfo(new NuGetVersion(3, 4, 5), DateTime.Today))
             };
 
             //act

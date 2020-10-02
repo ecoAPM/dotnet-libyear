@@ -139,7 +139,7 @@ namespace LibYear.Lib.Tests
                 {
                     new TestProjectFile("test1"), new List<Result>
                     {
-                        new Result("test1", new VersionInfo(new SemanticVersion(0, 1, 0), DateTime.Today), new VersionInfo(new SemanticVersion(1, 2, 3), DateTime.Today)),
+                        new Result("test1", new VersionInfo(new NuGetVersion(0, 1, 0), DateTime.Today), new VersionInfo(new NuGetVersion(1, 2, 3), DateTime.Today)),
                     }
                 }
             };

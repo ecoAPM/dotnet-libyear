@@ -3,9 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using LibYear.Lib;
 using NuGet.Configuration;
-using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
-using VersionInfo = LibYear.Lib.VersionInfo;
 
 namespace LibYear.App
 {
@@ -16,7 +14,7 @@ namespace LibYear.App
             try
             {
                 var metadataResource = new SourceRepository(new PackageSource("https://api.nuget.org/v3/index.json"), Repository.Provider.GetCoreV3()).GetResource<PackageMetadataResource>();
-                var versionCache = new ConcurrentDictionary<string, IList<VersionInfo>>();
+                var versionCache = new ConcurrentDictionary<string, IList<Release>>();
                 var packageVersionChecker = new PackageVersionChecker(metadataResource, versionCache);
                 var projectRetriever = new ProjectFileManager();
 

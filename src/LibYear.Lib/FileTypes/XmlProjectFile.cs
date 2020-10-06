@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using NuGet.Versioning;
 
 namespace LibYear.Lib.FileTypes
 {
@@ -14,7 +13,7 @@ namespace LibYear.Lib.FileTypes
         private readonly string _versionAttributeName;
 
         public string FileName { get; }
-        public IDictionary<string, NuGetVersion> Packages { get; }
+        public IDictionary<string, PackageVersion> Packages { get; }
 
         protected XmlProjectFile(string filename, string elementName, string[] packageAttributeNames, string versionAttributeName)
         {
@@ -28,9 +27,7 @@ namespace LibYear.Lib.FileTypes
 
             Packages = _xmlContents.Descendants(elementName).ToDictionary(
                 d => packageAttributeNames.Select(p => d.Attribute(p)?.Value ?? d.Element(p)?.Value).FirstOrDefault(v => v != null),
-                d => !string.IsNullOrEmpty(d.Attribute(versionAttributeName)?.Value ?? d.Element(versionAttributeName)?.Value)
-                    ? NuGetVersion.Parse(d.Attribute(versionAttributeName)?.Value ?? d.Element(versionAttributeName)?.Value)
-                    : null
+                d => ParseCurrentVersion(d, versionAttributeName)
             );
         }
 
@@ -46,6 +43,12 @@ namespace LibYear.Lib.FileTypes
 
                 File.WriteAllText(FileName, _xmlContents.ToString());
             }
+        }
+
+        private PackageVersion ParseCurrentVersion(XElement element, string versionAttributeName)
+        {
+            var version = element.Attribute(versionAttributeName)?.Value ?? element.Element(versionAttributeName)?.Value;
+            return !string.IsNullOrEmpty(version) ? PackageVersion.Parse(version) : null;
         }
 
         private void UpdateElement(XElement element, string latestVersion)

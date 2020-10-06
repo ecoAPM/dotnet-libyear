@@ -7,7 +7,6 @@ using NSubstitute;
 using NuGet.Common;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
-using NuGet.Versioning;
 using Xunit;
 
 namespace LibYear.Lib.Tests
@@ -18,12 +17,12 @@ namespace LibYear.Lib.Tests
         public async Task CanGetVersionInfoFromMetadata()
         {
             //arrange
-            var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new NuGetVersion(1, 2, 3))).Build();
+            var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new PackageVersion(1, 2, 3))).Build();
             var metadataResource = Substitute.For<PackageMetadataResource>();
             metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(new List<IPackageSearchMetadata> { metadata });
 
-            var checker = new PackageVersionChecker(metadataResource, new Dictionary<string, IList<VersionInfo>>());
+            var checker = new PackageVersionChecker(metadataResource, new Dictionary<string, IList<Release>>());
 
             //act
             var versions = await checker.GetVersions("test");
@@ -36,18 +35,18 @@ namespace LibYear.Lib.Tests
         public async Task CanGetResultFromCache()
         {
             //arrange
-            var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new NuGetVersion(1, 2, 3))).Build();
+            var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new PackageVersion(1, 2, 3))).Build();
             var metadataResource = Substitute.For<PackageMetadataResource>();
             metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
 
-            var v1 = new VersionInfo(new NuGetVersion(1, 2, 3), new DateTime(2015, 1, 1));
-            var v2 = new VersionInfo(new NuGetVersion(2, 3, 4), new DateTime(2016, 1, 1));
-            var versionCache = new Dictionary<string, IList<VersionInfo>> { { "test", new List<VersionInfo> { v1, v2 } } };
+            var v1 = new Release(new PackageVersion(1, 2, 3), new DateTime(2015, 1, 1));
+            var v2 = new Release(new PackageVersion(2, 3, 4), new DateTime(2016, 1, 1));
+            var versionCache = new Dictionary<string, IList<Release>> { { "test", new List<Release> { v1, v2 } } };
             var checker = new PackageVersionChecker(metadataResource, versionCache);
 
             //act
-            var result = await checker.GetResultTask("test", new NuGetVersion(1, 2, 3));
+            var result = await checker.GetResultTask("test", new PackageVersion(1, 2, 3));
 
             //assert
             var latest = result.Latest.Version.ToString();
@@ -55,21 +54,45 @@ namespace LibYear.Lib.Tests
         }
 
         [Fact]
-        public async Task LatestDoesNotIncludePrerelease()
+        public async Task InstalledVersionEqualsLatestVersionWithWildcard()
         {
             //arrange
-            var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new NuGetVersion(1, 2, 3))).Build();
+            var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", PackageVersion.Parse("*"))).Build();
             var metadataResource = Substitute.For<PackageMetadataResource>();
             metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
 
-            var v1 = new VersionInfo(new NuGetVersion(1, 2, 3), new DateTime(2015, 1, 1));
-            var v2 = new VersionInfo(NuGetVersion.Parse("2.3.4-beta-1"), new DateTime(2016, 1, 1));
-            var versionCache = new Dictionary<string, IList<VersionInfo>> { { "test", new List<VersionInfo> { v1, v2 } } };
+            var v1 = new Release(new PackageVersion(1, 2, 3), new DateTime(2015, 1, 1));
+            var v2 = new Release(new PackageVersion(2, 3, 4), new DateTime(2016, 1, 1));
+            var versionCache = new Dictionary<string, IList<Release>> { { "test", new List<Release> { v1, v2 } } };
             var checker = new PackageVersionChecker(metadataResource, versionCache);
 
             //act
-            var result = await checker.GetResultTask("test", new NuGetVersion(1, 2, 3));
+            var result = await checker.GetResultTask("test", PackageVersion.Parse("*"));
+
+            //assert
+            var installed = result.Installed.Version;
+            var latest = result.Latest.Version;
+            Assert.Equal("2.3.4", latest.ToString());
+            Assert.Equal(latest, installed);
+        }
+
+        [Fact]
+        public async Task LatestDoesNotIncludePrerelease()
+        {
+            //arrange
+            var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new PackageVersion(1, 2, 3))).Build();
+            var metadataResource = Substitute.For<PackageMetadataResource>();
+            metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
+                .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
+
+            var v1 = new Release(new PackageVersion(1, 2, 3), new DateTime(2015, 1, 1));
+            var v2 = new Release(PackageVersion.Parse("2.3.4-beta-1"), new DateTime(2016, 1, 1));
+            var versionCache = new Dictionary<string, IList<Release>> { { "test", new List<Release> { v1, v2 } } };
+            var checker = new PackageVersionChecker(metadataResource, versionCache);
+
+            //act
+            var result = await checker.GetResultTask("test", new PackageVersion(1, 2, 3));
 
             //assert
             var latest = result.Latest.Version.ToString();
@@ -80,18 +103,18 @@ namespace LibYear.Lib.Tests
         public async Task LatestDoesNotIncludeUnpublished()
         {
             //arrange
-            var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new NuGetVersion(1, 2, 3))).Build();
+            var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new PackageVersion(1, 2, 3))).Build();
             var metadataResource = Substitute.For<PackageMetadataResource>();
             metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
 
-            var v1 = new VersionInfo(new NuGetVersion(1, 2, 3), new DateTime(2015, 1, 1));
-            var v2 = new VersionInfo(new NuGetVersion(2, 3, 4), new DateTime(1900, 1, 1));
-            var versionCache = new Dictionary<string, IList<VersionInfo>> { { "test", new List<VersionInfo> { v1, v2 } } };
+            var v1 = new Release(new PackageVersion(1, 2, 3), new DateTime(2015, 1, 1));
+            var v2 = new Release(new PackageVersion(2, 3, 4), new DateTime(2016, 1, 1), false);
+            var versionCache = new Dictionary<string, IList<Release>> { { "test", new List<Release> { v1, v2 } } };
             var checker = new PackageVersionChecker(metadataResource, versionCache);
 
             //act
-            var result = await checker.GetResultTask("test", new NuGetVersion(1, 2, 3));
+            var result = await checker.GetResultTask("test", new PackageVersion(1, 2, 3));
 
             //assert
             var latest = result.Latest.Version.ToString();
@@ -132,16 +155,16 @@ namespace LibYear.Lib.Tests
         public void GetPackagesGetsPackages()
         {
             //arrange
-            var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new NuGetVersion(1, 2, 3))).Build();
+            var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new PackageVersion(1, 2, 3))).Build();
             var metadataResource = Substitute.For<PackageMetadataResource>();
             metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
                 .Returns(m => new List<IPackageSearchMetadata> { metadata }, m => throw new Exception(":("));
 
-            var v1 = new VersionInfo(new NuGetVersion(1, 2, 3), new DateTime(2015, 1, 1));
-            var v2 = new VersionInfo(new NuGetVersion(2, 3, 4), new DateTime(2016, 1, 1));
-            var versionCache = new Dictionary<string, IList<VersionInfo>> { { "test", new List<VersionInfo> { v1, v2 } } };
+            var v1 = new Release(new PackageVersion(1, 2, 3), new DateTime(2015, 1, 1));
+            var v2 = new Release(new PackageVersion(2, 3, 4), new DateTime(2016, 1, 1));
+            var versionCache = new Dictionary<string, IList<Release>> { { "test", new List<Release> { v1, v2 } } };
             var checker = new PackageVersionChecker(metadataResource, versionCache);
-            var project = new TestProjectFile("test", new Dictionary<string, NuGetVersion> { { "test", new NuGetVersion(1, 2, 3) } });
+            var project = new TestProjectFile("test", new Dictionary<string, PackageVersion> { { "test", new PackageVersion(1, 2, 3) } });
 
             //act
             var packages = checker.GetPackages(new[] { project });

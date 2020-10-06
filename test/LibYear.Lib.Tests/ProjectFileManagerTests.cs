@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using LibYear.Lib.FileTypes;
-using NuGet.Versioning;
 using Xunit;
 
 namespace LibYear.Lib.Tests
@@ -139,7 +138,7 @@ namespace LibYear.Lib.Tests
                 {
                     new TestProjectFile("test1"), new List<Result>
                     {
-                        new Result("test1", new VersionInfo(new NuGetVersion(0, 1, 0), DateTime.Today), new VersionInfo(new NuGetVersion(1, 2, 3), DateTime.Today)),
+                        new Result("test1", new Release(new PackageVersion(0, 1, 0), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),
                     }
                 }
             };

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using NuGet.Versioning;
 
 namespace LibYear.Lib.FileTypes
 {
@@ -10,13 +9,13 @@ namespace LibYear.Lib.FileTypes
     {
         private string _fileContents;
         public string FileName { get; }
-        public IDictionary<string, NuGetVersion> Packages { get; }
+        public IDictionary<string, PackageVersion> Packages { get; }
 
         public ProjectJsonFile(string filename)
         {
             FileName = filename;
             _fileContents = File.ReadAllText(FileName);
-            Packages = GetDependencies().ToDictionary(p => ((JProperty)p).Name.ToString(), p => NuGetVersion.Parse(((JProperty)p).Value.ToString()));
+            Packages = GetDependencies().ToDictionary(p => ((JProperty)p).Name.ToString(), p => PackageVersion.Parse(((JProperty)p).Value.ToString()));
         }
 
         private IEnumerable<JToken> GetDependencies()

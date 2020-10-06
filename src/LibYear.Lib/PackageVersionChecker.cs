@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 using LibYear.Lib.FileTypes;
 using NuGet.Common;
 using NuGet.Protocol.Core.Types;
-using NuGet.Versioning;
 
 namespace LibYear.Lib
 {
     public class PackageVersionChecker : IPackageVersionChecker
     {
         private readonly PackageMetadataResource _metadataResource;
-        private readonly IDictionary<string, IList<VersionInfo>> _versionCache;
+        private readonly IDictionary<string, IList<Release>> _versionCache;
 
-        public PackageVersionChecker(PackageMetadataResource metadataResource, IDictionary<string, IList<VersionInfo>> versionCache)
+        public PackageVersionChecker(PackageMetadataResource metadataResource, IDictionary<string, IList<Release>> versionCache)
         {
             _metadataResource = metadataResource;
             _versionCache = versionCache;
@@ -30,18 +29,22 @@ namespace LibYear.Lib
             return tasks.Select(t => t.Result);
         }
 
-        public async Task<Result> GetResultTask(string packageName, NuGetVersion installed)
+        public async Task<Result> GetResultTask(string packageName, PackageVersion installed)
         {
             var versions = _versionCache.ContainsKey(packageName) ? _versionCache[packageName] : _versionCache[packageName] = await GetVersions(packageName);
             var current = versions.FirstOrDefault(v => v.Version == installed);
-            var latest = versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.Released >= current?.Released).Max(m => m.Version));
+            var latest = versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.IsPublished).Max(m => m.Version));
+            if (installed?.IsWildcard ?? false)
+            {
+                current = latest;
+            }
             return new Result(packageName, current, latest);
         }
 
-        public async Task<IList<VersionInfo>> GetVersions(string packageName)
+        public async Task<IList<Release>> GetVersions(string packageName)
         {
             var metadata = _metadataResource.GetMetadataAsync(packageName, true, true, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
-            return (await metadata).Select(m => new VersionInfo(m)).ToList();
+            return (await metadata).Select(m => new Release(m)).ToList();
         }
     }
 }

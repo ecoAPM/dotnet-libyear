@@ -111,7 +111,7 @@ namespace LibYear.App
                 {
 
                     msg.AppendLine(
-                        $"{result.Name.PadRight(namePad)}   {result.Installed?.Version.ToString().PadRight(installedPad)}   {result.Installed?.Released:yyyy-MM-dd}   {result.Latest?.Version.ToString().PadRight(latestPad)}   {result.Latest?.Released:yyyy-MM-dd}   {result.YearsBehind:F1}");
+                        $"{result.Name.PadRight(namePad)}   {result.Installed?.Version.ToString().PadRight(installedPad)}   {result.Installed?.Date:yyyy-MM-dd}   {result.Latest?.Version.ToString().PadRight(latestPad)}   {result.Latest?.Date:yyyy-MM-dd}   {result.YearsBehind:F1}");
                 }
             }
 

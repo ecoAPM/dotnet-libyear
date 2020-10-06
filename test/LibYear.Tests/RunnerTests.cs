@@ -53,7 +53,7 @@ namespace LibYear.App.Tests
             var projectFile = new TestProjectFile("test project");
             var results = new Dictionary<IProjectFile, IEnumerable<Result>>
             {
-                { projectFile, new[] { new Result("test1", new VersionInfo(new NuGetVersion(1, 2, 3), DateTime.Today), new VersionInfo(new NuGetVersion(1,2,3), DateTime.Today) ) } }
+                { projectFile, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1,2,3), DateTime.Today) ) } }
             };
             checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
 
@@ -77,7 +77,7 @@ namespace LibYear.App.Tests
             var projectFile = new TestProjectFile("test project");
             var results = new Dictionary<IProjectFile, IEnumerable<Result>>
             {
-                { projectFile, new[] { new Result("test1", new VersionInfo(new NuGetVersion(1, 2, 3), DateTime.Today), new VersionInfo(new NuGetVersion(1,2,3), DateTime.Today) ) } }
+                { projectFile, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1,2,3), DateTime.Today) ) } }
             };
             checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
 
@@ -102,8 +102,8 @@ namespace LibYear.App.Tests
             var projectFile2 = new TestProjectFile("test project 2");
             var results = new Dictionary<IProjectFile, IEnumerable<Result>>
             {
-                { projectFile1, new[] { new Result("test1", new VersionInfo(new NuGetVersion(1, 2, 3), DateTime.Today), new VersionInfo(new NuGetVersion(1,2,3), DateTime.Today) ) } },
-                { projectFile2, new[] { new Result("test1", new VersionInfo(new NuGetVersion(1, 2, 3), DateTime.Today), new VersionInfo(new NuGetVersion(1,2,3), DateTime.Today) ) } }
+                { projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1,2,3), DateTime.Today) ) } },
+                { projectFile2, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1,2,3), DateTime.Today) ) } }
             };
             checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
 
@@ -128,7 +128,7 @@ namespace LibYear.App.Tests
             var projectFile2 = new TestProjectFile("test project 2");
             var results = new Dictionary<IProjectFile, IEnumerable<Result>>
             {
-                { projectFile1, new[] { new Result("test1", new VersionInfo(new NuGetVersion(1, 2, 3), DateTime.Today), new VersionInfo(new NuGetVersion(1,2,3), DateTime.Today) ) } },
+                { projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1,2,3), DateTime.Today) ) } },
                 { projectFile2, new List<Result>() }
             };
             checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);

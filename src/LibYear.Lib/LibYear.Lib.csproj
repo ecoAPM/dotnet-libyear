@@ -1,17 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>4.1.1</Version>
-    <Product>LibYear</Product>
-    <Authors>ecoAPM LLC</Authors>
-    <Company>ecoAPM LLC</Company>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageId>libyear-lib</PackageId>
-    <Description>Library portion of libyear, for consumption by other applications</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Version>4.1.1</Version>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Product>libyear</Product>
+		<PackageId>libyear-lib</PackageId>
+		<Authors>ecoAPM LLC</Authors>
+		<Company>ecoAPM LLC</Company>
+		<Copyright>ecoAPM LLC</Copyright>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/ecoAPM/dotnet-libyear</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/ecoAPM/dotnet-libyear</PackageProjectUrl>
+		<IncludeSymbols>true</IncludeSymbols>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="NuGet.Protocol" Version="6.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all"/>
+		<PackageReference Include="NuGet.Protocol" Version="6.0.0"/>
+		<None Include="../../README.md" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="."/>
+	</ItemGroup>
 </Project>

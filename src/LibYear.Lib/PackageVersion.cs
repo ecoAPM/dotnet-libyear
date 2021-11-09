@@ -5,7 +5,7 @@ namespace LibYear.Lib
 {
 	public class PackageVersion : NuGetVersion
 	{
-		public bool IsWildcard { get; private set; }
+		public bool IsWildcard { get; }
 
 		public PackageVersion(string version)
 			: this(Parse(version))
@@ -13,7 +13,7 @@ namespace LibYear.Lib
 		}
 
 		public PackageVersion(bool isWildcard)
-			: this(0,0,0)
+			: this(0, 0, 0)
 		{
 			IsWildcard = isWildcard;
 		}
@@ -55,7 +55,6 @@ namespace LibYear.Lib
 
 		public new virtual string ToString(string format, IFormatProvider formatProvider)
 		{
-
 			if (formatProvider == null
 			    || !TryFormatter(format, formatProvider, out string formattedString))
 			{
@@ -67,19 +66,14 @@ namespace LibYear.Lib
 
 		protected new bool TryFormatter(string format, IFormatProvider formatProvider, out string formattedString)
 		{
-			var formatted = false;
-			formattedString = null;
-
-			if (formatProvider != null)
+			if (formatProvider is ICustomFormatter formatter)
 			{
-				if (formatProvider is ICustomFormatter formatter)
-				{
-					formatted = true;
-					formattedString = formatter.Format(format, this, formatProvider);
-				}
+				formattedString = formatter.Format(format, this, formatProvider);
+				return true;
 			}
 
-			return formatted;
+			formattedString = null;
+			return false;
 		}
 	}
 }

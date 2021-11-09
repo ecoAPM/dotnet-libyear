@@ -8,13 +8,13 @@ jobs:
   Publish:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
       with:
         ref: ${{ github.ref }}
 
     - uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 3.1.x
 
     - name: Run tests
       run: dotnet test
@@ -23,7 +23,7 @@ jobs:
       run: dotnet pack -c Release -p:ContinuousIntegrationBuild=true
 
     - name: Publish app
-      run: dotnet nuget push src/bin/Release/dotnet-libyear.$(echo ${{ github.ref }} | sed 's/refs\/tags\///').nupkg -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push src/LibYear/bin/Release/libyear.$(echo ${{ github.ref }} | sed 's/refs\/tags\///').nupkg -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json
 
     - name: Publish library
-      run: dotnet nuget push src/bin/Release/LibYear.Lib.$(echo ${{ github.ref }} | sed 's/refs\/tags\///').nupkg -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push src/LibYear.Lib/bin/Release/libyear-lib.$(echo ${{ github.ref }} | sed 's/refs\/tags\///').nupkg -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json

@@ -2,7 +2,17 @@
 
 A simple measure of dependency freshness
 
-[![Actions Status](https://github.com/stevedesmond-ca/dotnet-libyear/workflows/CI/badge.svg)](https://github.com/stevedesmond-ca/dotnet-libyear/actions)
+[![NuGet version](https://img.shields.io/nuget/v/LibYear?logo=nuget&label=Install)](https://nuget.org/packages/LibYear)
+[![CI](https://github.com/ecoAPM/dotnet-libyear/actions/workflows/CI.yml/badge.svg)](https://github.com/ecoAPM/dotnet-libyear/actions/workflows/CI.yml)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ecoAPM_dotnet-libyear&metric=coverage)](https://sonarcloud.io/dashboard?id=ecoAPM_dotnet-libyear)
+
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=ecoAPM_dotnet-libyear&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=ecoAPM_dotnet-libyear)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=ecoAPM_dotnet-libyear&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=ecoAPM_dotnet-libyear)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ecoAPM_dotnet-libyear&metric=security_rating)](https://sonarcloud.io/dashboard?id=ecoAPM_dotnet-libyear)
+
+## Requirements
+
+- .NET SDK v3.1
 
 ## Installation
 
@@ -12,9 +22,9 @@ A simple measure of dependency freshness
 
 `dotnet libyear [args] [{csproj}|{dir}]`
 
-- Zero or more directories or csproj files may be passed
+- Zero or more directories or `csproj` files may be passed
 - If no arguments are passed, the current directory is searched
-- If no csproj is found in a directory, subdirectories are searched
+- If no `csproj` is found in a directory, subdirectories are searched
 
 ### Arguments:
 

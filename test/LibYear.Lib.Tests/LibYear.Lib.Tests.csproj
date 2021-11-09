@@ -1,46 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Remove="FileTypes\packages.config" />
-    <None Remove="FileTypes\project.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="FileTypes\packages.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FileTypes\project.csproj">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FileTypes\project.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FileTypes\Directory.Build.props">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FileTypes\Directory.Build.targets">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="coverlet.msbuild" Version="2.9.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
-    <PackageReference Include="NSubstitute" Version="4.2.2" />
-    <PackageReference Include="NuGet.Protocol" Version="5.7.0" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\LibYear.Lib\LibYear.Lib.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="coverlet.collector" Version="3.1.0"/>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0"/>
+		<PackageReference Include="NSubstitute" Version="4.2.2"/>
+		<PackageReference Include="NuGet.Protocol" Version="6.0.0"/>
+		<PackageReference Include="xunit" Version="2.4.1"/>
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3"/>
+		<ProjectReference Include="..\..\src\LibYear.Lib\LibYear.Lib.csproj"/>
+		<None Include="FileTypes\packages.config" CopyToOutputDirectory="PreserveNewest"/>
+		<None Include="FileTypes\project.json" CopyToOutputDirectory="PreserveNewest"/>
+		<None Include="FileTypes\project.csproj" CopyToOutputDirectory="PreserveNewest"/>
+		<None Include="FileTypes\Directory.Build.props" CopyToOutputDirectory="PreserveNewest"/>
+		<None Include="FileTypes\Directory.Build.targets" CopyToOutputDirectory="PreserveNewest"/>
+	</ItemGroup>
 </Project>

@@ -12,7 +12,7 @@ A simple measure of dependency freshness
 
 ## Requirements
 
-- .NET SDK v3.1
+- .NET SDK 6
 
 ## Installation
 

@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using LibYear.Lib.FileTypes;
 
-namespace LibYear.Lib
+namespace LibYear.Lib;
+
+public interface IPackageVersionChecker
 {
-    public interface IPackageVersionChecker
-    {
-        IDictionary<IProjectFile, IEnumerable<Result>> GetPackages(IEnumerable<IProjectFile> projectFiles);
-    }
+	IDictionary<IProjectFile, IEnumerable<Result>> GetPackages(IEnumerable<IProjectFile> projectFiles);
 }

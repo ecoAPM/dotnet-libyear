@@ -1,9 +1,8 @@
-namespace LibYear.Lib.FileTypes
+namespace LibYear.Lib.FileTypes;
+
+public class PackagesConfigFile : XmlProjectFile
 {
-    public class PackagesConfigFile : XmlProjectFile
-    {
-        public PackagesConfigFile(string filename) : base(filename, "package", new[] { "id" }, "version")
-        {
-        }
-    }
+	public PackagesConfigFile(string filename) : base(filename, "package", new[] { "id" }, "version")
+	{
+	}
 }

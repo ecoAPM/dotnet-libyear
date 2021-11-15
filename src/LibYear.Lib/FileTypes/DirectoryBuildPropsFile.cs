@@ -1,9 +1,8 @@
-namespace LibYear.Lib.FileTypes
+namespace LibYear.Lib.FileTypes;
+
+public class DirectoryBuildPropsFile : XmlProjectFile
 {
-    public class DirectoryBuildPropsFile : XmlProjectFile
-    {
-        public DirectoryBuildPropsFile(string filename) : base(filename, "PackageReference", new[] { "Include", "Update" }, "Version")
-        {
-        }
-    }
+	public DirectoryBuildPropsFile(string filename) : base(filename, "PackageReference", new[] { "Include", "Update" }, "Version")
+	{
+	}
 }

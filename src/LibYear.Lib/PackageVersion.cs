@@ -1,9 +1,8 @@
-using System;
 using NuGet.Versioning;
 
 namespace LibYear.Lib;
 
-public class PackageVersion : NuGetVersion
+public sealed class PackageVersion : NuGetVersion
 {
 	public bool IsWildcard { get; }
 
@@ -18,7 +17,7 @@ public class PackageVersion : NuGetVersion
 		IsWildcard = isWildcard;
 	}
 
-	public PackageVersion(NuGetVersion version)
+	public PackageVersion(NuGetVersion? version)
 		: base(version)
 	{
 	}
@@ -33,14 +32,22 @@ public class PackageVersion : NuGetVersion
 	{
 	}
 
-	public new static PackageVersion Parse(string version)
+	public new static PackageVersion? Parse(string version)
 	{
 		if (version.Equals("*"))
 		{
 			return new PackageVersion(true);
 		}
 
-		return new PackageVersion(NuGetVersion.Parse(version));
+		try
+		{
+			var nuGetVersion = NuGetVersion.Parse(version);
+			return new PackageVersion(nuGetVersion);
+		}
+		catch
+		{
+			return null;
+		}
 	}
 
 	public override string ToString()
@@ -53,10 +60,10 @@ public class PackageVersion : NuGetVersion
 		return OriginalVersion;
 	}
 
-	public new virtual string ToString(string format, IFormatProvider formatProvider)
+	public override string ToString(string format, IFormatProvider? formatProvider)
 	{
 		if (formatProvider == null
-			|| !TryFormatter(format, formatProvider, out string formattedString))
+			|| !TryFormatter(format, formatProvider, out var formattedString))
 		{
 			formattedString = ToString();
 		}
@@ -64,7 +71,7 @@ public class PackageVersion : NuGetVersion
 		return formattedString;
 	}
 
-	protected new bool TryFormatter(string format, IFormatProvider formatProvider, out string formattedString)
+	private new bool TryFormatter(string format, IFormatProvider formatProvider, out string formattedString)
 	{
 		if (formatProvider is ICustomFormatter formatter)
 		{
@@ -72,7 +79,7 @@ public class PackageVersion : NuGetVersion
 			return true;
 		}
 
-		formattedString = null;
+		formattedString = string.Empty;
 		return false;
 	}
 }

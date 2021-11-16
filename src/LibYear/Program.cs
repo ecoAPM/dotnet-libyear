@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using LibYear.Lib;
 using NuGet.Configuration;
 using NuGet.Protocol.Core.Types;

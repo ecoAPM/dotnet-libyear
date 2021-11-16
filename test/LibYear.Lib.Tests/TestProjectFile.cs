@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using LibYear.Lib.FileTypes;
 
 namespace LibYear.Lib.Tests;
@@ -6,12 +5,12 @@ namespace LibYear.Lib.Tests;
 public class TestProjectFile : IProjectFile
 {
 	public string FileName { get; }
-	public IDictionary<string, PackageVersion> Packages { get; }
+	public IDictionary<string, PackageVersion?> Packages { get; }
 
-	public TestProjectFile(string fileName, IDictionary<string, PackageVersion> packages = null)
+	public TestProjectFile(string fileName, IDictionary<string, PackageVersion?>? packages = null)
 	{
 		FileName = fileName;
-		Packages = packages;
+		Packages = packages ?? new Dictionary<string, PackageVersion?>();
 	}
 
 	public void Update(IEnumerable<Result> results)

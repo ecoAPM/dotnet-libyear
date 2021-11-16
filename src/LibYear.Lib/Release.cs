@@ -1,4 +1,3 @@
-using System;
 using NuGet.Protocol.Core.Types;
 
 namespace LibYear.Lib;

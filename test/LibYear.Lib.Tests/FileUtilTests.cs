@@ -1,4 +1,3 @@
-using System.IO;
 using LibYear.Lib.FileTypes;
 using Xunit;
 

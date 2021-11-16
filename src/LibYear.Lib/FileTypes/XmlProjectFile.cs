@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Xml.Linq;
 
 namespace LibYear.Lib.FileTypes;
@@ -13,7 +10,7 @@ public abstract class XmlProjectFile : IProjectFile
 	private readonly string _versionAttributeName;
 
 	public string FileName { get; }
-	public IDictionary<string, PackageVersion> Packages { get; }
+	public IDictionary<string, PackageVersion?> Packages { get; }
 
 	protected XmlProjectFile(string filename, string elementName, string[] packageAttributeNames, string versionAttributeName)
 	{
@@ -26,7 +23,7 @@ public abstract class XmlProjectFile : IProjectFile
 		_xmlContents = XDocument.Load(filename);
 
 		Packages = _xmlContents.Descendants(elementName).ToDictionary(
-			d => packageAttributeNames.Select(p => d.Attribute(p)?.Value ?? d.Element(p)?.Value).FirstOrDefault(v => v != null),
+			d => packageAttributeNames.Select(p => d.Attribute(p)?.Value ?? d.Element(p)?.Value).FirstOrDefault(v => v != null)!,
 			d => ParseCurrentVersion(d, versionAttributeName)
 		);
 	}
@@ -35,19 +32,19 @@ public abstract class XmlProjectFile : IProjectFile
 	{
 		lock (_xmlContents)
 		{
-			foreach (var result in results)
+			foreach (var result in results.Where(r => r.Latest != null))
 			{
 				foreach (var element in GetElements(result))
-					UpdateElement(element, result.Latest.Version.ToString());
+					UpdateElement(element, result.Latest!.Version.ToString());
 			}
 
 			File.WriteAllText(FileName, _xmlContents.ToString());
 		}
 	}
 
-	private PackageVersion ParseCurrentVersion(XElement element, string versionAttributeName)
+	private static PackageVersion? ParseCurrentVersion(XElement element, string versionAttributeName)
 	{
-		var version = element.Attribute(versionAttributeName)?.Value ?? element.Element(versionAttributeName)?.Value;
+		var version = element.Attribute(versionAttributeName)?.Value ?? element.Element(versionAttributeName)?.Value ?? string.Empty;
 		return !string.IsNullOrEmpty(version) ? PackageVersion.Parse(version) : null;
 	}
 

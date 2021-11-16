@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using LibYear.Lib.FileTypes;
 
 namespace LibYear.Lib;
@@ -16,7 +13,7 @@ public class ProjectFileManager : IProjectFileManager
 	{
 		return Directory.Exists(arg)
 			? GetProjectsInDir(arg)
-			: new List<IProjectFile> { arg.ToProjectFile() }.Where(f => f != null).ToList();
+			: new List<IProjectFile?> { arg.ToProjectFile() }.Where(f => f != null).ToList()!;
 	}
 
 	public IList<IProjectFile> GetProjectsInDir(string dirPath)

@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Newtonsoft.Json.Linq;
 
 namespace LibYear.Lib.FileTypes;
@@ -9,8 +6,8 @@ public class ProjectJsonFile : IProjectFile
 {
 	private string _fileContents;
 	public string FileName { get; }
-	public IDictionary<string, PackageVersion> Packages { get; }
-	private readonly object _lock = new object();
+	public IDictionary<string, PackageVersion?> Packages { get; }
+	private readonly object _lock = new();
 
 	public ProjectJsonFile(string filename)
 	{
@@ -34,7 +31,7 @@ public class ProjectJsonFile : IProjectFile
 		{
 			foreach (var result in results)
 			{
-				_fileContents = _fileContents.Replace($"\"{result.Name}\": \"{result.Installed.Version}\"", $"\"{result.Name}\": \"{result.Latest.Version}\"");
+				_fileContents = _fileContents.Replace($"\"{result.Name}\": \"{result.Installed?.Version}\"", $"\"{result.Name}\": \"{result.Latest?.Version}\"");
 			}
 
 			File.WriteAllText(FileName, _fileContents);

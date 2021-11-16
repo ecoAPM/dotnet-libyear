@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using LibYear.Lib;
 using LibYear.Lib.FileTypes;
 using LibYear.Lib.Tests;
 using NSubstitute;
-using NuGet.Versioning;
 using Xunit;
 
 namespace LibYear.App.Tests;

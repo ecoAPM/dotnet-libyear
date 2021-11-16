@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using LibYear.Lib.FileTypes;
 using NuGet.Common;
 using NuGet.Protocol.Core.Types;
@@ -25,11 +21,10 @@ public class PackageVersionChecker : IPackageVersionChecker
 	public static IEnumerable<Result> AwaitResults(IEnumerable<Task<Result>> resultsTasks)
 	{
 		var tasks = resultsTasks.ToArray();
-		Task.WaitAll(tasks);
-		return tasks.Select(t => t.Result);
+		return Task.WhenAll(tasks).GetAwaiter().GetResult();
 	}
 
-	public async Task<Result> GetResultTask(string packageName, PackageVersion installed)
+	public async Task<Result> GetResultTask(string packageName, PackageVersion? installed)
 	{
 		if (!_versionCache.ContainsKey(packageName))
 		{

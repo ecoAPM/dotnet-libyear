@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using LibYear.Lib.FileTypes;
 
 namespace LibYear.Lib;
@@ -12,7 +10,7 @@ public static class FileUtils
 	private static bool IsProjectJsonFile(this string path) => File.Exists(path) && new FileInfo(path).Name == "project.json";
 	private static bool IsNuGetFile(this string path) => File.Exists(path) && new FileInfo(path).Name == "packages.config";
 
-	public static IProjectFile ToProjectFile(this string path)
+	public static IProjectFile? ToProjectFile(this string path)
 	{
 		if (path.IsCsProjFile())
 			return new CsProjFile(path);

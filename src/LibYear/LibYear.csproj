@@ -22,6 +22,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
+		<PackageReference Include="Spectre.Console" Version="0.42.0" />
 		<ProjectReference Include="../LibYear.Core/LibYear.Core.csproj" />
 		<None Include="../../README.md" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="." />
 	</ItemGroup>

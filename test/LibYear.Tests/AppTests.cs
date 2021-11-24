@@ -2,27 +2,13 @@ using LibYear.Core;
 using LibYear.Core.FileTypes;
 using LibYear.Core.Tests;
 using NSubstitute;
+using Spectre.Console.Testing;
 using Xunit;
 
 namespace LibYear.Tests;
 
-public class RunnerTests
+public class AppTests
 {
-	[Fact]
-	public void HelpFlagShowsHelp()
-	{
-		//arrange
-		var checker = Substitute.For<IPackageVersionChecker>();
-		var manager = Substitute.For<IProjectFileManager>();
-		var runner = new Runner(checker, manager);
-
-		//act
-		var output = runner.Run(new List<string>(new[] { "-h" }));
-
-		//assert
-		Assert.Contains("Usage: ", output);
-	}
-
 	[Fact]
 	public void UpdateFlagUpdates()
 	{
@@ -33,13 +19,14 @@ public class RunnerTests
 		manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { new TestProjectFile("test1") });
 		manager.Update(Arg.Any<IDictionary<IProjectFile, IEnumerable<Result>>>()).Returns(new[] { "updated" });
 
-		var runner = new Runner(checker, manager);
+		var console = new TestConsole();
+		var app = new App(checker, manager, console);
 
 		//act
-		var output = runner.Run(new List<string>(new[] { "-u" }));
+		app.Run(new Settings { Update = true });
 
 		//assert
-		Assert.Contains("updated", output);
+		Assert.Contains("updated", console.Output);
 	}
 
 	[Fact]
@@ -49,21 +36,22 @@ public class RunnerTests
 		var checker = Substitute.For<IPackageVersionChecker>();
 		var projectFile = new TestProjectFile("test project");
 		var results = new Dictionary<IProjectFile, IEnumerable<Result>>
-			{
-				{ projectFile, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1,2,3), DateTime.Today) ) } }
-			};
+		{
+			{ projectFile, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) } }
+		};
 		checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
 
 		var manager = Substitute.For<IProjectFileManager>();
 		manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { projectFile });
 
-		var runner = new Runner(checker, manager);
+		var console = new TestConsole();
+		var app = new App(checker, manager, console);
 
 		//act
-		var output = runner.Run(new List<string>(new[] { "" }));
+		app.Run(new Settings());
 
 		//assert
-		Assert.Contains("test1", output);
+		Assert.Contains("test1", console.Output);
 	}
 
 	[Fact]
@@ -73,21 +61,22 @@ public class RunnerTests
 		var checker = Substitute.For<IPackageVersionChecker>();
 		var projectFile = new TestProjectFile("test project");
 		var results = new Dictionary<IProjectFile, IEnumerable<Result>>
-			{
-				{ projectFile, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1,2,3), DateTime.Today) ) } }
-			};
+		{
+			{ projectFile, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) } }
+		};
 		checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
 
 		var manager = Substitute.For<IProjectFileManager>();
 		manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { projectFile });
 
-		var runner = new Runner(checker, manager);
+		var console = new TestConsole();
+		var app = new App(checker, manager, console);
 
 		//act
-		var output = runner.Run(new List<string>(new[] { "-q" }));
+		app.Run(new Settings { QuietMode = true });
 
 		//assert
-		Assert.DoesNotContain("test1", output);
+		Assert.DoesNotContain("test1", console.Output);
 	}
 
 	[Fact]
@@ -98,22 +87,23 @@ public class RunnerTests
 		var projectFile1 = new TestProjectFile("test project 1");
 		var projectFile2 = new TestProjectFile("test project 2");
 		var results = new Dictionary<IProjectFile, IEnumerable<Result>>
-			{
-				{ projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1,2,3), DateTime.Today) ) } },
-				{ projectFile2, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1,2,3), DateTime.Today) ) } }
-			};
+		{
+			{ projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) } },
+			{ projectFile2, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) } }
+		};
 		checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
 
 		var manager = Substitute.For<IProjectFileManager>();
 		manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { projectFile1, projectFile2 });
 
-		var runner = new Runner(checker, manager);
+		var console = new TestConsole();
+		var app = new App(checker, manager, console);
 
 		//act
-		var output = runner.Run(new List<string>(new[] { "-q" }));
+		app.Run(new Settings { QuietMode = true });
 
 		//assert
-		Assert.Contains("Total", output);
+		Assert.Contains("Total", console.Output);
 	}
 
 	[Fact]
@@ -124,23 +114,24 @@ public class RunnerTests
 		var projectFile1 = new TestProjectFile("test project 1");
 		var projectFile2 = new TestProjectFile("test project 2");
 		var results = new Dictionary<IProjectFile, IEnumerable<Result>>
-			{
-				{ projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1,2,3), DateTime.Today) ) } },
-				{ projectFile2, new List<Result>() }
-			};
+		{
+			{ projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) } },
+			{ projectFile2, new List<Result>() }
+		};
 		checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
 
 		var manager = Substitute.For<IProjectFileManager>();
 		manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { projectFile1, projectFile2 });
 
-		var runner = new Runner(checker, manager);
+		var console = new TestConsole();
+		var app = new App(checker, manager, console);
 
 		//act
-		var output = runner.Run(new List<string>(new[] { "" }));
+		app.Run(new Settings());
 
 		//assert
-		Assert.Contains("test project 1", output);
-		Assert.DoesNotContain("test project 2", output);
+		Assert.Contains("test project 1", console.Output);
+		Assert.DoesNotContain("test project 2", console.Output);
 	}
 
 	[Fact]
@@ -152,12 +143,13 @@ public class RunnerTests
 		var manager = Substitute.For<IProjectFileManager>();
 		manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new List<IProjectFile>());
 
-		var runner = new Runner(checker, manager);
+		var console = new TestConsole();
+		var app = new App(checker, manager, console);
 
 		//act
-		var output = runner.Run(new List<string>(new[] { "" }));
+		app.Run(new Settings());
 
 		//assert
-		Assert.Contains("No project files found", output);
+		Assert.Contains("No project files found", console.Output);
 	}
 }

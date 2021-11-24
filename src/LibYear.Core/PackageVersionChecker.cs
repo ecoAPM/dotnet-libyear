@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using LibYear.Core.FileTypes;
 using NuGet.Common;
 using NuGet.Protocol.Core.Types;
@@ -9,6 +10,11 @@ public class PackageVersionChecker : IPackageVersionChecker
 	private readonly PackageMetadataResource _metadataResource;
 	private readonly IDictionary<string, IList<Release>> _versionCache;
 
+	public PackageVersionChecker(PackageMetadataResource metadataResource)
+		: this(metadataResource, new ConcurrentDictionary<string, IList<Release>>())
+	{
+	}
+
 	public PackageVersionChecker(PackageMetadataResource metadataResource, IDictionary<string, IList<Release>> versionCache)
 	{
 		_metadataResource = metadataResource;
@@ -16,12 +22,12 @@ public class PackageVersionChecker : IPackageVersionChecker
 	}
 
 	public IDictionary<IProjectFile, IEnumerable<Result>> GetPackages(IEnumerable<IProjectFile> projectFiles)
-		=> projectFiles.ToDictionary(proj => proj, proj => AwaitResults(proj.Packages.Select(p => GetResult(p.Key, p.Value))));
+		=> projectFiles.ToDictionary(proj => proj, GetResults);
 
-	public static IEnumerable<Result> AwaitResults(IEnumerable<Task<Result>> resultsTasks)
+	private IEnumerable<Result> GetResults(IProjectFile proj)
 	{
-		var tasks = resultsTasks.ToArray();
-		return Task.WhenAll(tasks).GetAwaiter().GetResult();
+		var results = proj.Packages.Select(p => GetResult(p.Key, p.Value));
+		return Task.WhenAll(results).GetAwaiter().GetResult();
 	}
 
 	public async Task<Result> GetResult(string packageName, PackageVersion? installed)

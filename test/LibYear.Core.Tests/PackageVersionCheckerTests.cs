@@ -17,7 +17,7 @@ public class PackageVersionCheckerTests
 		metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
 			.Returns(new List<IPackageSearchMetadata> { metadata });
 
-		var checker = new PackageVersionChecker(metadataResource, new Dictionary<string, IList<Release>>());
+		var checker = new PackageVersionChecker(metadataResource);
 
 		//act
 		var versions = await checker.GetVersions("test");
@@ -82,7 +82,7 @@ public class PackageVersionCheckerTests
 			.Returns(_ => new List<IPackageSearchMetadata> { metadata }, _ => throw new Exception(":("));
 
 		var v1 = new Release(new PackageVersion(1, 2, 3), new DateTime(2015, 1, 1));
-		var v2 = new Release(new PackageVersion("2.3.4-beta-1")!, new DateTime(2016, 1, 1));
+		var v2 = new Release(new PackageVersion("2.3.4-beta-1"), new DateTime(2016, 1, 1));
 		var versionCache = new Dictionary<string, IList<Release>> { { "test", new List<Release> { v1, v2 } } };
 		var checker = new PackageVersionChecker(metadataResource, versionCache);
 
@@ -115,36 +115,6 @@ public class PackageVersionCheckerTests
 		var latest = result.Latest!.Version.ToString();
 		Assert.Equal("1.2.3", latest);
 	}
-
-	[Fact]
-	public void AwaitResultsWaitsForAll()
-	{
-		//arrange
-		var resultsTasks = new[]
-		{
-				Sleep(1),
-				Sleep(2),
-				Sleep(3),
-				Sleep(4)
-			};
-
-		//act
-		var versions = PackageVersionChecker.AwaitResults(resultsTasks).ToArray();
-
-		//assert
-		Assert.Equal("1", versions[0].Name);
-		Assert.Equal("2", versions[1].Name);
-		Assert.Equal("3", versions[2].Name);
-		Assert.Equal("4", versions[3].Name);
-	}
-
-#pragma warning disable 1998
-	private static async Task<Result> Sleep(int x)
-	{
-		Thread.Sleep(x);
-		return new Result(x.ToString(), null, null);
-	}
-#pragma warning restore 1998
 
 	[Fact]
 	public void GetPackagesGetsPackages()

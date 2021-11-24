@@ -4,6 +4,5 @@ public interface IProjectFile
 {
 	string FileName { get; }
 	IDictionary<string, PackageVersion?> Packages { get; }
-	void Update(IEnumerable<Result> results);
-
+	string Update(IEnumerable<Result> results);
 }

@@ -15,25 +15,25 @@ public class PackageVersionTests
 	[Fact]
 	public void CanParseSemVerString()
 	{
-		var version = PackageVersion.Parse("1.2.3");
+		var version = new PackageVersion("1.2.3");
 
-		Assert.Equal("1.2.3", version!.ToString());
+		Assert.Equal("1.2.3", version.ToString());
 	}
 
 	[Fact]
 	public void CanParseNuGetString()
 	{
-		var version = PackageVersion.Parse("1.2.3.4");
+		var version = new PackageVersion("1.2.3.4");
 
-		Assert.Equal("1.2.3.4", version!.ToString());
+		Assert.Equal("1.2.3.4", version.ToString());
 	}
 
 	[Fact]
 	public void CanParseWildcardString()
 	{
-		var version = PackageVersion.Parse("*");
+		var version = new PackageVersion("*");
 
-		Assert.Equal("0.0.0", version!.ToString());
+		Assert.Equal("0.0.0", version.ToString());
 		Assert.True(version.IsWildcard);
 	}
 }

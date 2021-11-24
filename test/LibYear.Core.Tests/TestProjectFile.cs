@@ -13,7 +13,6 @@ public class TestProjectFile : IProjectFile
 		Packages = packages ?? new Dictionary<string, PackageVersion?>();
 	}
 
-	public void Update(IEnumerable<Result> results)
-	{
-	}
+	public string Update(IEnumerable<Result> results)
+		=> string.Empty;
 }

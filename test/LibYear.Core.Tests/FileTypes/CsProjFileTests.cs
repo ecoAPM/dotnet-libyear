@@ -12,7 +12,7 @@ public class CsProjFileTests
 		var filename = Path.Combine("FileTypes", "project.csproj");
 
 		//act
-		var file = new CsProjFile(filename);
+		var file = new CsProjFile(filename, File.ReadAllText(filename));
 
 		//assert
 		Assert.Equal("test1", file.Packages.First().Key);
@@ -29,7 +29,7 @@ public class CsProjFileTests
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "project.csproj");
-		var file = new CsProjFile(filename);
+		var file = new CsProjFile(filename, File.ReadAllText(filename));
 		var results = new[]
 		{
 			new Result("test1", new Release(new PackageVersion(0, 1, 0, 1), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),
@@ -41,10 +41,10 @@ public class CsProjFileTests
 		};
 
 		//act
-		file.Update(results);
+		var updated = file.Update(results);
 
 		//assert
-		var newFile = new CsProjFile(filename);
+		var newFile = new CsProjFile(filename, updated);
 		Assert.Equal("1.2.3", newFile.Packages["test1"]!.ToString());
 		Assert.Equal("2.3.4", newFile.Packages["test2"]!.ToString());
 		Assert.Equal("3.4.5", newFile.Packages["test3"]!.ToString());

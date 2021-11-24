@@ -4,16 +4,15 @@ namespace LibYear.Core.FileTypes;
 
 public abstract class XmlProjectFile : IProjectFile
 {
+	public string FileName { get; }
+	public IDictionary<string, PackageVersion?> Packages { get; }
+
 	private readonly XDocument _xmlContents;
 	private readonly string _elementName;
 	private readonly string[] _packageAttributeNames;
 	private readonly string _versionAttributeName;
-	private static readonly object _lock = new();
 
-	public string FileName { get; }
-	public IDictionary<string, PackageVersion?> Packages { get; }
-
-	protected XmlProjectFile(string filename, string elementName, string[] packageAttributeNames, string versionAttributeName)
+	protected XmlProjectFile(string filename, string contents, string elementName, string[] packageAttributeNames, string versionAttributeName)
 	{
 		FileName = filename;
 
@@ -21,12 +20,7 @@ public abstract class XmlProjectFile : IProjectFile
 		_packageAttributeNames = packageAttributeNames;
 		_versionAttributeName = versionAttributeName;
 
-		lock (_lock)
-		{
-			using var stream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-			_xmlContents = XDocument.Load(stream);
-		}
-
+		_xmlContents = XDocument.Parse(contents);
 		Packages = _xmlContents.Descendants(elementName)
 			.ToDictionary(
 				d => packageAttributeNames.Select(p => d.Attribute(p)?.Value ?? d.Element(p)?.Value).FirstOrDefault(v => v != null)!,
@@ -34,25 +28,21 @@ public abstract class XmlProjectFile : IProjectFile
 			);
 	}
 
-	public void Update(IEnumerable<Result> results)
+	public string Update(IEnumerable<Result> results)
 	{
-		lock (_lock)
+		foreach (var result in results.Where(r => r.Latest != null))
 		{
-			foreach (var result in results.Where(r => r.Latest != null))
-			{
-				foreach (var element in GetElements(result))
-					UpdateElement(element, result.Latest!.Version.ToString());
-			}
-
-			using var stream = new FileStream(FileName, FileMode.Open, FileAccess.Write);
-			new StreamWriter(stream).WriteAsync(_xmlContents.ToString()).GetAwaiter().GetResult();
+			foreach (var element in GetMatchingElements(result))
+				UpdateElement(element, result.Latest!.Version.ToString());
 		}
+
+		return _xmlContents.ToString();
 	}
 
 	private static PackageVersion? ParseCurrentVersion(XElement element, string versionAttributeName)
 	{
 		var version = element.Attribute(versionAttributeName)?.Value ?? element.Element(versionAttributeName)?.Value ?? string.Empty;
-		return !string.IsNullOrEmpty(version) ? PackageVersion.Parse(version) : null;
+		return !string.IsNullOrEmpty(version) ? new PackageVersion(version) : null;
 	}
 
 	private void UpdateElement(XElement element, string latestVersion)
@@ -69,7 +59,7 @@ public abstract class XmlProjectFile : IProjectFile
 			e.Value = latestVersion;
 	}
 
-	private IEnumerable<XElement> GetElements(Result result)
+	private IEnumerable<XElement> GetMatchingElements(Result result)
 	{
 		return _xmlContents.Descendants(_elementName)
 			.Where(d => _packageAttributeNames.Any(attributeName => (d.Attribute(attributeName)?.Value ?? d.Element(attributeName)?.Value) == result.Name

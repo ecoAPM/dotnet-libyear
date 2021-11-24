@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using LibYear.Core.FileTypes;
 using Xunit;
 
@@ -9,8 +10,9 @@ public class ProjectFileManagerTests
 	public void CanFindProjectFiles()
 	{
 		//arrange
-		var fileManager = new ProjectFileManager();
-		var dir = new DirectoryInfo("FileTypes");
+		var fileSystem = new FileSystem();
+		var fileManager = new ProjectFileManager(fileSystem);
+		var dir = fileSystem.DirectoryInfo.FromDirectoryName("FileTypes");
 
 		//act
 		var projects = fileManager.FindProjectsInDir(dir, SearchOption.TopDirectoryOnly);
@@ -24,8 +26,9 @@ public class ProjectFileManagerTests
 	public void CanFindProjectFilesRecursively()
 	{
 		//arrange
-		var fileManager = new ProjectFileManager();
-		var dir = new DirectoryInfo(".");
+		var fileSystem = new FileSystem();
+		var fileManager = new ProjectFileManager(fileSystem);
+		var dir = fileSystem.DirectoryInfo.FromDirectoryName(".");
 
 		//act
 		var projects = fileManager.FindProjectsInDir(dir, SearchOption.AllDirectories);
@@ -39,7 +42,8 @@ public class ProjectFileManagerTests
 	public void CanGetProjectsForDir()
 	{
 		//arrange
-		var fileManager = new ProjectFileManager();
+		var fileSystem = new FileSystem();
+		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
 		var projects = fileManager.GetProjectsInDir("FileTypes");
@@ -53,7 +57,8 @@ public class ProjectFileManagerTests
 	public void GetsProjectsRecursivelyIfNoneFound()
 	{
 		//arrange
-		var fileManager = new ProjectFileManager();
+		var fileSystem = new FileSystem();
+		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
 		var projects = fileManager.GetProjectsInDir(".");
@@ -67,14 +72,15 @@ public class ProjectFileManagerTests
 	public void CanGetAllProjectsForMultipleArgs()
 	{
 		//arrange
-		var projectFileNames = new[]
-		{
-				Path.Combine("FileTypes", "project.csproj"),
-				Path.Combine("FileTypes", "packages.config")
-			};
-		var fileManager = new ProjectFileManager();
+		var fileSystem = new FileSystem();
+		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
+		var projectFileNames = new[]
+		{
+			Path.Combine("FileTypes", "project.csproj"),
+			Path.Combine("FileTypes", "packages.config")
+		};
 		var projects = fileManager.GetAllProjects(projectFileNames);
 
 		//assert
@@ -86,13 +92,14 @@ public class ProjectFileManagerTests
 	public void GetAllProjectsAddsMultipleProjectsForDirectories()
 	{
 		//arrange
-		var projectFileNames = new[]
-		{
-				"FileTypes"
-			};
-		var fileManager = new ProjectFileManager();
+		var fileSystem = new FileSystem();
+		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
+		var projectFileNames = new[]
+		{
+			"FileTypes"
+		};
 		var projects = fileManager.GetAllProjects(projectFileNames);
 
 		//assert
@@ -104,7 +111,8 @@ public class ProjectFileManagerTests
 	public void GetAllProjectsGetsCurrentDirectoryByDefault()
 	{
 		//arrange
-		var fileManager = new ProjectFileManager();
+		var fileSystem = new FileSystem();
+		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
 		var projects = fileManager.GetAllProjects(new List<string>());
@@ -118,19 +126,19 @@ public class ProjectFileManagerTests
 	public void CanUpdateProjectFiles()
 	{
 		//arrange
-		var fileManager = new ProjectFileManager();
+		var fileSystem = new FileSystem();
+		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
-
 		var allResults = new Dictionary<IProjectFile, IEnumerable<Result>>
+		{
 			{
+				new TestProjectFile("test1"), new[]
 				{
-					new TestProjectFile("test1"), new List<Result>
-					{
-						new Result("test1", new Release(new PackageVersion(0, 1, 0), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),
-					}
+					new Result("test1", new Release(new PackageVersion(0, 1, 0), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),
 				}
-			};
+			}
+		};
 		var updated = fileManager.Update(allResults);
 
 		//assert

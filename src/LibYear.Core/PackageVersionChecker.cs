@@ -16,7 +16,7 @@ public class PackageVersionChecker : IPackageVersionChecker
 	}
 
 	public IDictionary<IProjectFile, IEnumerable<Result>> GetPackages(IEnumerable<IProjectFile> projectFiles)
-		=> projectFiles.ToDictionary(proj => proj, proj => AwaitResults(proj.Packages.Select(p => GetResultTask(p.Key, p.Value))));
+		=> projectFiles.ToDictionary(proj => proj, proj => AwaitResults(proj.Packages.Select(p => GetResult(p.Key, p.Value))));
 
 	public static IEnumerable<Result> AwaitResults(IEnumerable<Task<Result>> resultsTasks)
 	{
@@ -24,7 +24,7 @@ public class PackageVersionChecker : IPackageVersionChecker
 		return Task.WhenAll(tasks).GetAwaiter().GetResult();
 	}
 
-	public async Task<Result> GetResultTask(string packageName, PackageVersion? installed)
+	public async Task<Result> GetResult(string packageName, PackageVersion? installed)
 	{
 		if (!_versionCache.ContainsKey(packageName))
 		{
@@ -44,7 +44,7 @@ public class PackageVersionChecker : IPackageVersionChecker
 
 	public async Task<IList<Release>> GetVersions(string packageName)
 	{
-		var metadata = _metadataResource.GetMetadataAsync(packageName, true, true, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
-		return (await metadata).Select(m => new Release(m)).ToList();
+		var metadata = await _metadataResource.GetMetadataAsync(packageName, true, true, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
+		return metadata.Select(m => new Release(m)).ToList();
 	}
 }

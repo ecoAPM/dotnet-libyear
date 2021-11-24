@@ -9,12 +9,11 @@ public sealed class PackageVersion : NuGetVersion
 	public PackageVersion(string version)
 		: this(Parse(version))
 	{
-	}
+		if (version.Equals("*"))
+		{
+			IsWildcard = true;
+		}
 
-	public PackageVersion(bool isWildcard)
-		: this(0, 0, 0)
-	{
-		IsWildcard = isWildcard;
 	}
 
 	public PackageVersion(NuGetVersion? version)
@@ -32,16 +31,16 @@ public sealed class PackageVersion : NuGetVersion
 	{
 	}
 
-	public new static PackageVersion? Parse(string version)
+	private new static PackageVersion? Parse(string version)
 	{
 		if (version.Equals("*"))
 		{
-			return new PackageVersion(true);
+			return new PackageVersion(0, 0, 0);
 		}
 
 		try
 		{
-			var nuGetVersion = NuGetVersion.Parse(version);
+			var nuGetVersion = new NuGetVersion(version);
 			return new PackageVersion(nuGetVersion);
 		}
 		catch

@@ -12,7 +12,7 @@ public class DirectoryBuildPropsTests
 		var filename = Path.Combine("FileTypes", "Directory.Build.props");
 
 		//act
-		var file = new DirectoryBuildPropsFile(filename);
+		var file = new DirectoryBuildPropsFile(filename, File.ReadAllText(filename));
 
 		//assert
 		Assert.Equal("test1", file.Packages.First().Key);
@@ -25,7 +25,7 @@ public class DirectoryBuildPropsTests
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "Directory.Build.props");
-		var file = new DirectoryBuildPropsFile(filename);
+		var file = new DirectoryBuildPropsFile(filename, File.ReadAllText(filename));
 		var results = new[]
 		{
 			new Result("test1", new Release(new PackageVersion(0, 1, 0), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),
@@ -34,10 +34,10 @@ public class DirectoryBuildPropsTests
 		};
 
 		//act
-		file.Update(results);
+		var updated = file.Update(results);
 
 		//assert
-		var newFile = new DirectoryBuildPropsFile(filename);
+		var newFile = new DirectoryBuildPropsFile(filename, updated);
 		Assert.Equal("1.2.3", newFile.Packages.First().Value!.ToString());
 		Assert.Equal("2.3.4", newFile.Packages.Skip(1).First().Value!.ToString());
 		Assert.Equal("3.4.5", newFile.Packages.Skip(2).First().Value!.ToString());

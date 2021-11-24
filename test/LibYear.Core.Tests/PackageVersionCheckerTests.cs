@@ -41,7 +41,7 @@ public class PackageVersionCheckerTests
 		var checker = new PackageVersionChecker(metadataResource, versionCache);
 
 		//act
-		var result = await checker.GetResultTask("test", new PackageVersion(1, 2, 3));
+		var result = await checker.GetResult("test", new PackageVersion(1, 2, 3));
 
 		//assert
 		var latest = result.Latest!.Version.ToString();
@@ -52,7 +52,7 @@ public class PackageVersionCheckerTests
 	public async Task InstalledVersionEqualsLatestVersionWithWildcard()
 	{
 		//arrange
-		var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", PackageVersion.Parse("*"))).Build();
+		var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new PackageVersion("*"))).Build();
 		var metadataResource = Substitute.For<PackageMetadataResource>();
 		metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>())
 			.Returns(_ => new List<IPackageSearchMetadata> { metadata }, _ => throw new Exception(":("));
@@ -63,7 +63,7 @@ public class PackageVersionCheckerTests
 		var checker = new PackageVersionChecker(metadataResource, versionCache);
 
 		//act
-		var result = await checker.GetResultTask("test", PackageVersion.Parse("*"));
+		var result = await checker.GetResult("test", new PackageVersion("*"));
 
 		//assert
 		var installed = result.Installed!.Version;
@@ -82,12 +82,12 @@ public class PackageVersionCheckerTests
 			.Returns(_ => new List<IPackageSearchMetadata> { metadata }, _ => throw new Exception(":("));
 
 		var v1 = new Release(new PackageVersion(1, 2, 3), new DateTime(2015, 1, 1));
-		var v2 = new Release(PackageVersion.Parse("2.3.4-beta-1")!, new DateTime(2016, 1, 1));
+		var v2 = new Release(new PackageVersion("2.3.4-beta-1")!, new DateTime(2016, 1, 1));
 		var versionCache = new Dictionary<string, IList<Release>> { { "test", new List<Release> { v1, v2 } } };
 		var checker = new PackageVersionChecker(metadataResource, versionCache);
 
 		//act
-		var result = await checker.GetResultTask("test", new PackageVersion(1, 2, 3));
+		var result = await checker.GetResult("test", new PackageVersion(1, 2, 3));
 
 		//assert
 		var latest = result.Latest!.Version.ToString();
@@ -109,7 +109,7 @@ public class PackageVersionCheckerTests
 		var checker = new PackageVersionChecker(metadataResource, versionCache);
 
 		//act
-		var result = await checker.GetResultTask("test", new PackageVersion(1, 2, 3));
+		var result = await checker.GetResult("test", new PackageVersion(1, 2, 3));
 
 		//assert
 		var latest = result.Latest!.Version.ToString();

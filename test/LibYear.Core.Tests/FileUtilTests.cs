@@ -24,12 +24,6 @@ public class FileUtilTests
 	}
 
 	[Fact]
-	public void RecognizesProjectJsonFiles()
-	{
-		Assert.IsType<ProjectJsonFile>(Path.Combine("FileTypes", "project.json").ToProjectFile());
-	}
-
-	[Fact]
 	public void RecognizesNuGetFiles()
 	{
 		Assert.IsType<PackagesConfigFile>(Path.Combine("FileTypes", "packages.config").ToProjectFile());

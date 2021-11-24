@@ -13,7 +13,6 @@
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
 		<ProjectReference Include="..\..\src\LibYear.Core\LibYear.Core.csproj" />
 		<None Include="FileTypes\packages.config" CopyToOutputDirectory="PreserveNewest" />
-		<None Include="FileTypes\project.json" CopyToOutputDirectory="PreserveNewest" />
 		<None Include="FileTypes\project.csproj" CopyToOutputDirectory="PreserveNewest" />
 		<None Include="FileTypes\Directory.Build.props" CopyToOutputDirectory="PreserveNewest" />
 		<None Include="FileTypes\Directory.Build.targets" CopyToOutputDirectory="PreserveNewest" />

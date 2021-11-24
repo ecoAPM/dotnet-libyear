@@ -29,7 +29,6 @@ public class ProjectFileManager : IProjectFileManager
 		=> dir.EnumerateFiles("*.csproj", searchMode).Select<FileInfo, IProjectFile>(f => new CsProjFile(f.FullName))
 			.Union(dir.EnumerateFiles("Directory.build.props", searchMode).Select<FileInfo, IProjectFile>(f => new CsProjFile(f.FullName)))
 			.Union(dir.EnumerateFiles("Directory.build.targets", searchMode).Select<FileInfo, IProjectFile>(f => new CsProjFile(f.FullName)))
-			.Union(dir.EnumerateFiles("project.json", searchMode).Select<FileInfo, IProjectFile>(f => new ProjectJsonFile(f.FullName)))
 			.Union(dir.EnumerateFiles("packages.config", searchMode).Select<FileInfo, IProjectFile>(f => new PackagesConfigFile(f.FullName)))
 			.ToList();
 

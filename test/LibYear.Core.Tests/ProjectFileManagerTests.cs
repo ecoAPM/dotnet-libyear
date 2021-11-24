@@ -17,7 +17,6 @@ public class ProjectFileManagerTests
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
-		Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
 	}
 
@@ -33,7 +32,6 @@ public class ProjectFileManagerTests
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
-		Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
 	}
 
@@ -48,7 +46,6 @@ public class ProjectFileManagerTests
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
-		Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
 	}
 
@@ -63,7 +60,6 @@ public class ProjectFileManagerTests
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
-		Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
 	}
 
@@ -74,7 +70,6 @@ public class ProjectFileManagerTests
 		var projectFileNames = new[]
 		{
 				Path.Combine("FileTypes", "project.csproj"),
-				Path.Combine("FileTypes", "project.json"),
 				Path.Combine("FileTypes", "packages.config")
 			};
 		var fileManager = new ProjectFileManager();
@@ -84,7 +79,6 @@ public class ProjectFileManagerTests
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
-		Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
 	}
 
@@ -103,7 +97,6 @@ public class ProjectFileManagerTests
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
-		Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
 	}
 
@@ -118,7 +111,6 @@ public class ProjectFileManagerTests
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
-		Assert.Contains(projects, p => p.FileName.EndsWith("project.json"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
 	}
 

@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "test1": "0.1.0.1",
-    "test2": "0.2.0",
-    "test3": { "version": "0.3.0" }
-  }
-}

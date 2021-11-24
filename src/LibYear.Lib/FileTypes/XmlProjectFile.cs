@@ -8,6 +8,7 @@ public abstract class XmlProjectFile : IProjectFile
 	private readonly string _elementName;
 	private readonly string[] _packageAttributeNames;
 	private readonly string _versionAttributeName;
+	private static readonly object _lock = new();
 
 	public string FileName { get; }
 	public IDictionary<string, PackageVersion?> Packages { get; }
@@ -20,7 +21,11 @@ public abstract class XmlProjectFile : IProjectFile
 		_packageAttributeNames = packageAttributeNames;
 		_versionAttributeName = versionAttributeName;
 
-		_xmlContents = XDocument.Load(filename);
+		lock (_lock)
+		{
+			using var stream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+			_xmlContents = XDocument.Load(stream);
+		}
 
 		Packages = _xmlContents.Descendants(elementName).ToDictionary(
 			d => packageAttributeNames.Select(p => d.Attribute(p)?.Value ?? d.Element(p)?.Value).FirstOrDefault(v => v != null)!,
@@ -30,7 +35,7 @@ public abstract class XmlProjectFile : IProjectFile
 
 	public void Update(IEnumerable<Result> results)
 	{
-		lock (_xmlContents)
+		lock (_lock)
 		{
 			foreach (var result in results.Where(r => r.Latest != null))
 			{
@@ -38,7 +43,8 @@ public abstract class XmlProjectFile : IProjectFile
 					UpdateElement(element, result.Latest!.Version.ToString());
 			}
 
-			File.WriteAllText(FileName, _xmlContents.ToString());
+			using var stream = new FileStream(FileName, FileMode.Open, FileAccess.Write);
+			new StreamWriter(stream).WriteAsync(_xmlContents.ToString()).GetAwaiter().GetResult();
 		}
 	}
 
@@ -66,7 +72,7 @@ public abstract class XmlProjectFile : IProjectFile
 	{
 		return _xmlContents.Descendants(_elementName)
 			.Where(d => _packageAttributeNames.Any(attributeName => (d.Attribute(attributeName)?.Value ?? d.Element(attributeName)?.Value) == result.Name
-																	&& (d.Attribute(_versionAttributeName)?.Value ?? d.Element(_versionAttributeName)?.Value) == result.Installed?.Version.ToString()
+			                                                        && (d.Attribute(_versionAttributeName)?.Value ?? d.Element(_versionAttributeName)?.Value) == result.Installed?.Version.ToString()
 				)
 			);
 	}

@@ -7,23 +7,27 @@ public class ProjectJsonFile : IProjectFile
 	private string _fileContents;
 	public string FileName { get; }
 	public IDictionary<string, PackageVersion?> Packages { get; }
-	private readonly object _lock = new();
+	private static readonly object _lock = new();
 
 	public ProjectJsonFile(string filename)
 	{
 		FileName = filename;
-		_fileContents = File.ReadAllText(FileName);
+
+		lock (_lock)
+		{
+			using var stream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+			_fileContents = new StreamReader(stream).ReadToEndAsync().GetAwaiter().GetResult();
+		}
+
 		Packages = GetDependencies().ToDictionary(p => ((JProperty)p).Name.ToString(), p => PackageVersion.Parse(((JProperty)p).Value.ToString()));
 	}
 
 	private IEnumerable<JToken> GetDependencies()
-	{
-		return JObject.Parse(_fileContents).Descendants()
+		=> JObject.Parse(_fileContents).Descendants()
 			.Where(d => d.Type == JTokenType.Property
-						&& d.Path.Contains("dependencies")
-						&& (!d.Path.Contains("[") || d.Path.EndsWith("]"))
-						&& ((JProperty)d).Value.Type == JTokenType.String);
-	}
+			            && d.Path.Contains("dependencies")
+			            && (!d.Path.Contains("[") || d.Path.EndsWith("]"))
+			            && ((JProperty)d).Value.Type == JTokenType.String);
 
 	public void Update(IEnumerable<Result> results)
 	{
@@ -34,7 +38,8 @@ public class ProjectJsonFile : IProjectFile
 				_fileContents = _fileContents.Replace($"\"{result.Name}\": \"{result.Installed?.Version}\"", $"\"{result.Name}\": \"{result.Latest?.Version}\"");
 			}
 
-			File.WriteAllText(FileName, _fileContents);
+			using var stream = new FileStream(FileName, FileMode.Open, FileAccess.Write);
+			new StreamWriter(stream).WriteAsync(_fileContents).GetAwaiter().GetResult();
 		}
 	}
 }

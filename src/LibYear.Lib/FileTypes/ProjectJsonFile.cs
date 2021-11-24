@@ -19,15 +19,16 @@ public class ProjectJsonFile : IProjectFile
 			_fileContents = new StreamReader(stream).ReadToEndAsync().GetAwaiter().GetResult();
 		}
 
-		Packages = GetDependencies().ToDictionary(p => ((JProperty)p).Name.ToString(), p => PackageVersion.Parse(((JProperty)p).Value.ToString()));
-	}
-
-	private IEnumerable<JToken> GetDependencies()
-		=> JObject.Parse(_fileContents).Descendants()
+		Packages = JObject.Parse(_fileContents).Descendants()
 			.Where(d => d.Type == JTokenType.Property
 			            && d.Path.Contains("dependencies")
 			            && (!d.Path.Contains("[") || d.Path.EndsWith("]"))
-			            && ((JProperty)d).Value.Type == JTokenType.String);
+			            && ((JProperty)d).Value.Type == JTokenType.String)
+			.ToDictionary(
+				p => ((JProperty)p).Name,
+				p => PackageVersion.Parse(((JProperty)p).Value.ToString())
+			);
+	}
 
 	public void Update(IEnumerable<Result> results)
 	{

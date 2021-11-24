@@ -27,10 +27,11 @@ public abstract class XmlProjectFile : IProjectFile
 			_xmlContents = XDocument.Load(stream);
 		}
 
-		Packages = _xmlContents.Descendants(elementName).ToDictionary(
-			d => packageAttributeNames.Select(p => d.Attribute(p)?.Value ?? d.Element(p)?.Value).FirstOrDefault(v => v != null)!,
-			d => ParseCurrentVersion(d, versionAttributeName)
-		);
+		Packages = _xmlContents.Descendants(elementName)
+			.ToDictionary(
+				d => packageAttributeNames.Select(p => d.Attribute(p)?.Value ?? d.Element(p)?.Value).FirstOrDefault(v => v != null)!,
+				d => ParseCurrentVersion(d, versionAttributeName)
+			);
 	}
 
 	public void Update(IEnumerable<Result> results)

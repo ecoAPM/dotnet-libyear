@@ -39,10 +39,19 @@ public abstract class XmlProjectFile : IProjectFile
 		return _xmlContents.ToString();
 	}
 
-	private static PackageVersion? ParseCurrentVersion(XElement element, string versionAttributeName)
+	private PackageVersion? ParseCurrentVersion(XElement element, string versionAttributeName)
 	{
 		var version = element.Attribute(versionAttributeName)?.Value ?? element.Element(versionAttributeName)?.Value ?? string.Empty;
-		return !string.IsNullOrEmpty(version) ? new PackageVersion(version) : null;
+		try
+		{
+			return !string.IsNullOrEmpty(version)
+				? new PackageVersion(version)
+				: null;
+		}
+		catch (Exception e)
+		{
+			throw new ArgumentException($"Could not parse version {version} of {element} in {FileName}", e);
+		}
 	}
 
 	private void UpdateElement(XElement element, string latestVersion)

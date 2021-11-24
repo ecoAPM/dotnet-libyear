@@ -53,4 +53,27 @@ public class CsProjFileTests
 		Assert.Null(newFile.Packages["test6"]);
 		Assert.True(newFile.Packages["test7"]!.IsWildcard);
 	}
+
+	[Fact]
+	public async Task InvalidVersionShowsInfo()
+	{
+		//arrange
+		var filename = Path.Combine("FileTypes", "project.csproj");
+		var contents = await File.ReadAllTextAsync(filename);
+		var newContents = contents.Replace("0.2.0", "0.2.x");
+
+		try
+		{
+			//act
+			_ = new CsProjFile(filename, newContents);
+			Assert.False(true);
+		}
+		catch (Exception e)
+		{
+			//assert
+			Assert.Contains("0.2.x", e.Message);
+			Assert.Contains("test2", e.Message);
+			Assert.Contains("project.csproj", e.Message);
+		}
+	}
 }

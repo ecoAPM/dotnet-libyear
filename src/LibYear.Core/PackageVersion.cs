@@ -13,7 +13,6 @@ public sealed class PackageVersion : NuGetVersion
 		{
 			IsWildcard = true;
 		}
-
 	}
 
 	public PackageVersion(NuGetVersion? version)
@@ -31,38 +30,20 @@ public sealed class PackageVersion : NuGetVersion
 	{
 	}
 
-	private new static PackageVersion? Parse(string version)
-	{
-		if (version.Equals("*"))
-		{
-			return new PackageVersion(0, 0, 0);
-		}
-
-		try
-		{
-			var nuGetVersion = new NuGetVersion(version);
-			return new PackageVersion(nuGetVersion);
-		}
-		catch
-		{
-			return null;
-		}
-	}
+	private new static PackageVersion Parse(string version)
+		=> version.Equals("*")
+			? new PackageVersion(0, 0, 0)
+			: new PackageVersion(new NuGetVersion(version));
 
 	public override string ToString()
-	{
-		if (string.IsNullOrEmpty(OriginalVersion) || IsSemVer2)
-		{
-			return ToString("N", VersionFormatter.Instance);
-		}
-
-		return OriginalVersion;
-	}
+		=> string.IsNullOrEmpty(OriginalVersion) || IsSemVer2
+			? ToString("N", VersionFormatter.Instance)
+			: OriginalVersion;
 
 	public override string ToString(string format, IFormatProvider? formatProvider)
 	{
 		if (formatProvider == null
-			|| !TryFormatter(format, formatProvider, out var formattedString))
+		    || !TryFormatter(format, formatProvider, out var formattedString))
 		{
 			formattedString = ToString();
 		}

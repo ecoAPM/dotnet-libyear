@@ -42,4 +42,27 @@ public class DirectoryBuildPropsTests
 		Assert.Equal("2.3.4", newFile.Packages.Skip(1).First().Value!.ToString());
 		Assert.Equal("3.4.5", newFile.Packages.Skip(2).First().Value!.ToString());
 	}
+
+	[Fact]
+	public async Task InvalidVersionShowsInfo()
+	{
+		//arrange
+		var filename = Path.Combine("FileTypes", "Directory.Build.props");
+		var contents = await File.ReadAllTextAsync(filename);
+		var newContents = contents.Replace("0.2.0", "0.2.x");
+
+		try
+		{
+			//act
+			_ = new DirectoryBuildPropsFile(filename, newContents);
+			Assert.False(true);
+		}
+		catch (Exception e)
+		{
+			//assert
+			Assert.Contains("0.2.x", e.Message);
+			Assert.Contains("test2", e.Message);
+			Assert.Contains("Directory.Build.props", e.Message);
+		}
+	}
 }

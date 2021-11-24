@@ -1,8 +1,8 @@
 using System.Text;
-using LibYear.Lib;
-using LibYear.Lib.FileTypes;
+using LibYear.Core;
+using LibYear.Core.FileTypes;
 
-namespace LibYear.App;
+namespace LibYear;
 
 public class Runner
 {

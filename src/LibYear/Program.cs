@@ -1,9 +1,9 @@
 using System.Collections.Concurrent;
-using LibYear.Lib;
+using LibYear.Core;
 using NuGet.Configuration;
 using NuGet.Protocol.Core.Types;
 
-namespace LibYear.App;
+namespace LibYear;
 
 public static class Program
 {

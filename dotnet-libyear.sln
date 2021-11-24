@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibYear.App", "src\LibYear\LibYear.App.csproj", "{013F1FC6-1C75-4989-97A6-915BC58A70F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibYear", "src\LibYear\LibYear.csproj", "{013F1FC6-1C75-4989-97A6-915BC58A70F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibYear.App.Tests", "test\LibYear.Tests\LibYear.App.Tests.csproj", "{1E796120-4E44-4CA2-B489-532D7D865F37}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibYear.Tests", "test\LibYear.Tests\LibYear.Tests.csproj", "{1E796120-4E44-4CA2-B489-532D7D865F37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibYear.Lib", "src\LibYear.Lib\LibYear.Lib.csproj", "{94B51E20-1080-48AE-9160-FBB488050069}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibYear.Core", "src\LibYear.Core\LibYear.Core.csproj", "{94B51E20-1080-48AE-9160-FBB488050069}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibYear.Lib.Tests", "test\LibYear.Lib.Tests\LibYear.Lib.Tests.csproj", "{634DD86D-CA73-4C34-B5E6-125C87A47337}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibYear.Core.Tests", "test\LibYear.Core.Tests\LibYear.Core.Tests.csproj", "{634DD86D-CA73-4C34-B5E6-125C87A47337}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

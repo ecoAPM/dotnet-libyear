@@ -1,0 +1,9 @@
+namespace LibYear.Core.FileTypes;
+
+public interface IProjectFile
+{
+	string FileName { get; }
+	IDictionary<string, PackageVersion?> Packages { get; }
+	void Update(IEnumerable<Result> results);
+
+}

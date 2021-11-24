@@ -1,10 +1,10 @@
-using LibYear.Lib;
-using LibYear.Lib.FileTypes;
-using LibYear.Lib.Tests;
+using LibYear.Core;
+using LibYear.Core.FileTypes;
+using LibYear.Core.Tests;
 using NSubstitute;
 using Xunit;
 
-namespace LibYear.App.Tests;
+namespace LibYear.Tests;
 
 public class RunnerTests
 {

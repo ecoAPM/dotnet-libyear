@@ -23,7 +23,7 @@ jobs:
       run: dotnet pack -c Release -p:ContinuousIntegrationBuild=true
 
     - name: Publish app
-      run: dotnet nuget push src/LibYear/bin/Release/libyear.$(echo ${{ github.ref }} | sed 's/refs\/tags\///').nupkg -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push src/LibYear/bin/Release/LibYear.$(echo ${{ github.ref }} | sed 's/refs\/tags\///').nupkg -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json
 
     - name: Publish library
-      run: dotnet nuget push src/LibYear.Lib/bin/Release/libyear-lib.$(echo ${{ github.ref }} | sed 's/refs\/tags\///').nupkg -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push src/LibYear.Core/bin/Release/LibYear.Core.$(echo ${{ github.ref }} | sed 's/refs\/tags\///').nupkg -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json

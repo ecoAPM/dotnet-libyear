@@ -17,21 +17,22 @@ public class App
 		_console = console;
 	}
 
-	public void Run(Settings settings)
+	public async Task Run(Settings settings)
 	{
-		var projects = _projectFileManager.GetAllProjects(settings.Paths);
+		_console.WriteLine();
+		var projects = await _projectFileManager.GetAllProjects(settings.Paths);
 		if (!projects.Any())
 		{
 			_console.WriteLine("No project files found");
 			return;
 		}
 
-		var allResults = _checker.GetPackages(projects);
+		var allResults = await _checker.GetPackages(projects);
 		GetAllResultsTables(allResults, settings.QuietMode);
 
 		if (settings.Update)
 		{
-			var updated = _projectFileManager.Update(allResults);
+			var updated = await _projectFileManager.Update(allResults);
 			foreach (var projectFile in updated)
 			{
 				_console.WriteLine($"{projectFile} updated");

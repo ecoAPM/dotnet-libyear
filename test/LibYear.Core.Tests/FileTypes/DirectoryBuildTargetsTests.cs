@@ -6,13 +6,13 @@ namespace LibYear.Core.Tests.FileTypes;
 public class DirectoryBuildTargetsTests
 {
 	[Fact]
-	public void CanLoadDirectoryBuildTargetsFile()
+	public async Task CanLoadDirectoryBuildTargetsFile()
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "Directory.Build.targets");
 
 		//act
-		var file = new DirectoryBuildTargetsFile(filename, File.ReadAllText(filename));
+		var file = new DirectoryBuildTargetsFile(filename, await File.ReadAllTextAsync(filename));
 
 		//assert
 		Assert.Equal("test1", file.Packages.First().Key);
@@ -21,11 +21,11 @@ public class DirectoryBuildTargetsTests
 	}
 
 	[Fact]
-	public void CanUpdateDirectoryTargetsFile()
+	public async Task CanUpdateDirectoryTargetsFile()
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "Directory.Build.targets");
-		var file = new DirectoryBuildTargetsFile(filename, File.ReadAllText(filename));
+		var file = new DirectoryBuildTargetsFile(filename, await File.ReadAllTextAsync(filename));
 		var results = new[]
 		{
 			new Result("test1", new Release(new PackageVersion(0, 1, 0), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),

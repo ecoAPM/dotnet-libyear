@@ -10,37 +10,45 @@ public class ProjectFileManager : IProjectFileManager
 	public ProjectFileManager(IFileSystem fileSystem)
 		=> _fileSystem = fileSystem;
 
-	public IList<IProjectFile> GetAllProjects(IReadOnlyList<string> args)
-		=> args.Any()
-			? args.SelectMany(GetProjects).ToList()
-			: GetProjectsInDir(Directory.GetCurrentDirectory());
-
-	private IList<IProjectFile> GetProjects(string arg)
+	public async Task<IList<IProjectFile>> GetAllProjects(IReadOnlyList<string> paths)
 	{
-		if (_fileSystem.Directory.Exists(arg))
+		if (!paths.Any())
+			return await GetProjectsInDir(Directory.GetCurrentDirectory());
+
+		var tasks = paths.Select(GetProjects);
+		var projects = await Task.WhenAll(tasks);
+		return projects.SelectMany(p => p).ToList();
+	}
+
+	private async Task<IList<IProjectFile>> GetProjects(string path)
+	{
+		if (_fileSystem.Directory.Exists(path))
 		{
-			return GetProjectsInDir(arg);
+			return await GetProjectsInDir(path);
 		}
 
-		var fileInfo = _fileSystem.FileInfo.FromFileName(arg);
-		return new[] { ReadFile(fileInfo) }.Where(f => f != null).ToList()!;
+		var fileInfo = _fileSystem.FileInfo.FromFileName(path);
+		return new[] { await ReadFile(fileInfo) }.Where(f => f != null).ToList();
 	}
 
-	public IList<IProjectFile> GetProjectsInDir(string dirPath)
+	public async Task<IList<IProjectFile>> GetProjectsInDir(string dirPath)
 	{
 		var dir = _fileSystem.DirectoryInfo.FromDirectoryName(dirPath);
-		var projectFiles = FindProjectsInDir(dir, SearchOption.TopDirectoryOnly);
+		var projectFiles = await FindProjectsInDir(dir, SearchOption.TopDirectoryOnly);
 		return projectFiles.Any()
 			? projectFiles
-			: FindProjectsInDir(dir, SearchOption.AllDirectories);
+			: await FindProjectsInDir(dir, SearchOption.AllDirectories);
 	}
 
-	public IList<IProjectFile> FindProjectsInDir(IDirectoryInfo dir, SearchOption searchMode)
-		=> dir.EnumerateFiles("*.csproj", searchMode)
+	public async Task<IList<IProjectFile>> FindProjectsInDir(IDirectoryInfo dir, SearchOption searchMode)
+		=> await Task.WhenAll(FindProjects(dir, searchMode));
+
+	private IEnumerable<Task<IProjectFile>> FindProjects(IDirectoryInfo dir, SearchOption searchMode) =>
+		dir.EnumerateFiles("*.csproj", searchMode)
 			.Union(dir.EnumerateFiles("Directory.build.props", searchMode))
 			.Union(dir.EnumerateFiles("Directory.build.targets", searchMode))
 			.Union(dir.EnumerateFiles("packages.config", searchMode))
-			.Select<IFileInfo, IProjectFile>(ReadFile!)
+			.Select(ReadFile)
 			.ToList();
 
 	private static bool IsCsProjFile(IFileSystemInfo fileInfo) => fileInfo.Extension == ".csproj";
@@ -48,10 +56,11 @@ public class ProjectFileManager : IProjectFileManager
 	private static bool IsDirectoryBuildTargetsFile(IFileSystemInfo fileInfo) => fileInfo.Name == "Directory.Build.targets";
 	private static bool IsNuGetFile(IFileSystemInfo fileInfo) => fileInfo.Name == "packages.config";
 
-	private IProjectFile? ReadFile(IFileInfo fileInfo)
+	private async Task<IProjectFile> ReadFile(IFileSystemInfo fileInfo)
 	{
 		var path = fileInfo.FullName;
-		var contents = _fileSystem.File.ReadAllText(path);
+		var stream = _fileSystem.FileStream.Create(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+		var contents = await new StreamReader(stream).ReadToEndAsync();
 		if (IsCsProjFile(fileInfo))
 			return new CsProjFile(path, contents);
 		if (IsDirectoryBuildPropsFile(fileInfo))
@@ -61,10 +70,10 @@ public class ProjectFileManager : IProjectFileManager
 		if (IsNuGetFile(fileInfo))
 			return new PackagesConfigFile(path, contents);
 
-		return null;
+		throw new NotImplementedException("Unknown file type");
 	}
 
-	public IEnumerable<string> Update(IDictionary<IProjectFile, IEnumerable<Result>> allResults)
+	public async Task<IEnumerable<string>> Update(IDictionary<IProjectFile, IEnumerable<Result>> allResults)
 	{
 		var updated = new List<string>();
 		foreach (var result in allResults)
@@ -72,7 +81,9 @@ public class ProjectFileManager : IProjectFileManager
 			var projectFile = result.Key;
 			var results = result.Value;
 			var update = projectFile.Update(results);
-			_fileSystem.File.WriteAllText(projectFile.FileName, update);
+
+			var stream = _fileSystem.FileStream.Create(projectFile.FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+			await new StreamWriter(stream).WriteAsync(update);
 			updated.Add(projectFile.FileName);
 		}
 

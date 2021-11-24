@@ -7,7 +7,7 @@ namespace LibYear.Core.Tests;
 public class ProjectFileManagerTests
 {
 	[Fact]
-	public void CanFindProjectFiles()
+	public async Task CanFindProjectFiles()
 	{
 		//arrange
 		var fileSystem = new FileSystem();
@@ -15,7 +15,7 @@ public class ProjectFileManagerTests
 		var dir = fileSystem.DirectoryInfo.FromDirectoryName("FileTypes");
 
 		//act
-		var projects = fileManager.FindProjectsInDir(dir, SearchOption.TopDirectoryOnly);
+		var projects = await fileManager.FindProjectsInDir(dir, SearchOption.TopDirectoryOnly);
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
@@ -23,7 +23,7 @@ public class ProjectFileManagerTests
 	}
 
 	[Fact]
-	public void CanFindProjectFilesRecursively()
+	public async Task CanFindProjectFilesRecursively()
 	{
 		//arrange
 		var fileSystem = new FileSystem();
@@ -31,7 +31,7 @@ public class ProjectFileManagerTests
 		var dir = fileSystem.DirectoryInfo.FromDirectoryName(".");
 
 		//act
-		var projects = fileManager.FindProjectsInDir(dir, SearchOption.AllDirectories);
+		var projects = await fileManager.FindProjectsInDir(dir, SearchOption.AllDirectories);
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
@@ -39,14 +39,14 @@ public class ProjectFileManagerTests
 	}
 
 	[Fact]
-	public void CanGetProjectsForDir()
+	public async Task CanGetProjectsForDir()
 	{
 		//arrange
 		var fileSystem = new FileSystem();
 		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
-		var projects = fileManager.GetProjectsInDir("FileTypes");
+		var projects = await fileManager.GetProjectsInDir("FileTypes");
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
@@ -54,14 +54,14 @@ public class ProjectFileManagerTests
 	}
 
 	[Fact]
-	public void GetsProjectsRecursivelyIfNoneFound()
+	public async Task GetsProjectsRecursivelyIfNoneFound()
 	{
 		//arrange
 		var fileSystem = new FileSystem();
 		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
-		var projects = fileManager.GetProjectsInDir(".");
+		var projects = await fileManager.GetProjectsInDir(".");
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
@@ -69,7 +69,7 @@ public class ProjectFileManagerTests
 	}
 
 	[Fact]
-	public void CanGetAllProjectsForMultipleArgs()
+	public async Task CanGetAllProjectsForMultipleArgs()
 	{
 		//arrange
 		var fileSystem = new FileSystem();
@@ -81,7 +81,7 @@ public class ProjectFileManagerTests
 			Path.Combine("FileTypes", "project.csproj"),
 			Path.Combine("FileTypes", "packages.config")
 		};
-		var projects = fileManager.GetAllProjects(projectFileNames);
+		var projects = await fileManager.GetAllProjects(projectFileNames);
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
@@ -89,7 +89,7 @@ public class ProjectFileManagerTests
 	}
 
 	[Fact]
-	public void GetAllProjectsAddsMultipleProjectsForDirectories()
+	public async Task GetAllProjectsAddsMultipleProjectsForDirectories()
 	{
 		//arrange
 		var fileSystem = new FileSystem();
@@ -100,7 +100,7 @@ public class ProjectFileManagerTests
 		{
 			"FileTypes"
 		};
-		var projects = fileManager.GetAllProjects(projectFileNames);
+		var projects = await fileManager.GetAllProjects(projectFileNames);
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
@@ -108,14 +108,14 @@ public class ProjectFileManagerTests
 	}
 
 	[Fact]
-	public void GetAllProjectsGetsCurrentDirectoryByDefault()
+	public async Task GetAllProjectsGetsCurrentDirectoryByDefault()
 	{
 		//arrange
 		var fileSystem = new FileSystem();
 		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
-		var projects = fileManager.GetAllProjects(new List<string>());
+		var projects = await fileManager.GetAllProjects(new List<string>());
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
@@ -123,7 +123,7 @@ public class ProjectFileManagerTests
 	}
 
 	[Fact]
-	public void CanUpdateProjectFiles()
+	public async Task CanUpdateProjectFiles()
 	{
 		//arrange
 		var fileSystem = new FileSystem();
@@ -139,7 +139,7 @@ public class ProjectFileManagerTests
 				}
 			}
 		};
-		var updated = fileManager.Update(allResults);
+		var updated = await fileManager.Update(allResults);
 
 		//assert
 		Assert.Contains("test1", updated);

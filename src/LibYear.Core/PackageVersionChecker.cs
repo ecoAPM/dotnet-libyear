@@ -21,13 +21,17 @@ public class PackageVersionChecker : IPackageVersionChecker
 		_versionCache = versionCache;
 	}
 
-	public IDictionary<IProjectFile, IEnumerable<Result>> GetPackages(IEnumerable<IProjectFile> projectFiles)
-		=> projectFiles.ToDictionary(proj => proj, GetResults);
+	public async Task<IDictionary<IProjectFile, IEnumerable<Result>>> GetPackages(IEnumerable<IProjectFile> projectFiles)
+	{
+		var tasks = projectFiles.ToDictionary(proj => proj, GetResults);
+		await Task.WhenAll(tasks.Values);
+		return tasks.ToDictionary(p => p.Key, p => p.Value.GetAwaiter().GetResult());
+	}
 
-	private IEnumerable<Result> GetResults(IProjectFile proj)
+	private async Task<IEnumerable<Result>> GetResults(IProjectFile proj)
 	{
 		var results = proj.Packages.Select(p => GetResult(p.Key, p.Value));
-		return Task.WhenAll(results).GetAwaiter().GetResult();
+		return await Task.WhenAll(results);
 	}
 
 	public async Task<Result> GetResult(string packageName, PackageVersion? installed)

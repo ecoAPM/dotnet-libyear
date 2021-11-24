@@ -4,18 +4,18 @@ using Spectre.Console.Cli;
 
 namespace LibYear;
 
-public class Command : Command<Settings>
+public class Command : AsyncCommand<Settings>
 {
 	private readonly IAnsiConsole _console;
 
 	public Command(IAnsiConsole console)
 		=> _console = console;
 
-	public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
+	public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
 	{
 		try
 		{
-			_console.Status().Start("Running...", _ => Factory.App(_console).Run(settings));
+			await _console.Status().StartAsync("Running...", Run(settings));
 			return 0;
 		}
 		catch (Exception e)
@@ -24,4 +24,7 @@ public class Command : Command<Settings>
 			return 1;
 		}
 	}
+
+	private Func<StatusContext, Task> Run(Settings settings)
+		=> async _ => await Factory.App(_console).Run(settings);
 }

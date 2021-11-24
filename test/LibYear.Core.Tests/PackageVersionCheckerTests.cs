@@ -117,7 +117,7 @@ public class PackageVersionCheckerTests
 	}
 
 	[Fact]
-	public void GetPackagesGetsPackages()
+	public async Task GetPackagesGetsPackages()
 	{
 		//arrange
 		var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new PackageVersion(1, 2, 3))).Build();
@@ -132,7 +132,7 @@ public class PackageVersionCheckerTests
 		var project = new TestProjectFile("test", new Dictionary<string, PackageVersion?> { { "test", new PackageVersion(1, 2, 3) } });
 
 		//act
-		var packages = checker.GetPackages(new[] { project });
+		var packages = await checker.GetPackages(new[] { project });
 
 		//assert
 		var latest = packages.First().Value.First().Latest!.Version.ToString();

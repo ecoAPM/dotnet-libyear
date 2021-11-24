@@ -6,13 +6,13 @@ namespace LibYear.Core.Tests.FileTypes;
 public class DirectoryBuildPropsTests
 {
 	[Fact]
-	public void CanLoadDirectoryBuildPropsFile()
+	public async Task CanLoadDirectoryBuildPropsFile()
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "Directory.Build.props");
 
 		//act
-		var file = new DirectoryBuildPropsFile(filename, File.ReadAllText(filename));
+		var file = new DirectoryBuildPropsFile(filename, await File.ReadAllTextAsync(filename));
 
 		//assert
 		Assert.Equal("test1", file.Packages.First().Key);
@@ -21,11 +21,11 @@ public class DirectoryBuildPropsTests
 	}
 
 	[Fact]
-	public void CanUpdateDirectoryBuildPropsFile()
+	public async Task CanUpdateDirectoryBuildPropsFile()
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "Directory.Build.props");
-		var file = new DirectoryBuildPropsFile(filename, File.ReadAllText(filename));
+		var file = new DirectoryBuildPropsFile(filename, await File.ReadAllTextAsync(filename));
 		var results = new[]
 		{
 			new Result("test1", new Release(new PackageVersion(0, 1, 0), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),

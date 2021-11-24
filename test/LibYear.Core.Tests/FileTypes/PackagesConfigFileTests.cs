@@ -6,13 +6,13 @@ namespace LibYear.Core.Tests.FileTypes;
 public class PackagesConfigFileTests
 {
 	[Fact]
-	public void CanLoadPackagesConfigFile()
+	public async Task CanLoadPackagesConfigFile()
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "packages.config");
 
 		//act
-		var file = new PackagesConfigFile(filename, File.ReadAllText(filename));
+		var file = new PackagesConfigFile(filename, await File.ReadAllTextAsync(filename));
 
 		//assert
 		Assert.Equal("test1", file.Packages.First().Key);
@@ -21,11 +21,11 @@ public class PackagesConfigFileTests
 	}
 
 	[Fact]
-	public void CanUpdatePackagesConfigFile()
+	public async Task CanUpdatePackagesConfigFile()
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "packages.config");
-		var file = new PackagesConfigFile(filename, File.ReadAllText(filename));
+		var file = new PackagesConfigFile(filename, await File.ReadAllTextAsync(filename));
 		var results = new[]
 		{
 			new Result("test1", new Release(new PackageVersion(0, 1, 0), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),

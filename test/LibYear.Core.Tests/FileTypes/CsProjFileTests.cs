@@ -6,13 +6,13 @@ namespace LibYear.Core.Tests.FileTypes;
 public class CsProjFileTests
 {
 	[Fact]
-	public void CanLoadCsProjFile()
+	public async Task CanLoadCsProjFile()
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "project.csproj");
 
 		//act
-		var file = new CsProjFile(filename, File.ReadAllText(filename));
+		var file = new CsProjFile(filename, await File.ReadAllTextAsync(filename));
 
 		//assert
 		Assert.Equal("test1", file.Packages.First().Key);
@@ -25,11 +25,11 @@ public class CsProjFileTests
 	}
 
 	[Fact]
-	public void CanUpdateCsProjFile()
+	public async Task CanUpdateCsProjFile()
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "project.csproj");
-		var file = new CsProjFile(filename, File.ReadAllText(filename));
+		var file = new CsProjFile(filename, await File.ReadAllTextAsync(filename));
 		var results = new[]
 		{
 			new Result("test1", new Release(new PackageVersion(0, 1, 0, 1), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),

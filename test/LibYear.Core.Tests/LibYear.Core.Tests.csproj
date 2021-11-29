@@ -5,13 +5,13 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="coverlet.collector" Version="3.1.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-		<PackageReference Include="NSubstitute" Version="4.2.2" />
-		<PackageReference Include="NuGet.Protocol" Version="6.0.0" />
-		<PackageReference Include="System.IO.Abstractions" Version="13.2.47" />
+		<PackageReference Include="coverlet.collector" Version="3.1.2" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+		<PackageReference Include="NSubstitute" Version="4.4.0" />
+		<PackageReference Include="NuGet.Protocol" Version="6.2.1" />
+		<PackageReference Include="System.IO.Abstractions" Version="17.0.21" />
 		<PackageReference Include="xunit" Version="2.4.1" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
 		<ProjectReference Include="../../src/LibYear.Core/LibYear.Core.csproj" />
 		<None Include="FileTypes/packages.config" CopyToOutputDirectory="Always" />
 		<None Include="FileTypes/project.csproj" CopyToOutputDirectory="Always" />

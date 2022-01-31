@@ -9,7 +9,7 @@
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
 		<PackageReference Include="NSubstitute" Version="4.3.0" />
 		<PackageReference Include="NuGet.Protocol" Version="6.0.0" />
-		<PackageReference Include="System.IO.Abstractions" Version="16.1.4" />
+		<PackageReference Include="System.IO.Abstractions" Version="16.1.7" />
 		<PackageReference Include="xunit" Version="2.4.1" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
 		<ProjectReference Include="../../src/LibYear.Core/LibYear.Core.csproj" />

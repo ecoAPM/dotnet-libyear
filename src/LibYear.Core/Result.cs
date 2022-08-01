@@ -13,5 +13,9 @@ public class Result
 		Latest = latest;
 	}
 
-	public double YearsBehind => (Latest?.Date - Installed?.Date ?? TimeSpan.Zero).TotalDays / 365;
+	public double YearsBehind => DaysBehind > 0
+		? DaysBehind / 365
+		: 0;
+
+	private double DaysBehind => (Latest?.Date - Installed?.Date ?? TimeSpan.Zero).TotalDays;
 }

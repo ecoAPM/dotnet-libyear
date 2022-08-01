@@ -10,7 +10,7 @@ namespace LibYear.Tests;
 public class AppTests
 {
 	[Fact]
-	public void UpdateFlagUpdates()
+	public async Task UpdateFlagUpdates()
 	{
 		//arrange
 		var checker = Substitute.For<IPackageVersionChecker>();
@@ -23,14 +23,14 @@ public class AppTests
 		var app = new App(checker, manager, console);
 
 		//act
-		app.Run(new Settings { Update = true });
+		await app.Run(new Settings { Update = true });
 
 		//assert
 		Assert.Contains("updated", console.Output);
 	}
 
 	[Fact]
-	public void DisplaysPackagesByDefault()
+	public async Task DisplaysPackagesByDefault()
 	{
 		//arrange
 		var checker = Substitute.For<IPackageVersionChecker>();
@@ -48,14 +48,14 @@ public class AppTests
 		var app = new App(checker, manager, console);
 
 		//act
-		app.Run(new Settings());
+		await app.Run(new Settings());
 
 		//assert
 		Assert.Contains("test1", console.Output);
 	}
 
 	[Fact]
-	public void QuietModeIgnoresPackageAtNewestVersion()
+	public async Task QuietModeIgnoresPackageAtNewestVersion()
 	{
 		//arrange
 		var checker = Substitute.For<IPackageVersionChecker>();
@@ -73,14 +73,14 @@ public class AppTests
 		var app = new App(checker, manager, console);
 
 		//act
-		app.Run(new Settings { QuietMode = true });
+		await app.Run(new Settings { QuietMode = true });
 
 		//assert
 		Assert.DoesNotContain("test1", console.Output);
 	}
 
 	[Fact]
-	public void MultiplePackagesShowsGrandTotal()
+	public async Task MultiplePackagesShowsGrandTotal()
 	{
 		//arrange
 		var checker = Substitute.For<IPackageVersionChecker>();
@@ -100,14 +100,14 @@ public class AppTests
 		var app = new App(checker, manager, console);
 
 		//act
-		app.Run(new Settings { QuietMode = true });
+		await app.Run(new Settings { QuietMode = true });
 
 		//assert
 		Assert.Contains("Total", console.Output);
 	}
 
 	[Fact]
-	public void EmptyResultsAreSkipped()
+	public async Task EmptyResultsAreSkipped()
 	{
 		//arrange
 		var checker = Substitute.For<IPackageVersionChecker>();
@@ -127,7 +127,7 @@ public class AppTests
 		var app = new App(checker, manager, console);
 
 		//act
-		app.Run(new Settings());
+		await app.Run(new Settings());
 
 		//assert
 		Assert.Contains("test project 1", console.Output);
@@ -135,7 +135,7 @@ public class AppTests
 	}
 
 	[Fact]
-	public void MissingProjectFilesShowsError()
+	public async Task MissingProjectFilesShowsError()
 	{
 		//arrange
 		var checker = Substitute.For<IPackageVersionChecker>();
@@ -147,7 +147,7 @@ public class AppTests
 		var app = new App(checker, manager, console);
 
 		//act
-		app.Run(new Settings());
+		await app.Run(new Settings());
 
 		//assert
 		Assert.Contains("No project files found", console.Output);

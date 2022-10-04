@@ -4,5 +4,5 @@ namespace LibYear.Core;
 
 public interface IPackageVersionChecker
 {
-	Task<IDictionary<IProjectFile, IEnumerable<Result>>> GetPackages(IEnumerable<IProjectFile> projectFiles);
+	Task<SolutionResult> GetPackages(IReadOnlyCollection<IProjectFile> projectFiles);
 }

@@ -36,4 +36,12 @@ public class PackageVersionTests
 		Assert.Equal("0.0.0", version.ToString());
 		Assert.True(version.IsWildcard);
 	}
+
+	[Fact]
+	public void CanParseFormattedString()
+	{
+		var version = new PackageVersion("1.2.3");
+
+		Assert.Equal("1.2.3", version.ToString("N", null));
+	}
 }

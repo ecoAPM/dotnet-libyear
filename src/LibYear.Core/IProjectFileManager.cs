@@ -4,6 +4,6 @@ namespace LibYear.Core;
 
 public interface IProjectFileManager
 {
-	Task<IList<IProjectFile>> GetAllProjects(IReadOnlyList<string> paths);
-	Task<IEnumerable<string>> Update(IDictionary<IProjectFile, IEnumerable<Result>> allResults);
+	Task<IReadOnlyCollection<IProjectFile>> GetAllProjects(IReadOnlyCollection<string> paths);
+	Task<IReadOnlyCollection<string>> Update(SolutionResult result);
 }

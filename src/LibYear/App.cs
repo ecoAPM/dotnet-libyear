@@ -1,5 +1,4 @@
 using LibYear.Core;
-using LibYear.Core.FileTypes;
 using Spectre.Console;
 
 namespace LibYear;
@@ -17,61 +16,64 @@ public class App
 		_console = console;
 	}
 
-	public async Task Run(Settings settings)
+	public async Task<int> Run(Settings settings)
 	{
 		_console.WriteLine();
 		var projects = await _projectFileManager.GetAllProjects(settings.Paths);
 		if (!projects.Any())
 		{
 			_console.WriteLine("No project files found");
-			return;
+			return 1;
 		}
 
-		var allResults = await _checker.GetPackages(projects);
-		GetAllResultsTables(allResults, settings.QuietMode);
+		var result = await _checker.GetPackages(projects);
+		DisplayAllResultsTables(result, settings.QuietMode);
 
 		if (settings.Update)
 		{
-			var updated = await _projectFileManager.Update(allResults);
+			var updated = await _projectFileManager.Update(result);
 			foreach (var projectFile in updated)
 			{
 				_console.WriteLine($"{projectFile} updated");
 			}
 		}
+
+		var limitChecker = new LimitChecker(settings);
+		return limitChecker.AnyLimitsExceeded(result)
+			? 1
+			: 0;
 	}
 
-	private void GetAllResultsTables(IDictionary<IProjectFile, IEnumerable<Result>> allResults, bool quietMode)
+	private void DisplayAllResultsTables(SolutionResult allResults, bool quietMode)
 	{
-		if (!allResults.Any())
+		if (!allResults.Details.Any())
 			return;
 
-		int MaxLength(Func<Result, int> field) => allResults.Max(results => results.Value.Any() ? results.Value.Max(field) : 0);
+		int MaxLength(Func<Result, int> field) => allResults.Details.Max(results => results.Details.Any() ? results.Details.Max(field) : 0);
 		var namePad = Math.Max("Package".Length, MaxLength(r => r.Name.Length));
 		var installedPad = Math.Max("Installed".Length, MaxLength(r => r.Installed?.Version.ToString().Length ?? 0));
 		var latestPad = Math.Max("Latest".Length, MaxLength(r => r.Latest?.Version.ToString().Length ?? 0));
 
-		var width = allResults.Max(r => r.Key.FileName.Length);
-		foreach (var results in allResults)
+		var width = allResults.Details.Max(r => r.ProjectFile.FileName.Length);
+		foreach (var results in allResults.Details)
 			GetResultsTable(results, width, namePad, installedPad, latestPad, quietMode);
 
-		if (allResults.Count > 1)
+		if (allResults.Details.Count > 1)
 		{
-			var allTotal = allResults.Sum(ar => ar.Value.Sum(r => r.YearsBehind));
-			_console.WriteLine($"Total is {allTotal:F1} libyears behind");
+			_console.WriteLine($"Total is {allResults.YearsBehind:F1} libyears behind");
 		}
 	}
 
-	private void GetResultsTable(KeyValuePair<IProjectFile, IEnumerable<Result>> results, int titlePad, int namePad, int installedPad, int latestPad, bool quietMode)
+	private void GetResultsTable(ProjectResult results, int titlePad, int namePad, int installedPad, int latestPad, bool quietMode)
 	{
-		if (!results.Value.Any())
+		if (!results.Details.Any())
 			return;
 
-		var projectTotal = results.Value.Sum(r => r.YearsBehind);
 		var width = Math.Max(titlePad + 2, namePad + installedPad + latestPad + 48) + 2;
 		var table = new Table
 		{
-			Title = new TableTitle($"  {results.Key.FileName}".PadRight(width)),
-			Caption = new TableTitle(($"  Project is {projectTotal:F1} libyears behind").PadRight(width)),
+			Title = new TableTitle($"  {results.ProjectFile.FileName}".PadRight(width)),
+			Caption = new TableTitle(($"  Project is {results.YearsBehind:F1} libyears behind").PadRight(width)),
 			Width = width
 		};
 		table.AddColumn(new TableColumn("Package").Width(namePad));
@@ -81,7 +83,7 @@ public class App
 		table.AddColumn(new TableColumn("Released"));
 		table.AddColumn(new TableColumn("Age (y)"));
 
-		foreach (var result in results.Value.Where(r => !quietMode || r.YearsBehind > 0))
+		foreach (var result in results.Details.Where(r => !quietMode || r.YearsBehind > 0))
 		{
 			table.AddRow(
 				result.Name,
@@ -93,7 +95,7 @@ public class App
 			);
 		}
 
-		if (quietMode && projectTotal == 0)
+		if (quietMode && results.YearsBehind == 0)
 		{
 			table.ShowHeaders = false;
 		}

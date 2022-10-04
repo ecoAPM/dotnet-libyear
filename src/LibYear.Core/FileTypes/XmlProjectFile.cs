@@ -28,7 +28,7 @@ public abstract class XmlProjectFile : IProjectFile
 			);
 	}
 
-	public string Update(IEnumerable<Result> results)
+	public string Update(IReadOnlyCollection<Result> results)
 	{
 		foreach (var result in results.Where(r => r.Latest != null))
 		{
@@ -68,12 +68,11 @@ public abstract class XmlProjectFile : IProjectFile
 			e.Value = latestVersion;
 	}
 
-	private IEnumerable<XElement> GetMatchingElements(Result result)
-	{
-		return _xmlContents.Descendants(_elementName)
+	private IReadOnlyCollection<XElement> GetMatchingElements(Result result)
+		=> _xmlContents.Descendants(_elementName)
 			.Where(d => _packageAttributeNames.Any(attributeName => (d.Attribute(attributeName)?.Value ?? d.Element(attributeName)?.Value) == result.Name
 			                                                        && (d.Attribute(_versionAttributeName)?.Value ?? d.Element(_versionAttributeName)?.Value) == result.Installed?.Version.ToString()
 				)
-			);
-	}
+			)
+			.ToArray();
 }

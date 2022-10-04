@@ -8,30 +8,31 @@ namespace LibYear.Core;
 public class PackageVersionChecker : IPackageVersionChecker
 {
 	private readonly PackageMetadataResource _metadataResource;
-	private readonly IDictionary<string, IList<Release>> _versionCache;
+	private readonly IDictionary<string, IReadOnlyCollection<Release>> _versionCache;
 
 	public PackageVersionChecker(PackageMetadataResource metadataResource)
-		: this(metadataResource, new ConcurrentDictionary<string, IList<Release>>())
+		: this(metadataResource, new ConcurrentDictionary<string, IReadOnlyCollection<Release>>())
 	{
 	}
 
-	public PackageVersionChecker(PackageMetadataResource metadataResource, IDictionary<string, IList<Release>> versionCache)
+	public PackageVersionChecker(PackageMetadataResource metadataResource, IDictionary<string, IReadOnlyCollection<Release>> versionCache)
 	{
 		_metadataResource = metadataResource;
 		_versionCache = versionCache;
 	}
 
-	public async Task<IDictionary<IProjectFile, IEnumerable<Result>>> GetPackages(IEnumerable<IProjectFile> projectFiles)
+	public async Task<SolutionResult> GetPackages(IReadOnlyCollection<IProjectFile> projectFiles)
 	{
 		var tasks = projectFiles.ToDictionary(proj => proj, GetResults);
-		await Task.WhenAll(tasks.Values);
-		return tasks.ToDictionary(p => p.Key, p => p.Value.GetAwaiter().GetResult());
+		var results = await Task.WhenAll(tasks.Values);
+		return new SolutionResult(results);
 	}
 
-	private async Task<IEnumerable<Result>> GetResults(IProjectFile proj)
+	private async Task<ProjectResult> GetResults(IProjectFile proj)
 	{
-		var results = proj.Packages.Select(p => GetResult(p.Key, p.Value));
-		return await Task.WhenAll(results);
+		var tasks = proj.Packages.Select(p => GetResult(p.Key, p.Value));
+		var results = await Task.WhenAll(tasks);
+		return new ProjectResult(proj, results);
 	}
 
 	public async Task<Result> GetResult(string packageName, PackageVersion? installed)
@@ -52,9 +53,9 @@ public class PackageVersionChecker : IPackageVersionChecker
 		return new Result(packageName, current, latest);
 	}
 
-	public async Task<IList<Release>> GetVersions(string packageName)
+	public async Task<IReadOnlyCollection<Release>> GetVersions(string packageName)
 	{
 		var metadata = await _metadataResource.GetMetadataAsync(packageName, true, true, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
-		return metadata.Select(m => new Release(m)).ToList();
+		return metadata.Select(m => new Release(m)).ToArray();
 	}
 }

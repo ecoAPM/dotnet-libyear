@@ -1,5 +1,4 @@
 using System.IO.Abstractions;
-using LibYear.Core.FileTypes;
 using Xunit;
 
 namespace LibYear.Core.Tests;
@@ -115,7 +114,7 @@ public class ProjectFileManagerTests
 		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
-		var projects = await fileManager.GetAllProjects(new List<string>());
+		var projects = await fileManager.GetAllProjects(Array.Empty<string>());
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
@@ -130,15 +129,13 @@ public class ProjectFileManagerTests
 		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
-		var allResults = new Dictionary<IProjectFile, IEnumerable<Result>>
+		var allResults = new SolutionResult(new[]
 		{
+			new ProjectResult(new TestProjectFile("test1"), new[]
 			{
-				new TestProjectFile("test1"), new[]
-				{
-					new Result("test1", new Release(new PackageVersion(0, 1, 0), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),
-				}
-			}
-		};
+				new Result("test1", new Release(new PackageVersion(0, 1, 0), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),
+			})
+		});
 		var updated = await fileManager.Update(allResults);
 
 		//assert

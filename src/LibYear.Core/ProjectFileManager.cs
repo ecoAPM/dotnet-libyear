@@ -10,17 +10,17 @@ public class ProjectFileManager : IProjectFileManager
 	public ProjectFileManager(IFileSystem fileSystem)
 		=> _fileSystem = fileSystem;
 
-	public async Task<IList<IProjectFile>> GetAllProjects(IReadOnlyList<string> paths)
+	public async Task<IReadOnlyCollection<IProjectFile>> GetAllProjects(IReadOnlyCollection<string> paths)
 	{
 		if (!paths.Any())
 			return await GetProjectsInDir(Directory.GetCurrentDirectory());
 
 		var tasks = paths.Select(GetProjects);
 		var projects = await Task.WhenAll(tasks);
-		return projects.SelectMany(p => p).ToList();
+		return projects.SelectMany(p => p).ToArray();
 	}
 
-	private async Task<IList<IProjectFile>> GetProjects(string path)
+	private async Task<IReadOnlyCollection<IProjectFile>> GetProjects(string path)
 	{
 		if (_fileSystem.Directory.Exists(path))
 		{
@@ -28,10 +28,10 @@ public class ProjectFileManager : IProjectFileManager
 		}
 
 		var fileInfo = _fileSystem.FileInfo.FromFileName(path);
-		return new[] { await ReadFile(fileInfo) }.Where(f => f != null).ToList();
+		return new[] { await ReadFile(fileInfo) }.ToArray();
 	}
 
-	public async Task<IList<IProjectFile>> GetProjectsInDir(string dirPath)
+	public async Task<IReadOnlyCollection<IProjectFile>> GetProjectsInDir(string dirPath)
 	{
 		var dir = _fileSystem.DirectoryInfo.FromDirectoryName(dirPath);
 		var projectFiles = await FindProjectsInDir(dir, SearchOption.TopDirectoryOnly);
@@ -40,16 +40,16 @@ public class ProjectFileManager : IProjectFileManager
 			: await FindProjectsInDir(dir, SearchOption.AllDirectories);
 	}
 
-	public async Task<IList<IProjectFile>> FindProjectsInDir(IDirectoryInfo dir, SearchOption searchMode)
+	public async Task<IReadOnlyCollection<IProjectFile>> FindProjectsInDir(IDirectoryInfo dir, SearchOption searchMode)
 		=> await Task.WhenAll(FindProjects(dir, searchMode));
 
-	private IEnumerable<Task<IProjectFile>> FindProjects(IDirectoryInfo dir, SearchOption searchMode) =>
+	private IReadOnlyCollection<Task<IProjectFile>> FindProjects(IDirectoryInfo dir, SearchOption searchMode) =>
 		dir.EnumerateFiles("*.csproj", searchMode)
 			.Union(dir.EnumerateFiles("Directory.build.props", searchMode))
 			.Union(dir.EnumerateFiles("Directory.build.targets", searchMode))
 			.Union(dir.EnumerateFiles("packages.config", searchMode))
 			.Select(ReadFile)
-			.ToList();
+			.ToArray();
 
 	private static bool IsCsProjFile(IFileSystemInfo fileInfo) => fileInfo.Extension == ".csproj";
 	private static bool IsDirectoryBuildPropsFile(IFileSystemInfo fileInfo) => fileInfo.Name == "Directory.Build.props";
@@ -73,18 +73,16 @@ public class ProjectFileManager : IProjectFileManager
 		throw new NotImplementedException("Unknown file type");
 	}
 
-	public async Task<IEnumerable<string>> Update(IDictionary<IProjectFile, IEnumerable<Result>> allResults)
+	public async Task<IReadOnlyCollection<string>> Update(SolutionResult result)
 	{
 		var updated = new List<string>();
-		foreach (var result in allResults)
+		foreach (var project in result.Details)
 		{
-			var projectFile = result.Key;
-			var results = result.Value;
-			var update = projectFile.Update(results);
+			var update = project.ProjectFile.Update(project.Details);
 
-			var stream = _fileSystem.FileStream.Create(projectFile.FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+			var stream = _fileSystem.FileStream.Create(project.ProjectFile.FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
 			await new StreamWriter(stream).WriteAsync(update);
-			updated.Add(projectFile.FileName);
+			updated.Add(project.ProjectFile.FileName);
 		}
 
 		return updated;

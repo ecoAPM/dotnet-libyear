@@ -14,10 +14,11 @@ public class AppTests
 	{
 		//arrange
 		var checker = Substitute.For<IPackageVersionChecker>();
+		checker.GetPackages(Arg.Any<IReadOnlyCollection<IProjectFile>>()).Returns(new SolutionResult(Array.Empty<ProjectResult>()));
 
 		var manager = Substitute.For<IProjectFileManager>();
-		manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { new TestProjectFile("test1") });
-		manager.Update(Arg.Any<IDictionary<IProjectFile, IEnumerable<Result>>>()).Returns(new[] { "updated" });
+		manager.GetAllProjects(Arg.Any<IReadOnlyCollection<string>>()).Returns(new IProjectFile[] { new TestProjectFile("test1") });
+		manager.Update(Arg.Any<SolutionResult>()).Returns(new[] { "updated" });
 
 		var console = new TestConsole();
 		var app = new App(checker, manager, console);
@@ -35,14 +36,13 @@ public class AppTests
 		//arrange
 		var checker = Substitute.For<IPackageVersionChecker>();
 		var projectFile = new TestProjectFile("test project");
-		var results = new Dictionary<IProjectFile, IEnumerable<Result>>
-		{
-			{ projectFile, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) } }
-		};
-		checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
+		var result = new ProjectResult(projectFile, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) });
+
+		var results = new SolutionResult(new[] { result });
+		checker.GetPackages(Arg.Any<IReadOnlyCollection<IProjectFile>>()).Returns(results);
 
 		var manager = Substitute.For<IProjectFileManager>();
-		manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { projectFile });
+		manager.GetAllProjects(Arg.Any<IReadOnlyCollection<string>>()).Returns(new IProjectFile[] { projectFile });
 
 		var console = new TestConsole();
 		var app = new App(checker, manager, console);
@@ -60,14 +60,13 @@ public class AppTests
 		//arrange
 		var checker = Substitute.For<IPackageVersionChecker>();
 		var projectFile = new TestProjectFile("test project");
-		var results = new Dictionary<IProjectFile, IEnumerable<Result>>
-		{
-			{ projectFile, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) } }
-		};
-		checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
+		var result = new ProjectResult(projectFile, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) });
+
+		var results = new SolutionResult(new[] { result });
+		checker.GetPackages(Arg.Any<IReadOnlyCollection<IProjectFile>>()).Returns(results);
 
 		var manager = Substitute.For<IProjectFileManager>();
-		manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { projectFile });
+		manager.GetAllProjects(Arg.Any<IReadOnlyCollection<string>>()).Returns(new IProjectFile[] { projectFile });
 
 		var console = new TestConsole();
 		var app = new App(checker, manager, console);
@@ -86,15 +85,15 @@ public class AppTests
 		var checker = Substitute.For<IPackageVersionChecker>();
 		var projectFile1 = new TestProjectFile("test project 1");
 		var projectFile2 = new TestProjectFile("test project 2");
-		var results = new Dictionary<IProjectFile, IEnumerable<Result>>
+		var results = new SolutionResult(new []
 		{
-			{ projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) } },
-			{ projectFile2, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) } }
-		};
-		checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
+			new ProjectResult(projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) }),
+			new ProjectResult(projectFile2, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) })
+		});
+		checker.GetPackages(Arg.Any<IReadOnlyCollection<IProjectFile>>()).Returns(results);
 
 		var manager = Substitute.For<IProjectFileManager>();
-		manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { projectFile1, projectFile2 });
+		manager.GetAllProjects(Arg.Any<IReadOnlyCollection<string>>()).Returns(new IProjectFile[] { projectFile1, projectFile2 });
 
 		var console = new TestConsole();
 		var app = new App(checker, manager, console);
@@ -113,15 +112,15 @@ public class AppTests
 		var checker = Substitute.For<IPackageVersionChecker>();
 		var projectFile1 = new TestProjectFile("test project 1");
 		var projectFile2 = new TestProjectFile("test project 2");
-		var results = new Dictionary<IProjectFile, IEnumerable<Result>>
+		var results = new SolutionResult(new []
 		{
-			{ projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) } },
-			{ projectFile2, new List<Result>() }
-		};
-		checker.GetPackages(Arg.Any<IEnumerable<IProjectFile>>()).Returns(results);
+			new ProjectResult(projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) }),
+			new ProjectResult(projectFile2, new List<Result>())
+		});
+		checker.GetPackages(Arg.Any<IReadOnlyCollection<IProjectFile>>()).Returns(results);
 
 		var manager = Substitute.For<IProjectFileManager>();
-		manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new IProjectFile[] { projectFile1, projectFile2 });
+		manager.GetAllProjects(Arg.Any<IReadOnlyCollection<string>>()).Returns(new IProjectFile[] { projectFile1, projectFile2 });
 
 		var console = new TestConsole();
 		var app = new App(checker, manager, console);
@@ -141,7 +140,7 @@ public class AppTests
 		var checker = Substitute.For<IPackageVersionChecker>();
 
 		var manager = Substitute.For<IProjectFileManager>();
-		manager.GetAllProjects(Arg.Any<IReadOnlyList<string>>()).Returns(new List<IProjectFile>());
+		manager.GetAllProjects(Arg.Any<IReadOnlyCollection<string>>()).Returns(Array.Empty<IProjectFile>());
 
 		var console = new TestConsole();
 		var app = new App(checker, manager, console);

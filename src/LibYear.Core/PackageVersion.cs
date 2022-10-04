@@ -42,8 +42,7 @@ public sealed class PackageVersion : NuGetVersion
 
 	public override string ToString(string format, IFormatProvider? formatProvider)
 	{
-		if (formatProvider == null
-		    || !TryFormatter(format, formatProvider, out var formattedString))
+		if (formatProvider == null || !TryFormatter(format, formatProvider, out var formattedString))
 		{
 			formattedString = ToString();
 		}

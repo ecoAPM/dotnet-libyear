@@ -1,6 +1,6 @@
 namespace LibYear.Core;
 
-public class Result
+public class Result : HasAgeMeasurements
 {
 	public string Name { get; }
 	public Release? Installed { get; }
@@ -13,9 +13,6 @@ public class Result
 		Latest = latest;
 	}
 
-	public double YearsBehind => DaysBehind > 0
-		? DaysBehind / 365
-		: 0;
-
-	private double DaysBehind => (Latest?.Date - Installed?.Date ?? TimeSpan.Zero).TotalDays;
+	public override double DaysBehind
+		=> (Latest?.Date - Installed?.Date ?? TimeSpan.Zero).TotalDays;
 }

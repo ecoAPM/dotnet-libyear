@@ -27,13 +27,13 @@ public class ProjectFileManager : IProjectFileManager
 			return await GetProjectsInDir(path);
 		}
 
-		var fileInfo = _fileSystem.FileInfo.FromFileName(path);
+		var fileInfo = _fileSystem.FileInfo.New(path);
 		return new[] { await ReadFile(fileInfo) }.ToArray();
 	}
 
 	public async Task<IReadOnlyCollection<IProjectFile>> GetProjectsInDir(string dirPath)
 	{
-		var dir = _fileSystem.DirectoryInfo.FromDirectoryName(dirPath);
+		var dir = _fileSystem.DirectoryInfo.New(dirPath);
 		var projectFiles = await FindProjectsInDir(dir, SearchOption.TopDirectoryOnly);
 		return projectFiles.Any()
 			? projectFiles
@@ -59,7 +59,7 @@ public class ProjectFileManager : IProjectFileManager
 	private async Task<IProjectFile> ReadFile(IFileSystemInfo fileInfo)
 	{
 		var path = fileInfo.FullName;
-		var stream = _fileSystem.FileStream.Create(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+		var stream = _fileSystem.FileStream.New(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 		var contents = await new StreamReader(stream).ReadToEndAsync();
 		if (IsCsProjFile(fileInfo))
 			return new CsProjFile(path, contents);
@@ -80,7 +80,7 @@ public class ProjectFileManager : IProjectFileManager
 		{
 			var update = project.ProjectFile.Update(project.Details);
 
-			var stream = _fileSystem.FileStream.Create(project.ProjectFile.FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+			var stream = _fileSystem.FileStream.New(project.ProjectFile.FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
 			await new StreamWriter(stream).WriteAsync(update);
 			updated.Add(project.ProjectFile.FileName);
 		}

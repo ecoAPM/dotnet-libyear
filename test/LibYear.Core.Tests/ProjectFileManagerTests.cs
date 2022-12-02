@@ -11,7 +11,7 @@ public class ProjectFileManagerTests
 		//arrange
 		var fileSystem = new FileSystem();
 		var fileManager = new ProjectFileManager(fileSystem);
-		var dir = fileSystem.DirectoryInfo.FromDirectoryName("FileTypes");
+		var dir = fileSystem.DirectoryInfo.New("FileTypes");
 
 		//act
 		var projects = await fileManager.FindProjectsInDir(dir, SearchOption.TopDirectoryOnly);
@@ -27,7 +27,7 @@ public class ProjectFileManagerTests
 		//arrange
 		var fileSystem = new FileSystem();
 		var fileManager = new ProjectFileManager(fileSystem);
-		var dir = fileSystem.DirectoryInfo.FromDirectoryName(".");
+		var dir = fileSystem.DirectoryInfo.New(".");
 
 		//act
 		var projects = await fileManager.FindProjectsInDir(dir, SearchOption.AllDirectories);

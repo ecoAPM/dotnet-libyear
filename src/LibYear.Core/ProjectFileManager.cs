@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using System.Text;
 using LibYear.Core.FileTypes;
 
 namespace LibYear.Core;
@@ -61,6 +62,8 @@ public class ProjectFileManager : IProjectFileManager
 		var path = fileInfo.FullName;
 		var stream = _fileSystem.FileStream.New(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 		var contents = await new StreamReader(stream).ReadToEndAsync();
+		stream.Close();
+
 		if (IsCsProjFile(fileInfo))
 			return new CsProjFile(path, contents);
 		if (IsDirectoryBuildPropsFile(fileInfo))
@@ -82,6 +85,7 @@ public class ProjectFileManager : IProjectFileManager
 
 			var stream = _fileSystem.FileStream.New(project.ProjectFile.FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
 			await new StreamWriter(stream).WriteAsync(update);
+			stream.Close();
 			updated.Add(project.ProjectFile.FileName);
 		}
 

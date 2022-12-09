@@ -18,9 +18,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
-		<PackageReference Include="NuGet.Protocol" Version="6.4.0" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
+		<PackageReference Include="NuGet.Protocol" Version="6.7.0" />
 		<None Include="../../README.md" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="." />
-		<PackageReference Include="System.IO.Abstractions" Version="18.0.1" />
+		<PackageReference Include="System.IO.Abstractions" Version="19.2.87" />
 	</ItemGroup>
 </Project>

@@ -21,6 +21,6 @@
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
 		<PackageReference Include="NuGet.Protocol" Version="6.5.0" />
 		<None Include="../../README.md" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="." />
-		<PackageReference Include="System.IO.Abstractions" Version="19.2.16" />
+		<PackageReference Include="System.IO.Abstractions" Version="19.2.18" />
 	</ItemGroup>
 </Project>

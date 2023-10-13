@@ -11,7 +11,7 @@
 		<PackageReference Include="NuGet.Protocol" Version="6.7.0" />
 		<PackageReference Include="System.IO.Abstractions" Version="19.2.69" />
 		<PackageReference Include="xunit" Version="2.5.2" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
 		<ProjectReference Include="../../src/LibYear.Core/LibYear.Core.csproj" />
 		<None Include="FileTypes/packages.config" CopyToOutputDirectory="Always" />
 		<None Include="FileTypes/project.csproj" CopyToOutputDirectory="Always" />

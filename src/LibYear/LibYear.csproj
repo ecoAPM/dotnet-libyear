@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Version>7.0.1</Version>
+		<Version>8.0.0</Version>
 		<OutputType>Exe</OutputType>
 		<PackAsTool>true</PackAsTool>
 		<Product>libyear</Product>
 		<PackageId>LibYear</PackageId>
 		<ToolCommandName>dotnet-libyear</ToolCommandName>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Authors>ecoAPM LLC</Authors>
 		<Company>ecoAPM LLC</Company>
 		<Copyright>ecoAPM LLC</Copyright>

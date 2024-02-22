@@ -1,6 +1,5 @@
-using System.IO.Abstractions;
-using System.Text;
 using LibYear.Core.FileTypes;
+using System.IO.Abstractions;
 
 namespace LibYear.Core;
 
@@ -49,6 +48,7 @@ public class ProjectFileManager : IProjectFileManager
 			.Union(dir.EnumerateFiles("Directory.build.props", searchMode))
 			.Union(dir.EnumerateFiles("Directory.build.targets", searchMode))
 			.Union(dir.EnumerateFiles("packages.config", searchMode))
+			.Union(dir.EnumerateFiles("Directory.packages.props", searchMode))
 			.Select(ReadFile)
 			.ToArray();
 
@@ -56,6 +56,7 @@ public class ProjectFileManager : IProjectFileManager
 	private static bool IsDirectoryBuildPropsFile(IFileSystemInfo fileInfo) => fileInfo.Name == "Directory.Build.props";
 	private static bool IsDirectoryBuildTargetsFile(IFileSystemInfo fileInfo) => fileInfo.Name == "Directory.Build.targets";
 	private static bool IsNuGetFile(IFileSystemInfo fileInfo) => fileInfo.Name == "packages.config";
+	private static bool IsDirectoryPackagesPropsFile(IFileSystemInfo fileInfo) => fileInfo.Name == "Directory.Packages.props";
 
 	private async Task<IProjectFile> ReadFile(IFileSystemInfo fileInfo)
 	{
@@ -72,6 +73,8 @@ public class ProjectFileManager : IProjectFileManager
 			return new DirectoryBuildTargetsFile(path, contents);
 		if (IsNuGetFile(fileInfo))
 			return new PackagesConfigFile(path, contents);
+		if (IsDirectoryPackagesPropsFile(fileInfo))
+			return new DirectoryPackagesPropsFile(path, contents);
 
 		throw new NotImplementedException("Unknown file type");
 	}

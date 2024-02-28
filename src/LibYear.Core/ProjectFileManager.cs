@@ -56,7 +56,7 @@ public class ProjectFileManager : IProjectFileManager
 	private static bool IsDirectoryBuildPropsFile(IFileSystemInfo fileInfo) => fileInfo.Name == "Directory.Build.props";
 	private static bool IsDirectoryBuildTargetsFile(IFileSystemInfo fileInfo) => fileInfo.Name == "Directory.Build.targets";
 	private static bool IsNuGetFile(IFileSystemInfo fileInfo) => fileInfo.Name == "packages.config";
-	private static bool IsDirectoryPackagesPropsFile(IFileSystemInfo fileInfo) => fileInfo.Name == "Directory.Packages.props";
+	private static bool IsCentralPackageManagementFile(IFileSystemInfo fileInfo) => fileInfo.Name == "Directory.Packages.props";
 
 	private async Task<IProjectFile> ReadFile(IFileSystemInfo fileInfo)
 	{
@@ -73,8 +73,8 @@ public class ProjectFileManager : IProjectFileManager
 			return new DirectoryBuildTargetsFile(path, contents);
 		if (IsNuGetFile(fileInfo))
 			return new PackagesConfigFile(path, contents);
-		if (IsDirectoryPackagesPropsFile(fileInfo))
-			return new DirectoryPackagesPropsFile(path, contents);
+		if (IsCentralPackageManagementFile(fileInfo))
+			return new CentralPackageManagementFile(path, contents);
 
 		throw new NotImplementedException("Unknown file type");
 	}

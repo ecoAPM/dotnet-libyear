@@ -3,7 +3,7 @@ using Xunit;
 
 namespace LibYear.Core.Tests.FileTypes;
 
-public class DirectoryBuildTargetsTests
+public class DirectoryBuildTargetsFileTests
 {
 	[Fact]
 	public async Task CanLoadDirectoryBuildTargetsFile()

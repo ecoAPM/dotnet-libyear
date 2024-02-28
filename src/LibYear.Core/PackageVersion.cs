@@ -15,7 +15,7 @@ public sealed class PackageVersion : NuGetVersion
 		}
 	}
 
-	public PackageVersion(NuGetVersion? version)
+	public PackageVersion(NuGetVersion version)
 		: base(version)
 	{
 	}
@@ -40,9 +40,9 @@ public sealed class PackageVersion : NuGetVersion
 			? ToString("N", VersionFormatter.Instance)
 			: OriginalVersion;
 
-	public override string ToString(string format, IFormatProvider? formatProvider)
+	public override string ToString(string? format, IFormatProvider? formatProvider)
 	{
-		if (formatProvider == null || !TryFormatter(format, formatProvider, out var formattedString))
+		if (format == null || formatProvider == null || !TryFormatter(format, formatProvider, out var formattedString))
 		{
 			formattedString = ToString();
 		}

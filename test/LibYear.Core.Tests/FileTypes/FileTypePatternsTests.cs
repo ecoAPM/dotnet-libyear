@@ -36,10 +36,10 @@ public class FileTypePatternsTests
 	}
 
 	[Fact]
-	public void CanMatchDirectoryBuildPropsFiles()
+	public void CanMatchMSBuildPropsFiles()
 	{
 		//arrange
-		var regex = FileTypePatterns.DirectoryBuildProps();
+		var regex = FileTypePatterns.MSBuildProps();
 
 		//act
 		var match = regex.IsMatch("Directory.Build.props");
@@ -51,10 +51,10 @@ public class FileTypePatternsTests
 	}
 
 	[Fact]
-	public void CanMatchDirectoryBuildTargetsFiles()
+	public void CanMatchMSBuildTargetsFiles()
 	{
 		//arrange
-		var regex = FileTypePatterns.DirectoryBuildTargets();
+		var regex = FileTypePatterns.MSBuildTargets();
 
 		//act
 		var match = regex.IsMatch("Directory.Build.targets");

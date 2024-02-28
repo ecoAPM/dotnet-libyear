@@ -47,8 +47,8 @@ public class ProjectFileManager : IProjectFileManager
 		dir.EnumerateFiles("*.*", searchMode)
 			.Where(f => f.IsCsProjFile()
 				|| f.IsNuGetFile()
-				|| f.IsDirectoryBuildPropsFile()
-				|| f.IsDirectoryBuildTargetsFile()
+				|| f.IsMSBuildPropsFile()
+				|| f.IsMSBuildTargetsFile()
 				|| f.IsCentralPackageManagementFile())
 			.Select(ReadFile)
 			.ToArray();
@@ -62,10 +62,10 @@ public class ProjectFileManager : IProjectFileManager
 
 		if (fileInfo.IsCsProjFile())
 			return new CsProjFile(path, contents);
-		if (fileInfo.IsDirectoryBuildPropsFile())
-			return new DirectoryBuildPropsFile(path, contents);
-		if (fileInfo.IsDirectoryBuildTargetsFile())
-			return new DirectoryBuildTargetsFile(path, contents);
+		if (fileInfo.IsMSBuildPropsFile())
+			return new MSBuildPropsFile(path, contents);
+		if (fileInfo.IsMSBuildTargetsFile())
+			return new MSBuildTargetsFile(path, contents);
 		if (fileInfo.IsNuGetFile())
 			return new PackagesConfigFile(path, contents);
 		if (fileInfo.IsCentralPackageManagementFile())

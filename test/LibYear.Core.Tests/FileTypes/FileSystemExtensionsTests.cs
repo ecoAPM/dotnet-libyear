@@ -41,7 +41,7 @@ public class FileSystemExtensionsTests
 	}
 
 	[Fact]
-	public void CanMatchDirectoryBuildPropsFile()
+	public void CanMatchMSBuildPropsFile()
 	{
 		//arrange
 		var fileSystem = new FileSystem();
@@ -49,8 +49,8 @@ public class FileSystemExtensionsTests
 		var noMatchInfo = fileSystem.FileInfo.New("Directory.Build.NoCops");
 
 		//act
-		var isMatch = matchInfo.IsDirectoryBuildPropsFile();
-		var isNotMatch = noMatchInfo.IsDirectoryBuildPropsFile();
+		var isMatch = matchInfo.IsMSBuildPropsFile();
+		var isNotMatch = noMatchInfo.IsMSBuildPropsFile();
 
 		//assert
 		Assert.True(isMatch);
@@ -58,7 +58,7 @@ public class FileSystemExtensionsTests
 	}
 
 	[Fact]
-	public void CanMatchDirectoryBuildTargetsFile()
+	public void CanMatchMSBuildTargetsFile()
 	{
 		//arrange
 		var fileSystem = new FileSystem();
@@ -66,8 +66,8 @@ public class FileSystemExtensionsTests
 		var noMatchInfo = fileSystem.FileInfo.New("Directory.destroy.targets");
 
 		//act
-		var isMatch = matchInfo.IsDirectoryBuildTargetsFile();
-		var isNotMatch = noMatchInfo.IsDirectoryBuildTargetsFile();
+		var isMatch = matchInfo.IsMSBuildTargetsFile();
+		var isNotMatch = noMatchInfo.IsMSBuildTargetsFile();
 
 		//assert
 		Assert.True(isMatch);

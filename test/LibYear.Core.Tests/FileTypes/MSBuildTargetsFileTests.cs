@@ -3,16 +3,16 @@ using Xunit;
 
 namespace LibYear.Core.Tests.FileTypes;
 
-public class DirectoryBuildTargetsFileTests
+public class MSBuildTargetsFileTests
 {
 	[Fact]
-	public async Task CanLoadDirectoryBuildTargetsFile()
+	public async Task CanLoadMSBuildTargetsFile()
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "Directory.Build.targets");
 
 		//act
-		var file = new DirectoryBuildTargetsFile(filename, await File.ReadAllTextAsync(filename));
+		var file = new MSBuildTargetsFile(filename, await File.ReadAllTextAsync(filename));
 
 		//assert
 		Assert.Equal("test1", file.Packages.First().Key);
@@ -25,7 +25,7 @@ public class DirectoryBuildTargetsFileTests
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "Directory.Build.targets");
-		var file = new DirectoryBuildTargetsFile(filename, await File.ReadAllTextAsync(filename));
+		var file = new MSBuildTargetsFile(filename, await File.ReadAllTextAsync(filename));
 		var results = new[]
 		{
 			new Result("test1", new Release(new PackageVersion(0, 1, 0), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),
@@ -37,7 +37,7 @@ public class DirectoryBuildTargetsFileTests
 		var updated = file.Update(results);
 
 		//assert
-		var newFile = new DirectoryBuildTargetsFile(filename, updated);
+		var newFile = new MSBuildTargetsFile(filename, updated);
 		Assert.Equal("1.2.3", newFile.Packages.First().Value!.ToString());
 		Assert.Equal("2.3.4", newFile.Packages.Skip(1).First().Value!.ToString());
 		Assert.Equal("3.4.5", newFile.Packages.Skip(2).First().Value!.ToString());
@@ -54,7 +54,7 @@ public class DirectoryBuildTargetsFileTests
 		try
 		{
 			//act
-			_ = new DirectoryBuildTargetsFile(filename, newContents);
+			_ = new MSBuildTargetsFile(filename, newContents);
 			Assert.False(true);
 		}
 		catch (Exception e)

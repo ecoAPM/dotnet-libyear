@@ -3,16 +3,16 @@ using Xunit;
 
 namespace LibYear.Core.Tests.FileTypes;
 
-public class DirectoryBuildPropsTests
+public class MSBuildPropsTests
 {
 	[Fact]
-	public async Task CanLoadDirectoryBuildPropsFile()
+	public async Task CanLoadMSBuildPropsFile()
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "Directory.Build.props");
 
 		//act
-		var file = new DirectoryBuildPropsFile(filename, await File.ReadAllTextAsync(filename));
+		var file = new MSBuildPropsFile(filename, await File.ReadAllTextAsync(filename));
 
 		//assert
 		Assert.Equal("test1", file.Packages.First().Key);
@@ -21,11 +21,11 @@ public class DirectoryBuildPropsTests
 	}
 
 	[Fact]
-	public async Task CanUpdateDirectoryBuildPropsFile()
+	public async Task CanUpdateMSBuildPropsFile()
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "Directory.Build.props");
-		var file = new DirectoryBuildPropsFile(filename, await File.ReadAllTextAsync(filename));
+		var file = new MSBuildPropsFile(filename, await File.ReadAllTextAsync(filename));
 		var results = new[]
 		{
 			new Result("test1", new Release(new PackageVersion(0, 1, 0), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),
@@ -37,7 +37,7 @@ public class DirectoryBuildPropsTests
 		var updated = file.Update(results);
 
 		//assert
-		var newFile = new DirectoryBuildPropsFile(filename, updated);
+		var newFile = new MSBuildPropsFile(filename, updated);
 		Assert.Equal("1.2.3", newFile.Packages.First().Value!.ToString());
 		Assert.Equal("2.3.4", newFile.Packages.Skip(1).First().Value!.ToString());
 		Assert.Equal("3.4.5", newFile.Packages.Skip(2).First().Value!.ToString());
@@ -54,7 +54,7 @@ public class DirectoryBuildPropsTests
 		try
 		{
 			//act
-			_ = new DirectoryBuildPropsFile(filename, newContents);
+			_ = new MSBuildPropsFile(filename, newContents);
 			Assert.False(true);
 		}
 		catch (Exception e)

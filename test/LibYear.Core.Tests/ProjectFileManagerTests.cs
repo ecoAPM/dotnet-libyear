@@ -17,8 +17,11 @@ public class ProjectFileManagerTests
 		var projects = await fileManager.FindProjectsInDir(dir, SearchOption.TopDirectoryOnly);
 
 		//assert
-		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.props"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.targets"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Packages.props"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
 	}
 
 	[Fact]
@@ -33,8 +36,11 @@ public class ProjectFileManagerTests
 		var projects = await fileManager.FindProjectsInDir(dir, SearchOption.AllDirectories);
 
 		//assert
-		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.props"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.targets"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Packages.props"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
 	}
 
 	[Fact]
@@ -48,8 +54,11 @@ public class ProjectFileManagerTests
 		var projects = await fileManager.GetProjectsInDir("FileTypes");
 
 		//assert
-		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.props"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.targets"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Packages.props"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
 	}
 
 	[Fact]
@@ -63,8 +72,11 @@ public class ProjectFileManagerTests
 		var projects = await fileManager.GetProjectsInDir(".");
 
 		//assert
-		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.props"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.targets"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Packages.props"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
 	}
 
 	[Fact]
@@ -85,6 +97,9 @@ public class ProjectFileManagerTests
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
+		Assert.DoesNotContain(projects, p => p.FileName.EndsWith("Directory.Build.props"));
+		Assert.DoesNotContain(projects, p => p.FileName.EndsWith("Directory.Build.targets"));
+		Assert.DoesNotContain(projects, p => p.FileName.EndsWith("Directory.Packages.props"));
 	}
 
 	[Fact]
@@ -102,8 +117,11 @@ public class ProjectFileManagerTests
 		var projects = await fileManager.GetAllProjects(projectFileNames);
 
 		//assert
-		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.props"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.targets"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Packages.props"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
 	}
 
 	[Fact]
@@ -117,8 +135,11 @@ public class ProjectFileManagerTests
 		var projects = await fileManager.GetAllProjects(Array.Empty<string>());
 
 		//assert
-		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.props"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.targets"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Packages.props"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
+		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
 	}
 
 	[Fact]

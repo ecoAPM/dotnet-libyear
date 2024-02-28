@@ -43,20 +43,15 @@ public class ProjectFileManager : IProjectFileManager
 	public async Task<IReadOnlyCollection<IProjectFile>> FindProjectsInDir(IDirectoryInfo dir, SearchOption searchMode)
 		=> await Task.WhenAll(FindProjects(dir, searchMode));
 
-	private IReadOnlyCollection<Task<IProjectFile>> FindProjects(IDirectoryInfo dir, SearchOption searchMode) =>
-		dir.EnumerateFiles("*.csproj", searchMode)
-			.Union(dir.EnumerateFiles("Directory.build.props", searchMode))
-			.Union(dir.EnumerateFiles("Directory.build.targets", searchMode))
-			.Union(dir.EnumerateFiles("packages.config", searchMode))
-			.Union(dir.EnumerateFiles("Directory.packages.props", searchMode))
+	private Task<IProjectFile>[] FindProjects(IDirectoryInfo dir, SearchOption searchMode) =>
+		dir.EnumerateFiles("*.*", searchMode)
+			.Where(f => f.IsCsProjFile()
+				|| f.IsNuGetFile()
+				|| f.IsDirectoryBuildPropsFile()
+				|| f.IsDirectoryBuildTargetsFile()
+				|| f.IsCentralPackageManagementFile())
 			.Select(ReadFile)
 			.ToArray();
-
-	private static bool IsCsProjFile(IFileSystemInfo fileInfo) => fileInfo.Extension == ".csproj";
-	private static bool IsDirectoryBuildPropsFile(IFileSystemInfo fileInfo) => fileInfo.Name == "Directory.Build.props";
-	private static bool IsDirectoryBuildTargetsFile(IFileSystemInfo fileInfo) => fileInfo.Name == "Directory.Build.targets";
-	private static bool IsNuGetFile(IFileSystemInfo fileInfo) => fileInfo.Name == "packages.config";
-	private static bool IsCentralPackageManagementFile(IFileSystemInfo fileInfo) => fileInfo.Name == "Directory.Packages.props";
 
 	private async Task<IProjectFile> ReadFile(IFileSystemInfo fileInfo)
 	{
@@ -65,15 +60,15 @@ public class ProjectFileManager : IProjectFileManager
 		var contents = await new StreamReader(stream).ReadToEndAsync();
 		stream.Close();
 
-		if (IsCsProjFile(fileInfo))
+		if (fileInfo.IsCsProjFile())
 			return new CsProjFile(path, contents);
-		if (IsDirectoryBuildPropsFile(fileInfo))
+		if (fileInfo.IsDirectoryBuildPropsFile())
 			return new DirectoryBuildPropsFile(path, contents);
-		if (IsDirectoryBuildTargetsFile(fileInfo))
+		if (fileInfo.IsDirectoryBuildTargetsFile())
 			return new DirectoryBuildTargetsFile(path, contents);
-		if (IsNuGetFile(fileInfo))
+		if (fileInfo.IsNuGetFile())
 			return new PackagesConfigFile(path, contents);
-		if (IsCentralPackageManagementFile(fileInfo))
+		if (fileInfo.IsCentralPackageManagementFile())
 			return new CentralPackageManagementFile(path, contents);
 
 		throw new NotImplementedException("Unknown file type");

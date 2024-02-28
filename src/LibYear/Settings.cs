@@ -7,7 +7,7 @@ public class Settings : CommandSettings
 {
 	[CommandArgument(0, "[target]")]
 	[Description("the project file(s) or directory paths to analyze")]
-	public string[] Paths { get; set; } = { "." };
+	public string[] Paths { get; set; } = ["."];
 
 	[CommandOption("-u|--update")]
 	[Description("update any outdated packages")]

@@ -20,7 +20,7 @@ public class ProjectFileManager : IProjectFileManager
 		return projects.SelectMany(p => p).ToArray();
 	}
 
-	private async Task<IReadOnlyCollection<IProjectFile>> GetProjects(string path, bool recursive = false)
+	private async Task<IReadOnlyCollection<IProjectFile>> GetProjects(string path, bool recursive)
 	{
 		if (_fileSystem.Directory.Exists(path))
 		{

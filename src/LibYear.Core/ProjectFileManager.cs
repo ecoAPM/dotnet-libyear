@@ -15,16 +15,16 @@ public class ProjectFileManager : IProjectFileManager
 		if (!paths.Any())
 			return await GetProjectsInDir(Directory.GetCurrentDirectory(), recursive);
 
-		var tasks = paths.Select(GetProjects);
+		var tasks = paths.Select(p => GetProjects(p, recursive));
 		var projects = await Task.WhenAll(tasks);
 		return projects.SelectMany(p => p).ToArray();
 	}
 
-	private async Task<IReadOnlyCollection<IProjectFile>> GetProjects(string path)
+	private async Task<IReadOnlyCollection<IProjectFile>> GetProjects(string path, bool recursive = false)
 	{
 		if (_fileSystem.Directory.Exists(path))
 		{
-			return await GetProjectsInDir(path, false);
+			return await GetProjectsInDir(path, recursive);
 		}
 
 		var fileInfo = _fileSystem.FileInfo.New(path);

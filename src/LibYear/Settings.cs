@@ -30,6 +30,6 @@ public class Settings : CommandSettings
 	public double? LimitAny { get; set; }
 
 	[CommandOption("-r|--recursive")]
-	[Description("in all workding directory sub-folders")]
+	[Description("search recursively for all compatible files, even if one is found in a directory passed as an argument")]
 	public bool Recursive { get; set; }
 }

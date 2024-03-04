@@ -51,7 +51,7 @@ public class ProjectFileManagerTests
 		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
-		var projects = await fileManager.GetProjectsInDir("FileTypes");
+		var projects = await fileManager.GetProjectsInDir("FileTypes", false);
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.props"));
@@ -69,7 +69,7 @@ public class ProjectFileManagerTests
 		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
-		var projects = await fileManager.GetProjectsInDir(".");
+		var projects = await fileManager.GetProjectsInDir(".", false);
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.props"));
@@ -130,16 +130,19 @@ public class ProjectFileManagerTests
 		//arrange
 		var fileSystem = new FileSystem();
 		var fileManager = new ProjectFileManager(fileSystem);
+		fileSystem.File.Copy("./FileTypes/project.csproj", "./project.CurrentDirectory.csproj", true);
 
 		//act
-		var projects = await fileManager.GetAllProjects(Array.Empty<string>());
+		var projects = await fileManager.GetAllProjects(Array.Empty<string>(), true);
 
 		//assert
+		Assert.Contains(projects, p => p.FileName.EndsWith("project.CurrentDirectory.csproj"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.props"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.targets"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Packages.props"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("packages.config"));
 		Assert.Contains(projects, p => p.FileName.EndsWith("project.csproj"));
+		fileSystem.File.Delete("./project.CurrentDirectory.csproj");
 	}
 
 	[Fact]
@@ -161,5 +164,26 @@ public class ProjectFileManagerTests
 
 		//assert
 		Assert.Contains("test1", updated);
+	}
+
+	[Fact]
+	public async Task GetAllProjectsWithoutRecurseFlag()
+	{
+		//arrange
+		var fileSystem = new FileSystem();
+		var fileManager = new ProjectFileManager(fileSystem);
+		fileSystem.File.Copy("./FileTypes/project.csproj", "./project.recurse.csproj", true);
+
+		//act
+		var projects = await fileManager.GetAllProjects(["."], false);
+
+		//assert
+		Assert.Contains(projects, p => p.FileName.EndsWith("project.recurse.csproj"));
+		Assert.DoesNotContain(projects, p => p.FileName.EndsWith("Directory.Build.props"));
+		Assert.DoesNotContain(projects, p => p.FileName.EndsWith("Directory.Build.targets"));
+		Assert.DoesNotContain(projects, p => p.FileName.EndsWith("Directory.Packages.props"));
+		Assert.DoesNotContain(projects, p => p.FileName.EndsWith("packages.config"));
+		Assert.DoesNotContain(projects, p => p.FileName.EndsWith("project.csproj"));
+		fileSystem.File.Delete("./project.recurse.csproj");
 	}
 }

@@ -19,7 +19,7 @@ public class App
 	public async Task<int> Run(Settings settings)
 	{
 		_console.WriteLine();
-		var projects = await _projectFileManager.GetAllProjects(settings.Paths);
+		var projects = await _projectFileManager.GetAllProjects(settings.Paths, settings.Recursive);
 		if (!projects.Any())
 		{
 			_console.WriteLine("No project files found");

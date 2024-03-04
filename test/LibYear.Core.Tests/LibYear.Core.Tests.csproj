@@ -19,5 +19,6 @@
 		<None Include="FileTypes/Directory.Build.props" CopyToOutputDirectory="Always" />
 		<None Include="FileTypes/Directory.Build.targets" CopyToOutputDirectory="Always" />
 		<None Include="FileTypes/Directory.Packages.props" CopyToOutputDirectory="Always" />
+		<None Include="FileTypes/RecursiveFolderTest/sub-project.csproj" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 </Project>

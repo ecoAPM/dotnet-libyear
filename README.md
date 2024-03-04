@@ -34,6 +34,8 @@ A simple measure of dependency freshness
 
 `-u`, `--update`: update project files after displaying packages
 
+`-r`, `--recursive`: search recursively for all compatible files, even if one is found in a directory passed as an argument
+
 #### Limits:
 
 `-l`, `--limit`: exits with error code if total libyears behind is greater than this value

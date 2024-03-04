@@ -28,4 +28,8 @@ public class Settings : CommandSettings
 	[CommandOption("-a|--limit-any")]
 	[Description("fails if any dependency is more libyears behind than this value")]
 	public double? LimitAny { get; set; }
+
+	[CommandOption("-r|--recursive")]
+	[Description("search recursively for all compatible files, even if one is found in a directory passed as an argument")]
+	public bool Recursive { get; set; }
 }

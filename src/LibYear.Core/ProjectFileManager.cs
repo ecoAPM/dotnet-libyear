@@ -10,31 +10,31 @@ public class ProjectFileManager : IProjectFileManager
 	public ProjectFileManager(IFileSystem fileSystem)
 		=> _fileSystem = fileSystem;
 
-	public async Task<IReadOnlyCollection<IProjectFile>> GetAllProjects(IReadOnlyCollection<string> paths)
+	public async Task<IReadOnlyCollection<IProjectFile>> GetAllProjects(IReadOnlyCollection<string> paths, bool recursive = false)
 	{
 		if (!paths.Any())
-			return await GetProjectsInDir(Directory.GetCurrentDirectory());
+			return await GetProjectsInDir(Directory.GetCurrentDirectory(), recursive);
 
-		var tasks = paths.Select(GetProjects);
+		var tasks = paths.Select(p => GetProjects(p, recursive));
 		var projects = await Task.WhenAll(tasks);
 		return projects.SelectMany(p => p).ToArray();
 	}
 
-	private async Task<IReadOnlyCollection<IProjectFile>> GetProjects(string path)
+	private async Task<IReadOnlyCollection<IProjectFile>> GetProjects(string path, bool recursive)
 	{
 		if (_fileSystem.Directory.Exists(path))
 		{
-			return await GetProjectsInDir(path);
+			return await GetProjectsInDir(path, recursive);
 		}
 
 		var fileInfo = _fileSystem.FileInfo.New(path);
 		return new[] { await ReadFile(fileInfo) }.ToArray();
 	}
 
-	public async Task<IReadOnlyCollection<IProjectFile>> GetProjectsInDir(string dirPath)
+	public async Task<IReadOnlyCollection<IProjectFile>> GetProjectsInDir(string dirPath, bool recursive)
 	{
 		var dir = _fileSystem.DirectoryInfo.New(dirPath);
-		var projectFiles = await FindProjectsInDir(dir, SearchOption.TopDirectoryOnly);
+		var projectFiles = await FindProjectsInDir(dir, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 		return projectFiles.Any()
 			? projectFiles
 			: await FindProjectsInDir(dir, SearchOption.AllDirectories);

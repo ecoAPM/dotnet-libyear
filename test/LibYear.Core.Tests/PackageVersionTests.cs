@@ -34,7 +34,8 @@ public class PackageVersionTests
 		var version = new PackageVersion("*");
 
 		Assert.Equal("0.0.0", version.ToString());
-		Assert.True(version.IsWildcard);
+		Console.WriteLine(version.Wildcard);
+		Assert.Equal(PackageVersion.WildcardPosition.Major, version.Wildcard);
 	}
 
 	[Fact]

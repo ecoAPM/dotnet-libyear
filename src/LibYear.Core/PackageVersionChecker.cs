@@ -43,12 +43,16 @@ public class PackageVersionChecker : IPackageVersionChecker
 		}
 
 		var versions = _versionCache[packageName];
-		var current = versions.FirstOrDefault(v => v.Version == installed);
 		var latest = versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.IsPublished).Max(m => m.Version));
-		if (installed?.IsWildcard ?? false)
-		{
+		Release? current;
+		if (installed?.Wildcard == PackageVersion.WildcardPosition.Major)
 			current = latest;
-		}
+		else if (installed?.Wildcard == PackageVersion.WildcardPosition.Minor)
+			current = versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.IsPublished && m.Version.Major == installed.Major).Max(m => m.Version));
+		else if (installed?.Wildcard == PackageVersion.WildcardPosition.Patch)
+			current = versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.IsPublished && m.Version.Major == installed.Major && m.Version.Minor == installed.Minor).Max(m => m.Version));
+		else
+			current = versions.FirstOrDefault(v => v.Version == installed);
 
 		return new Result(packageName, current, latest);
 	}

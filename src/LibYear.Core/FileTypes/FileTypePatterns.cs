@@ -1,11 +1,9 @@
-﻿using System.IO.Abstractions;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace LibYear.Core.FileTypes;
 
-public partial class FileTypePatterns
+public abstract partial class FileTypePatterns
 {
-
 	[GeneratedRegex(".csproj$", RegexOptions.IgnoreCase)]
 	public static partial Regex CSProj();
 

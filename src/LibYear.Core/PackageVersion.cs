@@ -1,70 +1,71 @@
-using System.Runtime.InteropServices;
 using NuGet.Versioning;
 
 namespace LibYear.Core;
 
 public sealed class PackageVersion : NuGetVersion
 {
-	public enum WildcardPosition {
-		Major,
-		Minor,
-		Patch,
-		None
-	}
-
-	public WildcardPosition Wildcard { get; }
+	public WildcardType WildcardType { get; }
 
 	public PackageVersion(string version)
-		: this(Parse(version))
+		: this(ParseVersionString(version))
 	{
-	}
-
-	public PackageVersion(NuGetVersion version, WildcardPosition position = WildcardPosition.None)
-		: base(version)
-	{
-		Wildcard = position;
 	}
 
 	public PackageVersion(PackageVersion version)
 		: base(version)
 	{
-		Wildcard = version.Wildcard;
+		WildcardType = version.WildcardType;
+	}
+
+	public PackageVersion(NuGetVersion version)
+		: this(version, WildcardType.None)
+	{
+	}
+
+	public PackageVersion(NuGetVersion version, WildcardType wildcardType)
+		: base(version)
+	{
+		WildcardType = wildcardType;
 	}
 
 	public PackageVersion(int major, int minor, int patch)
 		: base(major, minor, patch)
 	{
-		Wildcard = WildcardPosition.None;
+		WildcardType = WildcardType.None;
 	}
 
 	public PackageVersion(int major, int minor, int patch, int revision)
 		: base(major, minor, patch, revision)
 	{
-		Wildcard = WildcardPosition.None;
+		WildcardType = WildcardType.None;
 	}
 
-	private new static PackageVersion Parse(string version)
+	private static PackageVersion ParseVersionString(string versionString)
 	{
-		if (version.EndsWith('*'))
+		var wildcard = GetWildcardPosition(versionString);
+
+		if (wildcard == WildcardType.None)
 		{
-			WildcardPosition position = WildcardPosition.None;
-			switch (version.Count(f => f == '.'))
-			{
-				case 0:
-					return new PackageVersion(new NuGetVersion(0, 0, 0), WildcardPosition.Major);
-				case 1:
-					position = WildcardPosition.Minor;
-					break;
-				case 2:
-					position = WildcardPosition.Patch;
-					break;
-			}
-			int index = version.LastIndexOf(".");
-			return new PackageVersion(new NuGetVersion(version.Substring(0, index)), position);
+			return new PackageVersion(new NuGetVersion(versionString), wildcard);
 		}
-		else
-			return new PackageVersion(new NuGetVersion(version));
+
+		var lastPeriod = versionString.LastIndexOf('.');
+		var version = wildcard == WildcardType.Major
+			? new NuGetVersion("0")
+			: new NuGetVersion(versionString[..lastPeriod]);
+
+		return new PackageVersion(version, wildcard);
 	}
+
+	private static WildcardType GetWildcardPosition(string version)
+		=> (version.Contains('*'), version.Count(f => f == '.')) switch
+		{
+			(true, 0) => WildcardType.Major,
+			(true, 1) => WildcardType.Minor,
+			(true, 2) => WildcardType.Patch,
+			(true, 3) => WildcardType.Revision,
+			_ => WildcardType.None
+		};
 
 	public override string ToString()
 		=> string.IsNullOrEmpty(OriginalVersion) || IsSemVer2

@@ -12,37 +12,20 @@ public class PackageVersionTests
 		Assert.Equal("1.2.3.4", version.ToString());
 	}
 
-	[Fact]
-	public void CanParseSemVerString()
+	[Theory]
+	[InlineData("1.2.3.4", "1.2.3.4", WildcardType.None)]
+	[InlineData("1.2.3", "1.2.3", WildcardType.None)]
+	[InlineData("1.2", "1.2", WildcardType.None)]
+	[InlineData("1", "1", WildcardType.None)]
+	[InlineData("1.2.3.*", "1.2.3", WildcardType.Revision)]
+	[InlineData("1.2.*", "1.2", WildcardType.Patch)]
+	[InlineData("1.*", "1", WildcardType.Minor)]
+	[InlineData("*", "0", WildcardType.Major)]
+	public void CanParseFormattedString(string versionString, string expected, WildcardType wildcard)
 	{
-		var version = new PackageVersion("1.2.3");
+		var version = new PackageVersion(versionString);
 
-		Assert.Equal("1.2.3", version.ToString());
-	}
-
-	[Fact]
-	public void CanParseNuGetString()
-	{
-		var version = new PackageVersion("1.2.3.4");
-
-		Assert.Equal("1.2.3.4", version.ToString());
-	}
-
-	[Fact]
-	public void CanParseWildcardString()
-	{
-		var version = new PackageVersion("*");
-
-		Assert.Equal("0.0.0", version.ToString());
-		Console.WriteLine(version.Wildcard);
-		Assert.Equal(PackageVersion.WildcardPosition.Major, version.Wildcard);
-	}
-
-	[Fact]
-	public void CanParseFormattedString()
-	{
-		var version = new PackageVersion("1.2.3");
-
-		Assert.Equal("1.2.3", version.ToString("N", null));
+		Assert.Equal(expected, version.ToString());
+		Assert.Equal(wildcard, version.WildcardType);
 	}
 }

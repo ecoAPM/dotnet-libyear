@@ -44,15 +44,13 @@ public class PackageVersionChecker : IPackageVersionChecker
 
 		var versions = _versionCache[packageName];
 		var latest = versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.IsPublished).Max(m => m.Version));
-		Release? current;
-		if (installed?.Wildcard == PackageVersion.WildcardPosition.Major)
-			current = latest;
-		else if (installed?.Wildcard == PackageVersion.WildcardPosition.Minor)
-			current = versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.IsPublished && m.Version.Major == installed.Major).Max(m => m.Version));
-		else if (installed?.Wildcard == PackageVersion.WildcardPosition.Patch)
-			current = versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.IsPublished && m.Version.Major == installed.Major && m.Version.Minor == installed.Minor).Max(m => m.Version));
-		else
-			current = versions.FirstOrDefault(v => v.Version == installed);
+		var current = installed?.WildcardType switch
+		{
+			WildcardType.Major => latest,
+			WildcardType.Minor => versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.IsPublished && m.Version.Major == installed.Major).Max(m => m.Version)),
+			WildcardType.Patch => versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.IsPublished && m.Version.Major == installed.Major && m.Version.Minor == installed.Minor).Max(m => m.Version)),
+			_ => versions.FirstOrDefault(v => v.Version == installed)
+		};
 
 		return new Result(packageName, current, latest);
 	}

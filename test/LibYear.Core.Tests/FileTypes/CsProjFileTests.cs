@@ -51,7 +51,7 @@ public class CsProjFileTests
 		Assert.Equal("4.5.6", newFile.Packages["test4"]!.ToString());
 		Assert.Equal("5.6.7", newFile.Packages["test5"]!.ToString());
 		Assert.Null(newFile.Packages["test6"]);
-		Assert.Equal(PackageVersion.WildcardPosition.Major, newFile.Packages["test7"]!.Wildcard);
+		Assert.Equal(WildcardType.Major, newFile.Packages["test7"]!.WildcardType);
 	}
 
 	[Fact]

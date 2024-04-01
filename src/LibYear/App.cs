@@ -20,7 +20,7 @@ public class App
 	{
 		_console.WriteLine();
 		var projects = await _projectFileManager.GetAllProjects(settings.Paths, settings.Recursive);
-		if (!projects.Any())
+		if (projects.Count == 0)
 		{
 			_console.WriteLine("No project files found");
 			return 1;
@@ -66,7 +66,7 @@ public class App
 
 	private void GetResultsTable(ProjectResult results, int titlePad, int namePad, int installedPad, int latestPad, bool quietMode)
 	{
-		if (!results.Details.Any())
+		if (results.Details.Count == 0)
 			return;
 
 		var width = Math.Max(titlePad + 2, namePad + installedPad + latestPad + 48) + 2;
@@ -95,7 +95,7 @@ public class App
 			);
 		}
 
-		if (quietMode && results.YearsBehind == 0)
+		if (quietMode && Math.Abs(results.YearsBehind) < double.Epsilon)
 		{
 			table.ShowHeaders = false;
 		}

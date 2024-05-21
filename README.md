@@ -36,6 +36,8 @@ A simple measure of dependency freshness
 
 `-r`, `--recursive`: search recursively for all compatible files, even if one is found in a directory passed as an argument
 
+`-o`, `--output`: sets how the output is displayed, valid options are `console` (default) or `json`. If `json` is selected, `--quiet` minifies the outputted json.
+
 #### Limits:
 
 `-l`, `--limit`: exits with error code if total libyears behind is greater than this value

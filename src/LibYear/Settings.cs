@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using LibYear.Output;
 using Spectre.Console.Cli;
 
 namespace LibYear;
@@ -35,11 +36,5 @@ public class Settings : CommandSettings
 
 	[CommandOption("-o|--output")]
 	[Description("output format (text or json)")]
-	public OutputOption Output { get; set; }
-}
-
-public enum OutputOption
-{
-	Table,
-	Json
+	public OutputOption Output { get; set; } = OutputOption.Table;
 }

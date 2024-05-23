@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace LibYear.Output;
+namespace LibYear.Output.Json;
 
 internal sealed class DoubleFormatter : JsonConverter<double>
 {
@@ -14,5 +14,5 @@ internal sealed class DoubleFormatter : JsonConverter<double>
 		Utf8JsonWriter writer,
 		double value,
 		JsonSerializerOptions options) =>
-		writer.WriteNumberValue(Math.Round(value, 2));
+		writer.WriteNumberValue(Math.Round(value, 1));
 }

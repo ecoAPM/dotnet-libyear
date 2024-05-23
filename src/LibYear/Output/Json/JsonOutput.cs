@@ -2,7 +2,7 @@
 using LibYear.Core;
 using Spectre.Console;
 
-namespace LibYear.Output;
+namespace LibYear.Output.Json;
 
 internal sealed class JsonOutput : IOutput
 {
@@ -17,10 +17,23 @@ internal sealed class JsonOutput : IOutput
 	{
 		if (!allResults.Details.Any())
 			return;
+		var output = FormatOutput(allResults, quietMode);
+		_console.WriteLine(output);
+	}
+
+	private static string FormatOutput(SolutionResult allResults, bool quietMode)
+	{
 		var model = new ResultOutput(allResults);
-		var serializer = quietMode
-			? IndentedJsonSerializerContext.Default.ResultOutput
-			: FlatJsonSerializerContext.Default.ResultOutput;
-		_console.WriteLine(JsonSerializer.Serialize(model, serializer));
+		var serilzationOptions = new JsonSerializerOptions
+		{
+			Converters =
+			{
+				new DoubleFormatter(),
+				new DateTimeConverter()
+			},
+			WriteIndented = quietMode
+		};
+		var output = JsonSerializer.Serialize(model, serilzationOptions);
+		return output;
 	}
 }

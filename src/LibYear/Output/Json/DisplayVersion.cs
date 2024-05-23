@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using LibYear.Core;
 
-namespace LibYear.Output;
+namespace LibYear.Output.Json;
 
 internal sealed record DisplayVersion
 {

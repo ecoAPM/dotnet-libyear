@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using LibYear.Core;
 
-namespace LibYear.Output;
+namespace LibYear.Output.Json;
 
 internal sealed record PackageResult
 {
@@ -12,9 +12,6 @@ internal sealed record PackageResult
 	[JsonPropertyName("latestVersion")]
 	public DisplayVersion? LatestVersion { get; init; }
 	[JsonConverter(typeof(DoubleFormatter))]
-	[JsonPropertyName("daysBehind")]
-	public double DaysBehind { get; init; }
-	[JsonConverter(typeof(DoubleFormatter))]
 	[JsonPropertyName("yearsBehind")]
 	public double YearsBehind { get; init; }
 
@@ -22,7 +19,6 @@ internal sealed record PackageResult
 	{
 		PackageName = result.Name;
 		YearsBehind = result.YearsBehind;
-		DaysBehind = result.DaysBehind;
 		CurrentVersion = result.Installed is null ? null : new DisplayVersion(result.Installed);
 		LatestVersion = result.Latest is null ? null : new DisplayVersion(result.Latest);
 	}

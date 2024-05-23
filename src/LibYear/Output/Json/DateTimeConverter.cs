@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace LibYear.Output;
+namespace LibYear.Output.Json;
 
 internal sealed class DateTimeConverter : JsonConverter<DateTime>
 {

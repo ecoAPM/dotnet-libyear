@@ -1,5 +1,7 @@
 using LibYear.Core;
 using LibYear.Output;
+using LibYear.Output.Json;
+using LibYear.Output.Table;
 using Spectre.Console;
 
 namespace LibYear;
@@ -26,6 +28,7 @@ public class App
 			_console.WriteLine("No project files found");
 			return 1;
 		}
+
 		var result = await _checker.GetPackages(projects);
 		var output = GetOutputMethod(settings);
 		output.DisplayAllResults(result, settings.QuietMode);

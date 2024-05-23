@@ -1,7 +1,7 @@
 ﻿using LibYear.Core;
 using Spectre.Console;
 
-namespace LibYear.Output;
+namespace LibYear.Output.Table;
 
 internal sealed class TableOutput : IOutput
 {
@@ -37,7 +37,7 @@ internal sealed class TableOutput : IOutput
 			return;
 
 		var width = Math.Max(titlePad + 2, namePad + installedPad + latestPad + 48) + 2;
-		var table = new Table
+		var table = new Spectre.Console.Table
 		{
 			Title = new TableTitle($"  {results.ProjectFile.FileName}".PadRight(width)),
 			Caption = new TableTitle(($"  Project is {results.YearsBehind:F1} libyears behind").PadRight(width)),

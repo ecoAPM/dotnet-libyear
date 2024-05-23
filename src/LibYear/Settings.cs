@@ -40,6 +40,6 @@ public class Settings : CommandSettings
 
 public enum OutputOption
 {
-	Console,
+	Table,
 	Json
 }

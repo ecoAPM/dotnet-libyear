@@ -29,7 +29,7 @@ public class App
 		var result = await _checker.GetPackages(projects);
 		IOutput output = settings.Output switch
 		{
-			OutputOption.Console => new ConsoleOutput(_console),
+			OutputOption.Table => new TableOutput(_console),
 			OutputOption.Json => new JsonOutput(_console),
 			_ => throw new NotImplementedException()
 		};

@@ -5,14 +5,9 @@ namespace LibYear.Output.Json;
 
 internal sealed record PackageResult
 {
-	[JsonPropertyName("packageName")]
 	public string PackageName { get; set; } = string.Empty;
-	[JsonPropertyName("currentVersion")]
 	public DisplayVersion? CurrentVersion { get; init; }
-	[JsonPropertyName("latestVersion")]
 	public DisplayVersion? LatestVersion { get; init; }
-	[JsonConverter(typeof(DoubleFormatter))]
-	[JsonPropertyName("yearsBehind")]
 	public double YearsBehind { get; init; }
 
 	public PackageResult(Result result)

@@ -3,7 +3,7 @@ using Spectre.Console;
 
 namespace LibYear.Output.Table;
 
-internal sealed class TableOutput : IOutput
+public sealed class TableOutput : IOutput
 {
 	private readonly IAnsiConsole _console;
 

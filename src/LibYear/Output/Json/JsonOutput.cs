@@ -4,7 +4,7 @@ using Spectre.Console;
 
 namespace LibYear.Output.Json;
 
-internal sealed class JsonOutput : IOutput
+public sealed class JsonOutput : IOutput
 {
 	private readonly IAnsiConsole _console;
 
@@ -15,7 +15,7 @@ internal sealed class JsonOutput : IOutput
 
 	public void DisplayAllResults(SolutionResult allResults, bool quietMode)
 	{
-		if (!allResults.Details.Any())
+		if (allResults.Details.Count == 0)
 			return;
 		var output = FormatOutput(allResults, quietMode);
 		_console.WriteLine(output);
@@ -24,16 +24,16 @@ internal sealed class JsonOutput : IOutput
 	private static string FormatOutput(SolutionResult allResults, bool quietMode)
 	{
 		var model = new ResultOutput(allResults);
-		var serilzationOptions = new JsonSerializerOptions
+		var serializerOptions = new JsonSerializerOptions
 		{
 			Converters =
 			{
 				new DoubleFormatter(),
 				new DateTimeConverter()
 			},
-			WriteIndented = quietMode
+			WriteIndented = !quietMode
 		};
-		var output = JsonSerializer.Serialize(model, serilzationOptions);
+		var output = JsonSerializer.Serialize(model, serializerOptions);
 		return output;
 	}
 }

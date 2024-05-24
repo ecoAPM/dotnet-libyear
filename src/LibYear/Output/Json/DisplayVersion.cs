@@ -7,7 +7,6 @@ internal sealed record DisplayVersion
 {
 	[JsonPropertyName("versionNumber")]
 	public string VersionNumber { get; init; } = string.Empty;
-	[JsonConverter(typeof(DateTimeConverter))]
 	[JsonPropertyName("releaseDate")]
 	public DateTime ReleaseDate { get; init; }
 	public DisplayVersion(Release release)

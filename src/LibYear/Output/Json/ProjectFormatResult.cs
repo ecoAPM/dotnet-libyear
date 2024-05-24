@@ -1,16 +1,11 @@
-﻿using System.Text.Json.Serialization;
-using LibYear.Core;
+﻿using LibYear.Core;
 
 namespace LibYear.Output.Json;
 
 internal sealed record ProjectFormatResult
 {
-	[JsonPropertyName("project")]
 	public string Project { get; init; } = string.Empty;
-	[JsonConverter(typeof(DoubleFormatter))]
-	[JsonPropertyName("yearsBehind")]
 	public double YearsBehind { get; init; }
-	[JsonPropertyName("packages")]
 	public IReadOnlyCollection<PackageResult> Packages { get; init; } = [];
 
 	public ProjectFormatResult(ProjectResult projectResult)

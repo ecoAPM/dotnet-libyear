@@ -5,11 +5,8 @@ namespace LibYear.Output.Json;
 
 internal sealed record ResultOutput
 {
-	[JsonConverter(typeof(DoubleFormatter))]
-	[JsonPropertyName("yearsBehind")] public double YearsBehind { get; init; }
-	[JsonConverter(typeof(DoubleFormatter))]
-	[JsonPropertyName("daysBehind")] public double DaysBehind { get; init; }
-
+	public double YearsBehind { get; init; }
+	public double DaysBehind { get; init; }
 	public IReadOnlyCollection<ProjectFormatResult> Projects { get; set; } = [];
 
 	public ResultOutput()

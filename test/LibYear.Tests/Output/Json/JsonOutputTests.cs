@@ -29,51 +29,69 @@ public class JsonOutputTests
 		Assert.Empty(console.Output);
 	}
 
-	[Fact]
-	public void QuietModeShouldPrintSingleLine()
+	[Theory]
+	[InlineData(false)]
+	[InlineData(true)]
+	public void ResultsShouldPrintToConsole(bool quietMode)
 	{
 		//arrange
 		var console = new TestConsole
 		{
 			Profile =
 			{
-				Width = Int32.MaxValue // Test console wraps the line, not accurately testing stdout redirection.
+				Width = Int32.MaxValue
 			}
 		};
-
-		// Act
-		var output = new JsonOutput(console);
 		var projectFile1 = new TestProjectFile("test project 1");
-		var results = new SolutionResult(new[]
+		var solutionResults = new SolutionResult(new[]
 		{
 			new ProjectResult(projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) }),
 		});
-		output.DisplayAllResults(results, true);
+
+		// Act
+		var sut = new JsonOutput(console);
+		sut.DisplayAllResults(solutionResults, quietMode);
 
 		// Assert
 		Assert.NotEmpty(console.Output);
-		Assert.Single(console.Lines);
-		Assert.StartsWith("{", console.Output);
-		Assert.EndsWith("}", console.Output.TrimEnd());
 	}
 
 	[Fact]
-	public void NonQuietModeShouldPrintOnMultipleLines()
+	public void QuietModeResultInSingleLineOutput()
 	{
 		//arrange
-		var console = new TestConsole();
+		var projectFile1 = new TestProjectFile("test project 1");
+		var solutionResults = new SolutionResult(new[]
+		{
+			new ProjectResult(projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) }),
+		});
 
 		// Act
-		var output = new JsonOutput(console);
+		var result = JsonOutput.FormatOutput(solutionResults, true);
+
+		// Assert
+		Assert.NotEmpty(result);
+		Assert.Single(result.Split("\n"));
+		Assert.StartsWith("{", result);
+		Assert.EndsWith("}", result);
+	}
+
+	[Fact]
+	public void NonQuietModeShouldResultInMultiLineOutput()
+	{
+		//arrange
+
 		var projectFile1 = new TestProjectFile("test project 1");
 		var results = new SolutionResult(new []
 		{
 			new ProjectResult(projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) }),
 		});
-		output.DisplayAllResults(results, false);
+
+		// Act
+		var result = JsonOutput.FormatOutput(results, false);
 
 		// Assert
-		Assert.NotEmpty(console.Lines);
-		Assert.NotEqual(1, console.Lines.Count);
+		Assert.NotEmpty(result);
+		Assert.NotEqual(1, result.Split("\n").Length);
 	}
 }

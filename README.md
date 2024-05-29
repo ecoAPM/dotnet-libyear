@@ -43,5 +43,5 @@ A simple measure of dependency freshness
 `-l`, `--limit`: exits with error code if total libyears behind is greater than this value
 
 `-p`, `--limit-project`: exits with error code if any project is more libyears behind than this value
-
+j
 `-a`, `--limit-any`: exits with error code if any dependency is more libyears behind than this value

@@ -21,7 +21,7 @@ public sealed class JsonOutput : IOutput
 		_console.WriteLine(output);
 	}
 
-	private static string FormatOutput(SolutionResult allResults, bool quietMode)
+	public static string FormatOutput(SolutionResult allResults, bool quietMode)
 	{
 		var model = new ResultOutput(allResults);
 		var serializerOptions = new JsonSerializerOptions

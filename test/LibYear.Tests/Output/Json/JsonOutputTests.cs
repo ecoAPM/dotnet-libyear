@@ -1,6 +1,8 @@
 ﻿using LibYear.Core;
 using LibYear.Core.Tests;
 using LibYear.Output.Json;
+using NSubstitute;
+using Spectre.Console;
 using Spectre.Console.Testing;
 using Xunit;
 
@@ -12,21 +14,14 @@ public class JsonOutputTests
 	public void NoResultsProducesNoOutput()
 	{
 		//arrange
-		var console = new TestConsole
-		{
-			Profile =
-			{
-				Width = Int32.MaxValue
-			}
-		};
-
+		var console = Substitute.For<IAnsiConsole>();
 		// Act
 		var output = new JsonOutput(console);
 		var result = new SolutionResult(Array.Empty<ProjectResult>());
 		output.DisplayAllResults(result, false);
 
 		// Assert
-		Assert.Empty(console.Output);
+		console.DidNotReceive().WriteLine();
 	}
 
 	[Theory]
@@ -35,13 +30,7 @@ public class JsonOutputTests
 	public void ResultsShouldPrintToConsole(bool quietMode)
 	{
 		//arrange
-		var console = new TestConsole
-		{
-			Profile =
-			{
-				Width = Int32.MaxValue
-			}
-		};
+		var console = new TestConsole();
 		var projectFile1 = new TestProjectFile("test project 1");
 		var solutionResults = new SolutionResult(new[]
 		{
@@ -70,10 +59,8 @@ public class JsonOutputTests
 		var result = JsonOutput.FormatOutput(solutionResults, true);
 
 		// Assert
-		Assert.NotEmpty(result);
-		Assert.Single(result.Split("\n"));
-		Assert.StartsWith("{", result);
-		Assert.EndsWith("}", result);
+		var expectedJsonOutput = @"{""YearsBehind"":0,""DaysBehind"":0,""Projects"":[{""Project"":""test project 1"",""YearsBehind"":0,""Packages"":[{""PackageName"":""test1"",""CurrentVersion"":{""versionNumber"":""1.2.3"",""releaseDate"":""2024-05-29""},""LatestVersion"":{""versionNumber"":""1.2.3"",""releaseDate"":""2024-05-29""},""YearsBehind"":0}]}]}";
+		Assert.Equal(expectedJsonOutput, result);
 	}
 
 	[Fact]
@@ -91,7 +78,32 @@ public class JsonOutputTests
 		var result = JsonOutput.FormatOutput(results, false);
 
 		// Assert
-		Assert.NotEmpty(result);
-		Assert.NotEqual(1, result.Split("\n").Length);
+		var expectedOutput = """
+		                     {
+		                       "YearsBehind": 0,
+		                       "DaysBehind": 0,
+		                       "Projects": [
+		                         {
+		                           "Project": "test project 1",
+		                           "YearsBehind": 0,
+		                           "Packages": [
+		                             {
+		                               "PackageName": "test1",
+		                               "CurrentVersion": {
+		                                 "versionNumber": "1.2.3",
+		                                 "releaseDate": "2024-05-29"
+		                               },
+		                               "LatestVersion": {
+		                                 "versionNumber": "1.2.3",
+		                                 "releaseDate": "2024-05-29"
+		                               },
+		                               "YearsBehind": 0
+		                             }
+		                           ]
+		                         }
+		                       ]
+		                     }
+		                     """;
+		Assert.Equal(expectedOutput, result);
 	}
 }

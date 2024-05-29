@@ -36,7 +36,7 @@ A simple measure of dependency freshness
 
 `-r`, `--recursive`: search recursively for all compatible files, even if one is found in a directory passed as an argument
 
-`-o`, `--output`: sets how the output is displayed, valid options are `table` (default) or `json`. If `json` is selected, `--quiet` minifies the outputted json.
+`-o`, `--output`: sets how the output is displayed, valid options are `table` (default) or `json`. If `json` is selected, `--quiet` minifies the outputted JSON.
 
 #### Limits:
 

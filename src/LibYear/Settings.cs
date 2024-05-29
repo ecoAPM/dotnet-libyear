@@ -35,6 +35,6 @@ public class Settings : CommandSettings
 	public bool Recursive { get; set; }
 
 	[CommandOption("-o|--output")]
-	[Description("output format (text or json)")]
+	[Description("output format (table or JSON)")]
 	public OutputOption Output { get; set; } = OutputOption.Table;
 }

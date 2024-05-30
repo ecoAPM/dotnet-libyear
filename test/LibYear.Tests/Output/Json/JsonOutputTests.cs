@@ -15,12 +15,13 @@ public class JsonOutputTests
 	{
 		//arrange
 		var console = Substitute.For<IAnsiConsole>();
-		// Act
+
+		// act
 		var output = new JsonOutput(console);
 		var result = new SolutionResult(Array.Empty<ProjectResult>());
 		output.DisplayAllResults(result, false);
 
-		// Assert
+		// assert
 		console.DidNotReceive().WriteLine();
 	}
 
@@ -37,11 +38,11 @@ public class JsonOutputTests
 			new ProjectResult(projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) }),
 		});
 
-		// Act
+		// act
 		var sut = new JsonOutput(console);
 		sut.DisplayAllResults(solutionResults, quietMode);
 
-		// Assert
+		// assert
 		Assert.NotEmpty(console.Output);
 	}
 
@@ -55,10 +56,10 @@ public class JsonOutputTests
 			new ProjectResult(projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) }),
 		});
 
-		// Act
+		// act
 		var result = JsonOutput.FormatOutput(solutionResults, true);
 
-		// Assert
+		// assert
 		var expectedJsonOutput = @"{""YearsBehind"":0,""DaysBehind"":0,""Projects"":[{""Project"":""test project 1"",""YearsBehind"":0,""Packages"":[{""PackageName"":""test1"",""CurrentVersion"":{""versionNumber"":""1.2.3"",""releaseDate"":""2024-05-29""},""LatestVersion"":{""versionNumber"":""1.2.3"",""releaseDate"":""2024-05-29""},""YearsBehind"":0}]}]}";
 		Assert.Equal(expectedJsonOutput, result);
 	}
@@ -74,10 +75,10 @@ public class JsonOutputTests
 			new ProjectResult(projectFile1, new[] { new Result("test1", new Release(new PackageVersion(1, 2, 3), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)) }),
 		});
 
-		// Act
+		// act
 		var result = JsonOutput.FormatOutput(results, false);
 
-		// Assert
+		// assert
 		var expectedOutput = """
 		                     {
 		                       "YearsBehind": 0,

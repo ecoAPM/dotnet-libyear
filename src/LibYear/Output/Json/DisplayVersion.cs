@@ -9,8 +9,10 @@ internal sealed record DisplayVersion
 	public string VersionNumber { get; init; } = string.Empty;
 	[JsonPropertyName("releaseDate")]
 	public DateTime ReleaseDate { get; init; }
+	public Release Release { get; init; }
 	public DisplayVersion(Release release)
 	{
+		Release = release;
 		VersionNumber = release.Version.ToString();
 		ReleaseDate = release.Date;
 	}

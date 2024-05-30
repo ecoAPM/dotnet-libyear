@@ -6,14 +6,13 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="coverlet.collector" Version="6.0.2" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
 		<PackageReference Include="NSubstitute" Version="5.1.0" />
-		<PackageReference Include="NuGet.Protocol" Version="6.9.1" />
+		<PackageReference Include="NuGet.Protocol" Version="6.10.0" />
 		<PackageReference Include="System.IO.Abstractions" Version="21.0.2" />
-		<PackageReference Include="xunit" Version="2.8.0" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.0" />
+		<PackageReference Include="xunit" Version="2.8.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.1" />
 		<ProjectReference Include="../../src/LibYear.Core/LibYear.Core.csproj" />
-
 		<None Include="FileTypes/packages.config" CopyToOutputDirectory="Always" />
 		<None Include="FileTypes/project.csproj" CopyToOutputDirectory="Always" />
 		<None Include="FileTypes/Directory.Build.props" CopyToOutputDirectory="Always" />

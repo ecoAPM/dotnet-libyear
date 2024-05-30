@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace LibYear.Output.Json;
 
-internal sealed class DateTimeConverter : JsonConverter<DateTime>
+public sealed class DateTimeConverter : JsonConverter<DateTime>
 {
 	public override DateTime Read(
 		ref Utf8JsonReader reader,

@@ -36,10 +36,11 @@ A simple measure of dependency freshness
 
 `-r`, `--recursive`: search recursively for all compatible files, even if one is found in a directory passed as an argument
 
+`-o`, `--output`: sets how the output is displayed, valid options are `table` (default) or `json`. If `json` is selected, `--quiet` minifies the outputted JSON.
+
 #### Limits:
 
 `-l`, `--limit`: exits with error code if total libyears behind is greater than this value
 
 `-p`, `--limit-project`: exits with error code if any project is more libyears behind than this value
-
 `-a`, `--limit-any`: exits with error code if any dependency is more libyears behind than this value

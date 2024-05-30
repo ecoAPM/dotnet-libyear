@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using LibYear.Output;
 using Spectre.Console.Cli;
 
 namespace LibYear;
@@ -32,4 +33,8 @@ public class Settings : CommandSettings
 	[CommandOption("-r|--recursive")]
 	[Description("search recursively for all compatible files, even if one is found in a directory passed as an argument")]
 	public bool Recursive { get; set; }
+
+	[CommandOption("-o|--output")]
+	[Description("output format (table or JSON)")]
+	public OutputOption Output { get; set; } = OutputOption.Table;
 }

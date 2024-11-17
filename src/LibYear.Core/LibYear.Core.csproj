@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version>8.2.0</Version>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 		<Product>libyear</Product>
 		<PackageId>LibYear.Core</PackageId>
 		<Authors>ecoAPM LLC</Authors>

@@ -12,7 +12,7 @@ A simple measure of dependency freshness
 
 ## Requirements
 
-- .NET 8 SDK
+- .NET SDK
 
 ## Installation
 

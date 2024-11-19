@@ -6,7 +6,7 @@
 		<Product>libyear</Product>
 		<PackageId>LibYear</PackageId>
 		<ToolCommandName>dotnet-libyear</ToolCommandName>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<Authors>ecoAPM LLC</Authors>
 		<Company>ecoAPM LLC</Company>
 		<Copyright>ecoAPM LLC</Copyright>

@@ -46,10 +46,12 @@ public class App
 
 	private void DisplayAllResultsTables(SolutionResult allResults, bool quietMode)
 	{
-		if (!allResults.Details.Any())
+		if (allResults.Details.Count == 0)
 			return;
 
-		int MaxLength(Func<Result, int> field) => allResults.Details.Max(results => results.Details.Any() ? results.Details.Max(field) : 0);
+		int MaxLength(Func<Result, int> field)
+			=> allResults.Details.Max(results => results.Details.Count > 0 ? results.Details.Max(field) : 0);
+
 		var namePad = Math.Max("Package".Length, MaxLength(r => r.Name.Length));
 		var installedPad = Math.Max("Installed".Length, MaxLength(r => r.Installed?.Version.ToString().Length ?? 0));
 		var latestPad = Math.Max("Latest".Length, MaxLength(r => r.Latest?.Version.ToString().Length ?? 0));

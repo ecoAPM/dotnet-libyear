@@ -9,6 +9,8 @@ namespace LibYear.Tests;
 
 public class AppTests
 {
+	private static readonly string[] UpdateResult = ["updated"];
+
 	[Fact]
 	public async Task UpdateFlagUpdates()
 	{
@@ -18,7 +20,7 @@ public class AppTests
 
 		var manager = Substitute.For<IProjectFileManager>();
 		manager.GetAllProjects(Arg.Any<IReadOnlyCollection<string>>()).Returns(new IProjectFile[] { new TestProjectFile("test1") });
-		manager.Update(Arg.Any<SolutionResult>()).Returns(new[] { "updated" });
+		manager.Update(Arg.Any<SolutionResult>()).Returns(UpdateResult);
 
 		var console = new TestConsole();
 		var app = new App(checker, manager, console);

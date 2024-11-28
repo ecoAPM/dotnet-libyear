@@ -12,7 +12,7 @@ public class ProjectFileManager : IProjectFileManager
 
 	public async Task<IReadOnlyCollection<IProjectFile>> GetAllProjects(IReadOnlyCollection<string> paths, bool recursive = false)
 	{
-		if (!paths.Any())
+		if (paths.Count == 0)
 			return await GetProjectsInDir(Directory.GetCurrentDirectory(), recursive);
 
 		var tasks = paths.Select(p => GetProjects(p, recursive));
@@ -35,7 +35,7 @@ public class ProjectFileManager : IProjectFileManager
 	{
 		var dir = _fileSystem.DirectoryInfo.New(dirPath);
 		var projectFiles = await FindProjectsInDir(dir, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-		return projectFiles.Any()
+		return projectFiles.Count > 0
 			? projectFiles
 			: await FindProjectsInDir(dir, SearchOption.AllDirectories);
 	}

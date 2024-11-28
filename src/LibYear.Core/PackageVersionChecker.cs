@@ -37,12 +37,12 @@ public class PackageVersionChecker : IPackageVersionChecker
 
 	public async Task<Result> GetResult(string packageName, PackageVersion? installed)
 	{
-		if (!_versionCache.ContainsKey(packageName))
+		if (!_versionCache.TryGetValue(packageName, out var versions))
 		{
-			_versionCache[packageName] = await GetVersions(packageName);
+			versions = await GetVersions(packageName);
+			_versionCache[packageName] = versions;
 		}
 
-		var versions = _versionCache[packageName];
 		var latest = versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.IsPublished).Max(m => m.Version));
 		var current = installed?.WildcardType switch
 		{

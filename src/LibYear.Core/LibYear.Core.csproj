@@ -20,7 +20,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
 		<PackageReference Include="NuGet.Protocol" Version="6.12.1" />
-		<PackageReference Include="System.IO.Abstractions" Version="21.1.7" />
+		<PackageReference Include="System.IO.Abstractions" Version="21.2.1" />
 		<None Include="../../README.md" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="." />
 	</ItemGroup>
 </Project>

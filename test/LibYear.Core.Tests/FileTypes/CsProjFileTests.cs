@@ -15,13 +15,15 @@ public class CsProjFileTests
 		var file = new CsProjFile(filename, await File.ReadAllTextAsync(filename));
 
 		//assert
-		Assert.Equal("test1", file.Packages.First().Key);
-		Assert.Equal("test2", file.Packages.Skip(1).First().Key);
-		Assert.Equal("test3", file.Packages.Skip(2).First().Key);
-		Assert.Equal("test4", file.Packages.Skip(3).First().Key);
-		Assert.Equal("test5", file.Packages.Skip(4).First().Key);
-		Assert.Equal("test6", file.Packages.Skip(5).First().Key);
-		Assert.Equal("test7", file.Packages.Skip(6).First().Key);
+		var packages = file.Packages.Keys.ToArray();
+		Assert.Equal("test1", packages[0]);
+		Assert.Equal("test2", packages[1]);
+		Assert.Equal("test3", packages[2]);
+		Assert.Equal("test4", packages[3]);
+		Assert.Equal("test5", packages[4]);
+		Assert.Equal("test6", packages[5]);
+		Assert.Equal("test7", packages[6]);
+		Assert.Equal("test8", packages[7]);
 	}
 
 	[Fact]
@@ -55,7 +57,7 @@ public class CsProjFileTests
 	}
 
 	[Fact]
-	public async Task InvalidVersionShowsInfo()
+	public async Task InvalidVersionShowsExceptionDetails()
 	{
 		//arrange
 		var filename = Path.Combine("FileTypes", "project.csproj");
@@ -75,5 +77,19 @@ public class CsProjFileTests
 			Assert.Contains("test2", e.Message);
 			Assert.Contains("project.csproj", e.Message);
 		}
+	}
+
+	[Fact]
+	public async Task VersionRangeGetsSkipped()
+	{
+		//arrange
+		var filename = Path.Combine("FileTypes", "project.csproj");
+		var contents = await File.ReadAllTextAsync(filename);
+
+		//act
+		var file = new CsProjFile(filename, contents);
+
+		//assert
+		Assert.Null(file.Packages["test8"]);
 	}
 }

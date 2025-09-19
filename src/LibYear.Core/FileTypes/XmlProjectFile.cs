@@ -44,7 +44,7 @@ public abstract class XmlProjectFile : IProjectFile
 		var version = element.Attribute(versionAttributeName)?.Value ?? element.Element(versionAttributeName)?.Value ?? string.Empty;
 		try
 		{
-			return !string.IsNullOrEmpty(version)
+			return !string.IsNullOrEmpty(version) && !version.Any(v => PackageVersion.RangeChars.Contains(v))
 				? new PackageVersion(version)
 				: null;
 		}

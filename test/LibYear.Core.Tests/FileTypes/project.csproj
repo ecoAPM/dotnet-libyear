@@ -19,5 +19,6 @@
     </PackageReference>
     <PackageReference Include="test6" />
     <PackageReference Include="test7" Version="*" />
+    <PackageReference Include="test8" Version="[1.2,2.3]" />
   </ItemGroup>
 </Project>

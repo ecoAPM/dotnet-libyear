@@ -4,6 +4,8 @@ namespace LibYear.Core;
 
 public sealed class PackageVersion : NuGetVersion
 {
+	public const string RangeChars = "[],()";
+
 	public WildcardType WildcardType { get; }
 
 	public PackageVersion(string version)
@@ -46,7 +48,8 @@ public sealed class PackageVersion : NuGetVersion
 
 		if (wildcard == WildcardType.None)
 		{
-			return new PackageVersion(new NuGetVersion(versionString), wildcard);
+			var nuGetVersion = new NuGetVersion(versionString);
+			return new PackageVersion(nuGetVersion, wildcard);
 		}
 
 		var lastPeriod = versionString.LastIndexOf('.');

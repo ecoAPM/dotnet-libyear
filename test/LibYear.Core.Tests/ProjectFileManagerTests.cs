@@ -138,7 +138,7 @@ public class ProjectFileManagerTests
 		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
-		var projects = await fileManager.GetAllProjects(Array.Empty<string>());
+		var projects = await fileManager.GetAllProjects([]);
 
 		//assert
 		Assert.Contains(projects, p => p.FileName.EndsWith("Directory.Build.props"));
@@ -157,13 +157,11 @@ public class ProjectFileManagerTests
 		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
-		var allResults = new SolutionResult(new[]
-		{
-			new ProjectResult(new TestProjectFile("test1"), new[]
-			{
-				new Result("test1", new Release(new PackageVersion(0, 1, 0), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today)),
-			})
-		});
+		var allResults = new SolutionResult([
+			new ProjectResult(new TestProjectFile("test1"), [
+				new Result("test1", new Release(new PackageVersion(0, 1, 0), DateTime.Today), new Release(new PackageVersion(1, 2, 3), DateTime.Today))
+			])
+		]);
 		var updated = await fileManager.Update(allResults);
 
 		//assert
@@ -197,7 +195,7 @@ public class ProjectFileManagerTests
 		var fileManager = new ProjectFileManager(fileSystem);
 
 		//act
-		var projects = await fileManager.GetAllProjects(["FileTypes"], false);
+		var projects = await fileManager.GetAllProjects(["FileTypes"]);
 
 		//assert
 		Assert.DoesNotContain(projects, p => p.FileName.EndsWith("sub-project.csproj"));

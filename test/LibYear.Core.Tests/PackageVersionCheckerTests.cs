@@ -14,7 +14,7 @@ public class PackageVersionCheckerTests
 		//arrange
 		var metadata = PackageSearchMetadataBuilder.FromIdentity(new PackageIdentity("test", new PackageVersion(1, 2, 3))).Build();
 		var metadataResource = Substitute.For<PackageMetadataResource>();
-		metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>()).Returns(new [] { metadata });
+		metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>()).Returns([metadata]);
 
 		var checker = new PackageVersionChecker(metadataResource);
 
@@ -60,7 +60,7 @@ public class PackageVersionCheckerTests
 		metadata2.IsListed.Returns(true);
 
 		var metadataResource = Substitute.For<PackageMetadataResource>();
-		metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>()).Returns(new [] { metadata1, metadata2 });
+		metadataResource.GetMetadataAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<SourceCacheContext>(), Arg.Any<ILogger>(), Arg.Any<CancellationToken>()).Returns([metadata1, metadata2]);
 
 		var checker = new PackageVersionChecker(metadataResource);
 
@@ -207,7 +207,7 @@ public class PackageVersionCheckerTests
 		var project = new TestProjectFile("test", new Dictionary<string, PackageVersion?> { { "test", new PackageVersion(1, 2, 3) } });
 
 		//act
-		var packages = await checker.GetPackages(new[] { project });
+		var packages = await checker.GetPackages([project]);
 
 		//assert
 		var latest = packages.Details.First().Details.First().Latest!.Version.ToString();

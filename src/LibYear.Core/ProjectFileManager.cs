@@ -28,7 +28,7 @@ public class ProjectFileManager : IProjectFileManager
 		}
 
 		var fileInfo = _fileSystem.FileInfo.New(path);
-		return new[] { await ReadFile(fileInfo) }.ToArray();
+		return [await ReadFile(fileInfo)];
 	}
 
 	public async Task<IReadOnlyCollection<IProjectFile>> GetProjectsInDir(string dirPath, bool recursive)

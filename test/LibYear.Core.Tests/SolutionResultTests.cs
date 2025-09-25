@@ -12,16 +12,14 @@ public class SolutionResultTests
 		var project2 = new TestProjectFile("test2", new Dictionary<string, PackageVersion?>());
 		var projects = new[]
 		{
-			new ProjectResult(project1, new[]
-			{
+			new ProjectResult(project1, [
 				new Result("dep1", new Release(new PackageVersion("1.2.3"), new DateTime(2022, 10, 1)), new Release(new PackageVersion("1.2.4"), new DateTime(2022, 10, 5))),
 				new Result("dep2", new Release(new PackageVersion("1.2.3"), new DateTime(2022, 10, 2)), new Release(new PackageVersion("1.2.4"), new DateTime(2022, 10, 5)))
-			}),
-			new ProjectResult(project2, new[]
-			{
+			]),
+			new ProjectResult(project2, [
 				new Result("dep3", new Release(new PackageVersion("1.2.3"), new DateTime(2022, 10, 3)), new Release(new PackageVersion("1.2.4"), new DateTime(2022, 10, 5))),
 				new Result("dep4", new Release(new PackageVersion("1.2.3"), new DateTime(2022, 10, 4)), new Release(new PackageVersion("1.2.4"), new DateTime(2022, 10, 5)))
-			})
+			])
 		};
 		var result = new SolutionResult(projects);
 

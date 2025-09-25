@@ -57,6 +57,56 @@ public class CsProjFileTests
 	}
 
 	[Fact]
+	public async Task UpdateMaintainsIndent()
+	{
+		//arrange
+		var filename = Path.Combine("FileTypes", "project.csproj");
+		var original = await File.ReadAllTextAsync(filename);
+		var file = new CsProjFile(filename, original);
+		var results = Array.Empty<Result>();
+
+		//act
+		var updated = file.Update(results);
+
+		//assert
+		Assert.Equal(updated, original);
+	}
+
+	[Fact]
+	public async Task UpdateMaintainsFourSpaces()
+	{
+		//arrange
+		var filename = Path.Combine("FileTypes", "project.csproj");
+		var original = await File.ReadAllTextAsync(filename);
+		original = original.Replace("  ", "    ");
+		var file = new CsProjFile(filename, original);
+		var results = Array.Empty<Result>();
+
+		//act
+		var updated = file.Update(results);
+
+		//assert
+		Assert.Equal(updated, original);
+	}
+
+	[Fact]
+	public async Task UpdateMaintainsTabs()
+	{
+		//arrange
+		var filename = Path.Combine("FileTypes", "project.csproj");
+		var original = await File.ReadAllTextAsync(filename);
+		original = original.Replace("  ", "\t");
+		var file = new CsProjFile(filename, original);
+		var results = Array.Empty<Result>();
+
+		//act
+		var updated = file.Update(results);
+
+		//assert
+		Assert.Equal(updated, original);
+	}
+
+	[Fact]
 	public async Task InvalidVersionShowsExceptionDetails()
 	{
 		//arrange

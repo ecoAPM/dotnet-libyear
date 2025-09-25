@@ -81,9 +81,7 @@ public class ProjectFileManager : IProjectFileManager
 		{
 			var update = project.ProjectFile.Update(project.Details);
 
-			var stream = _fileSystem.FileStream.New(project.ProjectFile.FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
-			await new StreamWriter(stream).WriteAsync(update);
-			stream.Close();
+			await _fileSystem.File.WriteAllTextAsync(project.ProjectFile.FileName, update);
 			updated.Add(project.ProjectFile.FileName);
 		}
 

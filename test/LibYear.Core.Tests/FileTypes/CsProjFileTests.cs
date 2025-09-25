@@ -118,7 +118,7 @@ public class CsProjFileTests
 		{
 			//act
 			_ = new CsProjFile(filename, newContents);
-			Assert.False(true);
+			Assert.Fail();
 		}
 		catch (Exception e)
 		{
@@ -141,5 +141,25 @@ public class CsProjFileTests
 
 		//assert
 		Assert.Null(file.Packages["test8"]);
+	}
+
+	[Fact]
+	public async Task ProjectBuildConditionsThrowException()
+	{
+		//arrange
+		var filename = Path.Combine("FileTypes", "project.csproj");
+		var contents = @"<Project Sdk=""Microsoft.NET.Sdk""><ItemGroup Condition=""'$(TargetFramework)' == 'net8.0'""></ItemGroup></Project>";
+
+		try
+		{
+			//act
+			_ = new CsProjFile(filename, contents);
+			Assert.Fail();
+		}
+		catch (Exception e)
+		{
+			//assert
+			Assert.Contains("not supported", e.Message);
+		}
 	}
 }

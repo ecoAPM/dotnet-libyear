@@ -31,6 +31,9 @@ public abstract class XmlProjectFile : IProjectFile
 		_xmlContents = XDocument.Parse(contents);
 		_whitespace = DetermineWhitespace(contents);
 
+		if (_xmlContents.Root is not null && _xmlContents.Root.DescendantsAndSelf().Any(e => e.Attribute("Condition") is not null))
+			throw new ArgumentException("Project files with conditions are not supported");
+
 		Packages = _xmlContents.Descendants(elementName)
 			.ToDictionary(
 				d => packageAttributeNames.Select(p => d.Attribute(p)?.Value ?? d.Element(p)?.Value).FirstOrDefault(v => v != null)!,

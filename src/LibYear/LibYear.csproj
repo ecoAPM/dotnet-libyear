@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Version>9.0.2</Version>
+		<Version>10.0.0</Version>
 		<OutputType>Exe</OutputType>
 		<PackAsTool>true</PackAsTool>
 		<Product>libyear</Product>
 		<PackageId>LibYear</PackageId>
 		<ToolCommandName>dotnet-libyear</ToolCommandName>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Authors>ecoAPM LLC</Authors>
 		<Company>ecoAPM LLC</Company>
 		<Copyright>ecoAPM LLC</Copyright>
@@ -21,7 +21,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
-		<PackageReference Include="Spectre.Console.Cli" Version="0.51.1" />
+		<PackageReference Include="Spectre.Console.Cli" Version="0.53.0" />
 		<ProjectReference Include="../LibYear.Core/LibYear.Core.csproj" />
 		<None Include="../../README.md" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="." />
 	</ItemGroup>

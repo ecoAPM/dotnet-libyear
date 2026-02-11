@@ -30,7 +30,7 @@ jobs:
         run: dotnet restore
 
       - name: Start Sonar Analysis
-        run: dotnet-sonarscanner begin /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$SONAR_TOKEN" /o:"ecoapm" /k:"ecoAPM_dotnet-libyear" /d:sonar.cs.vstest.reportsPaths="test/**/results.trx" /d:sonar.cs.opencover.reportsPaths="test/**/coverage.opencover.xml"
+        run: dotnet-sonarscanner begin /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token="$SONAR_TOKEN" /o:"ecoapm" /k:"ecoAPM_dotnet-libyear" /d:sonar.cs.vstest.reportsPaths="test/**/results.trx" /d:sonar.cs.opencover.reportsPaths="test/**/coverage.opencover.xml"
         env:
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
 
@@ -43,7 +43,7 @@ jobs:
         run: dotnet test --no-build --logger "trx;LogFileName=results.trx" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
       - name: Finish Sonar Analysis
-        run: dotnet-sonarscanner end /d:sonar.login="$SONAR_TOKEN"
+        run: dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
         env:
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

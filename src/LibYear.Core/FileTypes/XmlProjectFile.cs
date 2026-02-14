@@ -42,9 +42,14 @@ public abstract class XmlProjectFile : IProjectFile
 	}
 
 	private static Whitespace DetermineWhitespace(string contents)
-		=> contents.Contains("\n\t") ? Whitespace.Tabs
-			: contents.Contains("\n  <") ? Whitespace.TwoSpaces
+	{
+		if (contents.Contains("\n\t"))
+			return Whitespace.Tabs;
+
+		return contents.Contains("\n  <")
+			? Whitespace.TwoSpaces
 			: Whitespace.FourSpaces;
+	}
 
 	public string Update(IReadOnlyCollection<Result> results)
 	{

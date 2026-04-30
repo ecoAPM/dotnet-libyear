@@ -7,7 +7,7 @@
 	<ItemGroup>
 		<PackageReference Include="coverlet.collector" Version="10.0.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-		<PackageReference Include="Spectre.Console.Testing" Version="0.54.0" />
+		<PackageReference Include="Spectre.Console.Testing" Version="0.55.2" />
 		<ProjectReference Include="..\..\src\LibYear\LibYear.csproj" />
 		<ProjectReference Include="..\LibYear.Core.Tests\LibYear.Core.Tests.csproj" />
 	</ItemGroup>

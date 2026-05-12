@@ -5,9 +5,9 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="coverlet.collector" Version="10.0.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
-		<PackageReference Include="Spectre.Console.Testing" Version="0.55.2" />
+		<PackageReference Include="coverlet.collector" Version="10.0.1" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
+		<PackageReference Include="Spectre.Console.Testing" Version="0.57.0" />
 		<ProjectReference Include="..\..\src\LibYear\LibYear.csproj" />
 		<ProjectReference Include="..\LibYear.Core.Tests\LibYear.Core.Tests.csproj" />
 	</ItemGroup>

@@ -1,17 +1,10 @@
 namespace LibYear.Core;
 
-public class Result : HasAgeMeasurements
+public class Result(string name, Release? installed, Release? latest) : HasAgeMeasurements
 {
-	public string Name { get; }
-	public Release? Installed { get; }
-	public Release? Latest { get; }
-
-	public Result(string name, Release? installed, Release? latest)
-	{
-		Name = name;
-		Installed = installed;
-		Latest = latest;
-	}
+	public string Name { get; } = name;
+	public Release? Installed { get; } = installed;
+	public Release? Latest { get; } = latest;
 
 	public override double DaysBehind
 		=> (Latest?.Date - Installed?.Date ?? TimeSpan.Zero).TotalDays;

@@ -3,13 +3,8 @@ using System.IO.Abstractions;
 
 namespace LibYear.Core;
 
-public class ProjectFileManager : IProjectFileManager
+public class ProjectFileManager(IFileSystem fileSystem) : IProjectFileManager
 {
-	private readonly IFileSystem _fileSystem;
-
-	public ProjectFileManager(IFileSystem fileSystem)
-		=> _fileSystem = fileSystem;
-
 	public async Task<IReadOnlyCollection<IProjectFile>> GetAllProjects(IReadOnlyCollection<string> paths, bool recursive = false)
 	{
 		if (paths.Count == 0)
@@ -22,18 +17,18 @@ public class ProjectFileManager : IProjectFileManager
 
 	private async Task<IReadOnlyCollection<IProjectFile>> GetProjects(string path, bool recursive)
 	{
-		if (_fileSystem.Directory.Exists(path))
+		if (fileSystem.Directory.Exists(path))
 		{
 			return await GetProjectsInDir(path, recursive);
 		}
 
-		var fileInfo = _fileSystem.FileInfo.New(path);
+		var fileInfo = fileSystem.FileInfo.New(path);
 		return [await ReadFile(fileInfo)];
 	}
 
 	public async Task<IReadOnlyCollection<IProjectFile>> GetProjectsInDir(string dirPath, bool recursive)
 	{
-		var dir = _fileSystem.DirectoryInfo.New(dirPath);
+		var dir = fileSystem.DirectoryInfo.New(dirPath);
 		var projectFiles = await FindProjectsInDir(dir, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 		return projectFiles.Count > 0
 			? projectFiles
@@ -56,7 +51,7 @@ public class ProjectFileManager : IProjectFileManager
 	private async Task<IProjectFile> ReadFile(IFileSystemInfo fileInfo)
 	{
 		var path = fileInfo.FullName;
-		var stream = _fileSystem.FileStream.New(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+		var stream = fileSystem.FileStream.New(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 		var contents = await new StreamReader(stream).ReadToEndAsync();
 		stream.Close();
 
@@ -81,7 +76,7 @@ public class ProjectFileManager : IProjectFileManager
 		{
 			var update = project.ProjectFile.Update(project.Details);
 
-			await _fileSystem.File.WriteAllTextAsync(project.ProjectFile.FileName, update);
+			await fileSystem.File.WriteAllTextAsync(project.ProjectFile.FileName, update);
 			updated.Add(project.ProjectFile.FileName);
 		}
 

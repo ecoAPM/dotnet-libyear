@@ -1,8 +1,3 @@
 namespace LibYear.Core.FileTypes;
 
-public class PackagesConfigFile : XmlProjectFile
-{
-	public PackagesConfigFile(string filename, string contents) : base(filename, contents, "package", ["id"], "version")
-	{
-	}
-}
+public class PackagesConfigFile(string filename, string contents) : XmlProjectFile(filename, contents, "package", ["id"], "version");

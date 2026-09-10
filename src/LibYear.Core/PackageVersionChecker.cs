@@ -5,20 +5,11 @@ using NuGet.Protocol.Core.Types;
 
 namespace LibYear.Core;
 
-public class PackageVersionChecker : IPackageVersionChecker
+public class PackageVersionChecker(PackageMetadataResource metadataResource, IDictionary<string, IReadOnlyCollection<Release>> versionCache) : IPackageVersionChecker
 {
-	private readonly PackageMetadataResource _metadataResource;
-	private readonly IDictionary<string, IReadOnlyCollection<Release>> _versionCache;
-
 	public PackageVersionChecker(PackageMetadataResource metadataResource)
 		: this(metadataResource, new ConcurrentDictionary<string, IReadOnlyCollection<Release>>())
 	{
-	}
-
-	public PackageVersionChecker(PackageMetadataResource metadataResource, IDictionary<string, IReadOnlyCollection<Release>> versionCache)
-	{
-		_metadataResource = metadataResource;
-		_versionCache = versionCache;
 	}
 
 	public async Task<SolutionResult> GetPackages(IReadOnlyCollection<IProjectFile> projectFiles)
@@ -37,10 +28,10 @@ public class PackageVersionChecker : IPackageVersionChecker
 
 	public async Task<Result> GetResult(string packageName, PackageVersion? installed)
 	{
-		if (!_versionCache.TryGetValue(packageName, out var versions))
+		if (!versionCache.TryGetValue(packageName, out var versions))
 		{
 			versions = await GetVersions(packageName);
-			_versionCache[packageName] = versions;
+			versionCache[packageName] = versions;
 		}
 
 		var latest = versions.FirstOrDefault(v => v.Version == versions.Where(m => !m.Version.IsPrerelease && m.IsPublished).Max(m => m.Version));
@@ -57,7 +48,7 @@ public class PackageVersionChecker : IPackageVersionChecker
 
 	public async Task<IReadOnlyCollection<Release>> GetVersions(string packageName)
 	{
-		var metadata = await _metadataResource.GetMetadataAsync(packageName, true, true, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
+		var metadata = await metadataResource.GetMetadataAsync(packageName, true, true, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
 		return metadata.Select(m => new Release(m)).ToArray();
 	}
 }

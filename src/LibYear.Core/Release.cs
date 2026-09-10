@@ -2,20 +2,13 @@ using NuGet.Protocol.Core.Types;
 
 namespace LibYear.Core;
 
-public class Release
+public class Release(PackageVersion version, DateTime released, bool isPublished = true)
 {
-	public PackageVersion Version { get; }
-	public DateTime Date { get; }
-	public bool IsPublished { get; }
+	public PackageVersion Version { get; } = version;
+	public DateTime Date { get; } = released;
+	public bool IsPublished { get; } = isPublished;
 
 	public Release(IPackageSearchMetadata metadata) : this(new PackageVersion(metadata.Identity.Version), metadata.Published.GetValueOrDefault().Date, metadata.IsListed)
 	{
-	}
-
-	public Release(PackageVersion version, DateTime released, bool isPublished = true)
-	{
-		Version = version;
-		Date = released;
-		IsPublished = isPublished;
 	}
 }

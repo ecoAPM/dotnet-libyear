@@ -3,38 +3,27 @@ using Spectre.Console;
 
 namespace LibYear;
 
-public class App
+public class App(IPackageVersionChecker checker, IProjectFileManager projectFileManager, IAnsiConsole console)
 {
-	private readonly IPackageVersionChecker _checker;
-	private readonly IProjectFileManager _projectFileManager;
-	private readonly IAnsiConsole _console;
-
-	public App(IPackageVersionChecker checker, IProjectFileManager projectFileManager, IAnsiConsole console)
-	{
-		_checker = checker;
-		_projectFileManager = projectFileManager;
-		_console = console;
-	}
-
 	public async Task<int> Run(Settings settings)
 	{
-		_console.WriteLine();
-		var projects = await _projectFileManager.GetAllProjects(settings.Paths, settings.Recursive);
+		console.WriteLine();
+		var projects = await projectFileManager.GetAllProjects(settings.Paths, settings.Recursive);
 		if (projects.Count == 0)
 		{
-			_console.WriteLine("No project files found");
+			console.WriteLine("No project files found");
 			return 1;
 		}
 
-		var result = await _checker.GetPackages(projects);
+		var result = await checker.GetPackages(projects);
 		DisplayAllResultsTables(result, settings.QuietMode);
 
 		if (settings.Update)
 		{
-			var updated = await _projectFileManager.Update(result);
+			var updated = await projectFileManager.Update(result);
 			foreach (var projectFile in updated)
 			{
-				_console.WriteLine($"{projectFile} updated");
+				console.WriteLine($"{projectFile} updated");
 			}
 		}
 
@@ -62,7 +51,7 @@ public class App
 
 		if (allResults.Details.Count > 1)
 		{
-			_console.WriteLine($"Total is {allResults.YearsBehind:F1} libyears behind");
+			console.WriteLine($"Total is {allResults.YearsBehind:F1} libyears behind");
 		}
 	}
 
@@ -102,7 +91,7 @@ public class App
 			table.ShowHeaders = false;
 		}
 
-		_console.Write(table);
-		_console.WriteLine();
+		console.Write(table);
+		console.WriteLine();
 	}
 }

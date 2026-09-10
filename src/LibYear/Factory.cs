@@ -21,6 +21,7 @@ public static class Factory
 		var source = new PackageSource("https://api.nuget.org/v3/index.json");
 		var provider = Repository.Provider.GetCoreV3();
 		var repo = new SourceRepository(source, provider);
-		return repo.GetResource<PackageMetadataResource>();
+		return repo.GetResource<PackageMetadataResource>()
+			?? throw new NuGetConfigurationException("Failed to create NuGet resource");
 	}
 }

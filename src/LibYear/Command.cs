@@ -8,7 +8,7 @@ public class Command(IAnsiConsole console) : AsyncCommand<Settings>
 	public async Task<int> ExecuteAsync(CommandContext context, Settings settings)
 		=> await ExecuteAsync(context, settings, CancellationToken.None);
 
-	protected override async Task<int> ExecuteAsync(CommandContext context, Settings settings, CancellationToken cancellationToken)
+	public override async Task<int> ExecuteAsync(CommandContext context, Settings settings, CancellationToken cancellationToken)
 	{
 		try
 		{

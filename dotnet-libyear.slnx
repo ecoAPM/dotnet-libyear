@@ -1,0 +1,10 @@
+<Solution>
+  <Project Path="src/LibYear.Core/LibYear.Core.csproj">
+    <Deploy Solution="Release|*" />
+  </Project>
+  <Project Path="src/LibYear/LibYear.csproj">
+    <Deploy Solution="Release|*" />
+  </Project>
+  <Project Path="test/LibYear.Core.Tests/LibYear.Core.Tests.csproj" />
+  <Project Path="test/LibYear.Tests/LibYear.Tests.csproj" />
+</Solution>
